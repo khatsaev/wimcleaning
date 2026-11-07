@@ -379,6 +379,39 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;background:var(--prim
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .skel{animation:none}
 }
+/* бонусы и уровни */
+.lvl{background:var(--primary);color:#fff;border-radius:20px;padding:var(--s4);display:grid;gap:var(--s3)}
+.lvl .top{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s3)}
+.lvl .eyebrow{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F3D489}
+.lvl .name{font-family:var(--display);font-size:20px;line-height:26px}
+.lvl .pct{font-family:var(--display);font-size:44px;line-height:44px;font-weight:700;letter-spacing:-.02em}
+.lvl .sub{color:#D9DFFB;font-size:14px;line-height:20px}
+.lvl .bal{display:flex;justify-content:space-between;align-items:center;padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.2);font-size:14px;line-height:20px}
+.lvl .bal b{font-family:var(--display);font-size:18px;line-height:24px}
+.lvl .btn{background:rgba(255,255,255,.14);color:#fff;min-height:44px}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ochre);border-radius:99px;transform-origin:left center}
+.promo{display:flex;align-items:center;gap:var(--s3);width:100%;text-align:left;background:var(--ochre-bg);color:var(--ink);border-radius:20px;padding:var(--s3) var(--s4);box-shadow:0 0 0 1px rgba(201,154,46,.5) inset}
+.promo .pp{flex:none;min-width:60px;display:grid;justify-items:center;font-family:var(--display);font-weight:700;font-size:20px;line-height:24px;color:var(--ochre-ink)}
+.promo .pp small{font-size:11px;line-height:12px;font-weight:600}
+.promo .grow{display:grid;gap:2px}
+.promo b{font-size:15px;line-height:20px}
+.promo .chev{flex:none;color:var(--ochre-ink)}
+.bonus-line{display:flex;align-items:center;gap:var(--s2);font-size:14px;line-height:20px;color:var(--ochre-ink);background:var(--ochre-bg);border-radius:12px;padding:var(--s2) var(--s3)}
+.bonus-line .ic{width:18px;height:18px;flex:none}
+.tiers{display:grid;gap:var(--s2);list-style:none;padding:0;margin:0}
+.tier{display:grid;grid-template-columns:60px 1fr;gap:var(--s3);align-items:center;background:var(--surface);border-radius:16px;padding:var(--s3);box-shadow:0 0 0 1px var(--line) inset}
+.tier.cur{box-shadow:0 0 0 2px var(--primary) inset}
+.tier .tp{font-family:var(--display);font-size:20px;line-height:24px;font-weight:700;color:var(--primary);text-align:center}
+.tier h3{margin:0;font-size:16px;line-height:22px}
+.chip.lv{background:var(--ochre-bg);color:var(--ochre-ink)}
+.bswitch{display:flex;align-items:center;gap:var(--s3);width:100%;text-align:left;padding:var(--s3);border-radius:14px;background:var(--ochre-bg);color:var(--ink);min-height:56px}
+.bswitch .grow{display:grid;gap:2px}
+.bswitch .knob{flex:none;width:44px;height:26px;border-radius:99px;background:#CFC6AE;position:relative;transition:background .2s}
+.bswitch .knob::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:99px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s}
+.bswitch[aria-checked=true] .knob{background:var(--primary)}
+.bswitch[aria-checked=true] .knob::after{transform:translateX(18px)}
+#totalIn{display:grid;gap:var(--s3)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
@@ -420,6 +453,7 @@ const fmtStamp=t=>new Date(t).toLocaleDateString('ru-RU',{day:'numeric',month:'s
 const P=JSON.parse($('#pricing').textContent).услуги;
 const IC={
  b2:'<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/>',
+ gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
  carpet:'<rect x="4" y="5" width="16" height="14" rx="1"/><path d="M12 8l3.5 4-3.5 4-3.5-4z"/><path d="M4 3v2M8 3v2M12 3v2M16 3v2M20 3v2M4 19v2M8 19v2M12 19v2M16 19v2M20 19v2"/>',
  bed:'<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>',
  blinds:'<path d="M3 3h18"/><path d="M20 7H8"/><path d="M20 11H8"/><path d="M10 19h10"/><path d="M8 15h12"/><path d="M4 3v14"/><circle cx="4" cy="19" r="2"/>',
@@ -529,6 +563,7 @@ function seed(){
   if(r.items)r.price=itemsTotal(r.items);
   return r;
  };
+ const ago=(r,days)=>{const sh=days*864e5;r.created-=sh;r.history.forEach(h=>h.t-=sh);return r};
  const o=[
   mk(1035,true,'Аминат Р.','pickup',null,t,SLOTS[1],'in_progress','Сотрудник 1',{items:[{k:'curtain',n:2},{k:'blanket',s:'2-спальное'}]}),
   mk(1033,true,'Аминат Р.','blanket',3,yd,SLOTS[0],'delivered','Сотрудник 2'),
@@ -541,17 +576,41 @@ function seed(){
   mk(1034,false,'Седа И.','blanket',2,tm,SLOTS[3],'accepted',''),
   mk(1041,false,'Аслан Х.','carpet',12,tm,SLOTS[0],'accepted','',{comment:'Ковёр с длинным ворсом.'}),
   mk(1032,false,'Луиза Р.','facade',null,yd,SLOTS[1],'cancelled','',{cancelReason:'Клиент передумал'}),
-  mk(1031,false,'Тимур Ш.','carpet',5,yd,SLOTS[0],'delivered','Сотрудник 1')
+  mk(1031,false,'Тимур Ш.','carpet',5,yd,SLOTS[0],'delivered','Сотрудник 1'),
+  ago(mk(1021,true,'Аминат Р.','curtain',1,addDays(-45),SLOTS[2],'delivered','Сотрудник 2'),45),
+  ago(mk(1012,true,'Аминат Р.','carpet',12,addDays(-120),SLOTS[1],'delivered','Сотрудник 1'),120),
+  ago(mk(1015,false,'Руслан А.','facade',260,addDays(-150),SLOTS[0],'delivered','Сотрудник 1',{price:24000}),150)
  ];
  o[10].history.push({s:'cancelled',t:now-H,note:o[10].cancelReason});
  return {orders:o,user:null,limit:{},cart:{}};
 }
-let S=(function(){try{const r=localStorage.getItem('wim_proto_v3');if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.orders))return o}}catch(e){}return seed()})();
+let S=(function(){try{const r=localStorage.getItem('wim_proto_v4');if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.orders))return o}}catch(e){}return seed()})();
 if(!S.cart)S.cart={};
 const cartCount=()=>ITEMK.reduce((s,k)=>s+(S.cart[k]||[]).length,0);
 const cartTotal=()=>ITEMK.reduce((s,k)=>s+grpTotal(k,S.cart[k]||[]),0);
 const cartItems=()=>ITEMK.flatMap(k=>(S.cart[k]||[]).map(x=>Object.assign({k},x)));
-function save(){try{localStorage.setItem('wim_proto_v3',JSON.stringify(S))}catch(e){}}
+/* бонусы: вариант A (кешбэк 5% всем) входит в вариант C (уровни по сумме доставленных заказов за 12 месяцев) */
+const LV=[{n:'Свежий',p:5,from:0},{n:'Чистый',p:7,from:8000},{n:'Безупречный',p:10,from:20000}];
+const YEAR=365*864e5;
+const dlvAt=o=>{const h=o.history.find(x=>x.s==='delivered');return h?h.t:0};
+const lvOf=sum=>LV.reduce((a,l)=>sum>=l.from?l:a,LV[0]);
+function loyal(pred){
+ const done=S.orders.filter(o=>pred(o)&&o.status==='delivered'&&o.price>0).sort((a,b)=>dlvAt(a)-dlvAt(b));
+ const before=t=>done.filter(x=>dlvAt(x)<t&&dlvAt(x)>t-YEAR).reduce((s,x)=>s+x.price,0);
+ const acc=done.map(o=>{const l=lvOf(before(dlvAt(o)));return {o,l,b:Math.round((o.price-(o.bonusUse||0))*l.p/100)}});
+ const used=S.orders.filter(o=>pred(o)&&o.status!=='cancelled'&&o.bonusUse).map(o=>({o,u:o.bonusUse}));
+ const year=before(Date.now()+1),lv=lvOf(year),nx=LV[LV.indexOf(lv)+1]||null;
+ return {acc,used,bal:acc.reduce((s,a)=>s+a.b,0)-used.reduce((s,x)=>s+x.u,0),year,lv,nx,left:nx?nx.from-year:0};
+}
+const myL=()=>loyal(o=>o.mine);
+const clientL=o=>loyal(o.mine?x=>x.mine:x=>x.name===o.name);
+const bonusFor=o=>{const a=clientL(o).acc.find(x=>x.o===o);return a?a.b:0};
+const BMAX=30; /* бонусами можно оплатить до 30% заказа */
+const bonusCan=price=>S.user?Math.max(0,Math.min(myL().bal,Math.floor(price*BMAX/100))):0;
+const payLines=o=>o.bonusUse?'<div class="row sb small"><span>Бонусами</span><b>−'+money(o.bonusUse)+'</b></div><div class="row sb small"><span>К оплате при получении</span><b>≈ '+money(o.price-o.bonusUse)+'</b></div>':'';
+const bns=n=>rub(n)+'\u00A0'+plural(n,['бонус','бонуса','бонусов']);
+const earnLine=price=>price>0?'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Начислим '+bns(Math.round(price*myL().lv.p/100))+' после доставки ('+myL().lv.p+'%)':'Вернём от 5% бонусами после доставки')+'</span></div>':'';
+function save(){try{localStorage.setItem('wim_proto_v4',JSON.stringify(S))}catch(e){}}
 const limitOf=s=>(S.limit&&S.limit[s]!=null)?S.limit[s]:5;
 const byId=id=>S.orders.find(o=>o.id===id);
 
@@ -565,13 +624,13 @@ let ordersFilter='active';
 let ordersLoaded=false;
 let af={q:'',status:'all',service:'all',date:'all',from:'',to:''};
 let dayDate=addDays(0);
-function newDraft(){return {service:'',qty:'',desc:'',address:'',date:'',time:'',phone:'',name:'',comment:'',photos:[]}}
+function newDraft(){return {useBonus:false,service:'',qty:'',desc:'',address:'',date:'',time:'',phone:'',name:'',comment:'',photos:[]}}
 function go(name,p){stack.push(view);view=Object.assign({name},p||{});render()}
 function back(){view=stack.pop()||{name:mode==='admin'?'alist':'home'};render()}
 function tab(name){stack=[];view={name};render()}
 function setMode(m){mode=m;stack=[];view={name:m==='admin'?'alist':'home'};try{if(m==='admin')history.replaceState(null,'','#admin');else history.replaceState(null,'',location.pathname+location.search)}catch(e){location.hash=m==='admin'?'admin':''}render()}
 addEventListener('hashchange',()=>{const m=location.hash==='#admin'?'admin':'client';if(m!==mode)setMode(m)});
-addEventListener('storage',e=>{if(e.key==='wim_proto_v3'){try{S=JSON.parse(e.newValue)||S}catch(x){}if(!['form','service'].includes(view.name))render()}});
+addEventListener('storage',e=>{if(e.key==='wim_proto_v4'){try{S=JSON.parse(e.newValue)||S}catch(x){}if(!['form','service'].includes(view.name))render()}});
 
 /* ---------- каркас ---------- */
 function chrome(){
@@ -583,7 +642,7 @@ function chrome(){
  document.documentElement.style.background=document.body.style.background=small?tone:'';
  $('#ahead').innerHTML=mode==='admin'?'<div class="ahead">'+logo()+'<b>Режим владельца</b><button class="exit" data-act="mode" data-v="client">Клиент</button></div>':'';
  const tabs=mode==='admin'?[['alist','Заявки','inbox',['alist','acard']],['aday','План на день','cal',['aday']],['aslots','Окна приёма','sl',['aslots']]]
-  :[['home','Услуги','grid',['home','service','done','login'].concat(draft.service==='facade'?['form']:[])],['pikap','Пикап','truck',['pikap'].concat(draft.service==='pickup'?['form']:[])],['orders','Мои заказы','list',['orders','order']],['profile','Профиль','user',['profile']]];
+  :[['home','Услуги','grid',['home','service','done','login'].concat(draft.service==='facade'?['form']:[])],['pikap','Пикап','truck',['pikap'].concat(draft.service==='pickup'?['form']:[])],['orders','Мои заказы','list',['orders','order']],['profile','Профиль','user',['profile','bonus']]];
  $('#tabbar').innerHTML=tabs.map(t=>'<button data-act="tab" data-v="'+t[0]+'" '+(t[3].includes(view.name)?'aria-current="page"':'')+'>'+ic(t[2])+'<span>'+t[1]+'</span>'+(t[0]==='pikap'&&cartCount()?'<span class="badge" aria-label="позиций: '+cartCount()+'">'+cartCount()+'</span>':'')+'</button>').join('');
 }
 function render(){
@@ -696,6 +755,7 @@ VIEWS.home=()=>{
  '<div class="lead"><h1 class="h1">Оставьте заявку в пару касаний</h1><p class="muted">Выберите услугу, опишите, что нужно почистить, и приложите фото. Мы свяжемся с вами и уточним детали.</p></div></header>'+
 
  (mine?'<button class="card tap active-order" data-act="open" data-id="'+mine.id+'"><span class="xs muted">Активный заказ</span><span class="row sb"><b>Заказ №'+mine.id+'</b>'+chipS(mine.status)+'</span><span class="small muted clamp">'+titleOf(mine)+'. '+stOf(mine.status).h+'</span></button>':'')+
+ promo()+
  '<div class="sect"><h2 class="h2">Услуги</h2><p class="muted small">Выберите, что нужно почистить</p></div>'+
  '<div class="stack"><div class="svc-list">'+SKEYS.map(k=>{const s=SERV[k];return '<button class="svc" data-act="svc" data-k="'+k+'"><span class="ico">'+ic(s.icon)+'</span><span><h3>'+s.title+'</h3>'+(s.listPrice?'<span class="price-line"><span>'+s.listPrice+'</span>'+demoChip()+'</span>':'<span class="note">Цена после осмотра</span>')+'</span><svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true">'+IC.chev+'</svg></button>'}).join('')+'</div>'+
  '</div>';
@@ -796,6 +856,29 @@ function truckBump(){const b=document.querySelector('.tabbar [data-v=pikap]');if
  const t=b.querySelector('svg'),g=b.querySelector('.badge');
  gsap.timeline().to(t,{y:-8,rotation:-10,duration:.18,ease:'power2.out'}).to(t,{y:0,rotation:0,duration:.6,ease:'bounce.out'});
  if(g)gsap.fromTo(g,{scale:1.7},{scale:1,duration:.45,ease:'back.out(3)'})}
+function lvlCard(L,link){
+ const pr=L.nx?Math.min(100,Math.round(L.year/L.nx.from*100)):100;
+ return '<div class="lvl"><div class="top"><div><div class="eyebrow">Ваш уровень</div><div class="name">«'+L.lv.n+'»</div></div><div class="pct">'+L.lv.p+'%</div></div>'+
+ '<div class="stack tight"><div class="bar" role="progressbar" aria-label="До следующего уровня" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pr+'"><i style="width:'+pr+'%"></i></div>'+
+ '<p class="sub">'+(L.nx?'За год: '+money(L.year)+'. Ещё '+money(L.left)+' до «'+L.nx.n+'», будет '+L.nx.p+'%.':'Высший уровень: '+L.lv.p+'% бонусами и личный менеджер.')+'</p></div>'+
+ '<div class="bal"><span>Бонусов на счёте</span><b>'+rub(L.bal)+'</b></div>'+
+ (link?'<button class="btn" data-act="bonus">Как работают уровни</button>':'')+'</div>';
+}
+const chevI='<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true">'+IC.chev+'</svg>';
+function promo(){
+ if(S.user){const L=myL();return '<button class="promo" data-act="bonus"><span class="pp">'+L.lv.p+'%</span><span class="grow"><b>Уровень «'+L.lv.n+'» · '+bns(L.bal)+'</b><span class="small muted">'+(L.nx?'До '+L.nx.p+'% осталось '+money(L.left):'Личный менеджер и 10% бонусами')+'</span></span>'+chevI+'</button>'}
+ return '<button class="promo" data-act="bonus"><span class="pp"><small>до</small>10%</span><span class="grow"><b>Возвращаем бонусами до 10%</b><span class="small muted">Чем больше заказываете за год, тем выше процент</span></span>'+chevI+'</button>';
+}
+const barIn=()=>{const b=document.querySelector('.bar i');if(b&&window.gsap&&!reduce())gsap.from(b,{scaleX:0,duration:.9,ease:'power2.out',delay:.1})};
+VIEWS.bonus=()=>{
+ const L=S.user?myL():null;
+ return backBtn()+'<h1 class="h1">Бонусы и уровни</h1><p class="muted">Возвращаем часть стоимости бонусами. Чем больше вы заказали за год, тем выше процент.</p>'+
+ (L?lvlCard(L):'<div class="card stack"><p class="muted">Войдите, чтобы видеть свой уровень и бонусы.</p><button class="btn pri" data-act="goLogin">Вход</button></div>')+
+ '<div class="sect"><h2 class="h2">Уровни</h2></div><ul class="tiers">'+LV.map(l=>'<li class="tier'+(L&&L.lv===l?' cur':'')+'"><span class="tp">'+l.p+'%</span><div><div class="row sb"><h3>«'+l.n+'»</h3>'+(L&&L.lv===l?'<span class="chip lv">Вы здесь</span>':'')+'</div><p class="small muted">'+(l.from?'От '+money(l.from)+' за год':'С первого заказа')+(l.p===10?'. Плюс личный менеджер':'')+'</p></div></li>').join('')+'</ul>'+
+ '<div class="card stack"><h3>Как это работает</h3><ul class="list small"><li>Бонусы начисляем, когда заказ доставлен: процент от суммы заказа.</li><li>Уровень считаем по сумме заказов за последние 12 месяцев.</li><li>1 бонус = 1 ₽. Бонусами можно оплатить до '+BMAX+'% заказа, списываем при получении.</li></ul><p class="small muted">Пример: семья заказала на 8 300 ₽ за год и получает уже 7%.</p></div>'+
+ (L&&(L.acc.length||L.used.length)?'<div class="card stack"><h3>Начисления и списания</h3><ul class="hist">'+[...L.acc.map(a=>({t:dlvAt(a.o),h:'<li><span>Заказ №'+a.o.id+' · '+a.l.p+'%</span><b>+'+rub(a.b)+'</b></li>'})),...L.used.map(x=>({t:x.o.created,h:'<li><span>Оплата заказа №'+x.o.id+'</span><b>−'+rub(x.u)+'</b></li>'}))].sort((a,b)=>b.t-a.t).map(x=>x.h).join('')+'</ul></div>':'');
+};
+AFTER.bonus=barIn;
 VIEWS.pikap=()=>{
  const n=cartCount();
  let h='<h1 class="h1">Пикап</h1><p class="muted">Заберём всё за один приезд и привезём обратно чистым.</p>';
@@ -805,7 +888,7 @@ VIEWS.pikap=()=>{
   '<ul class="lines">'+its.map((it,i)=>'<li>'+itemLine(k,it,i)+'</li>').join('')+'</ul>'+
   '<div class="grid2"><button class="btn out" data-act="svc" data-k="'+k+'">Изменить</button><button class="btn dng" data-act="cartRm" data-k="'+k+'">Убрать</button></div></div>'}).join('')+'</div>'+
  '<button class="addpos" data-act="tab" data-v="home">'+ic('plus')+'Добавить другую услугу</button>'+
- '<div class="card stack"><div class="row sb"><h3>Итого</h3><b class="sumbig">≈ '+money(cartTotal())+'</b></div><p class="xs muted">Предварительно. Точную сумму назовём после осмотра вещей.</p></div>';
+ '<div class="card stack"><div class="row sb"><h3>Итого</h3><b class="sumbig">≈ '+money(cartTotal())+'</b></div><p class="xs muted">Предварительно. Точную сумму назовём после осмотра вещей.</p>'+earnLine(cartTotal())+'</div>';
 };
 CTA.pikap=()=>cartCount()?'<button class="btn pri" data-act="checkout">'+ic('truck')+'Оформить вывоз</button>':'';
 function cartBrief(){return '<div class="card stack"><div class="row sb"><h3>В пикапе</h3><button class="textbtn" style="width:auto" data-act="tab" data-v="pikap">Изменить</button></div>'+
@@ -815,7 +898,7 @@ VIEWS.service=()=>{
  if(k!=='facade'&&ed.k!==k)edInit(k);
  return backBtn()+'<div class="head-ico"><span class="ico">'+ic(s.icon)+'</span><h1 class="h1">'+s.title+'</h1></div>'+
  '<div class="stack"><p class="muted">'+s.short+'</p>'+
- (s.cardPrice?priceLine(s.cardPrice):'<p class="small muted">Рассчитаем после выезда</p>')+'</div>'+
+ (s.cardPrice?priceLine(s.cardPrice):'<p class="small muted">Рассчитаем после выезда</p>')+'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Вернём '+myL().lv.p+'% бонусами после доставки':'Вернём от 5% бонусами после доставки')+'</span></div></div>'+
  (k==='facade'?calcHTML(k):'<div class="card"><h2 class="h2">'+EDH[k]+'</h2><div id="ed">'+edHTML()+'</div></div>')+
 
 
@@ -840,11 +923,13 @@ AFTER.service=()=>{
 /* форма */
 function formTotal(){
  const k=draft.service;if(!k)return '';
- if(k==='pickup')return '<div class="stack tight">'+priceLine('Примерно: '+money(cartTotal()),'md')+'<p class="xs muted">Итог можем уточнить после осмотра вещей.</p></div>';
+ if(k==='pickup'){const t=cartTotal(),u=draft.useBonus?bonusCan(t):0;
+  const sw=S.user?(myL().bal>0?'<button class="bswitch" data-act="useB" role="switch" aria-checked="'+!!draft.useBonus+'"><span class="grow"><b>Оплатить бонусами</b><span class="small muted">'+(u?'Спишем '+bns(u)+' при получении заказа':'Есть '+bns(myL().bal)+', можно оплатить до '+BMAX+'% заказа')+'</span></span><span class="knob" aria-hidden="true"></span></button>':''):'<p class="xs muted">Бонусами можно оплатить до '+BMAX+'% заказа. Войдите, чтобы ими воспользоваться.</p>';
+  return '<div class="stack tight">'+priceLine('Примерно: '+money(t),'md')+'<p class="xs muted">Итог можем уточнить после осмотра вещей.</p></div>'+sw+(u?'<div class="row sb"><span>К оплате при получении</span><b>≈ '+money(t-u)+'</b></div>':'')+earnLine(t-u)}
  if(k==='facade')return '<p>Рассчитаем после выезда и оценки по фото.</p>';
  const q=parseFloat(String(draft.qty).replace(',','.'));
  if(!(q>0))return '<span class="muted">Укажите количество, и мы покажем примерную цену.</span>';
- return '<div class="stack tight">'+priceLine('Примерно: '+money(q*unitPrice(k)),'md')+'<p class="xs muted">'+nf.format(q)+' '+SERV[k].unit+' × '+rub(unitPrice(k))+' ₽. Итог можем уточнить после осмотра вещей.</p></div>';
+ return '<div class="stack tight">'+priceLine('Примерно: '+money(q*unitPrice(k)),'md')+'<p class="xs muted">'+nf.format(q)+' '+SERV[k].unit+' × '+rub(unitPrice(k))+' ₽. Итог можем уточнить после осмотра вещей.</p>'+earnLine(q*unitPrice(k))+'</div>';
 }
 const fieldErr=n=>errs[n]?'<span class="error" id="e_'+n+'" role="alert">'+esc(errs[n])+'</span>':'';
 VIEWS.form=()=>{
@@ -909,13 +994,13 @@ function send(){
   const d=draft,q=parseFloat(String(d.qty).replace(',','.'));
   const o={id,mine:true,name:d.name.trim(),phone:d.phone.trim(),service:d.service,qty:isNaN(q)?null:q,address:d.address.trim(),date:d.date||addDays(1),time:d.time||SLOTS[0],comment:[d.desc&&('Здание: '+d.desc),d.comment].filter(Boolean).join('. '),
    photos:d.photos.map((p,i)=>p.thumb||photoPh(i,'Фото '+(i+1))),price:d.service==='facade'||isNaN(q)?null:priceOf(d.service,q),status:'accepted',history:[{s:'accepted',t:Date.now()}],staff:'',note:'',created:Date.now()};
-  if(d.service==='pickup'){o.items=cartItems();o.price=itemsTotal(o.items);o.qty=null;S.cart={}}
+  if(d.service==='pickup'){o.items=cartItems();o.price=itemsTotal(o.items);o.qty=null;S.cart={};if(d.useBonus){const u=bonusCan(o.price);if(u)o.bonusUse=u}}
   S.orders.unshift(o);save();
   b.disabled=false;b.className='btn ok';b.innerHTML=ic('check')+' Заявка отправлена';
   setTimeout(()=>{draft=newDraft();errs={};stack=[];view={name:'done',id};render()},reduce()?50:600);
  },reduce()?50:700);
 }
-VIEWS.done=()=>{const o=byId(view.id);return '<div class="stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="stack center"><h1 class="h1">Заявка принята</h1><p class="muted">Мы получили вашу заявку №'+o.id+'. Свяжемся с вами, чтобы уточнить детали. Статус можно смотреть в разделе «Мои заказы».</p></div><div class="stack"><button class="btn pri" data-act="open" data-id="'+o.id+'">Смотреть заказ</button><button class="btn out" data-act="tab" data-v="home">На главную</button></div>'};
+VIEWS.done=()=>{const o=byId(view.id);return '<div class="stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="stack center"><h1 class="h1">Заявка принята</h1><p class="muted">Мы получили вашу заявку №'+o.id+'. Свяжемся с вами, чтобы уточнить детали. Статус можно смотреть в разделе «Мои заказы».</p>'+earnLine(o.price-(o.bonusUse||0))+'</div><div class="stack"><button class="btn pri" data-act="open" data-id="'+o.id+'">Смотреть заказ</button><button class="btn out" data-act="tab" data-v="home">На главную</button></div>'};
 
 /* вход */
 let loginStep=0,loginMail='';
@@ -932,7 +1017,7 @@ VIEWS.orders=()=>{
  if(!mine.length)return h+empty('Заказов пока нет','Когда вы оставите заявку, она появится здесь.','Выбрать услугу','home');
  const list=mine.filter(o=>ordersFilter==='active'?!['delivered','cancelled'].includes(o.status):['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created);
  if(!list.length)return h+empty(ordersFilter==='active'?'Активных заказов нет':'Завершённых заказов нет','Здесь пока пусто.');
- return h+'<div class="cards">'+list.map(o=>'<button class="card tap ocard" data-act="open" data-id="'+o.id+'"><span class="row sb"><b>Заказ №'+o.id+'</b>'+chipS(o.status)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">Создан '+fmtDate(iso(o.created))+(o.price!=null?', '+money(o.price):'')+'</span></button>').join('')+'</div>';
+ return h+'<div class="cards">'+list.map(o=>'<button class="card tap ocard" data-act="open" data-id="'+o.id+'"><span class="row sb"><b>Заказ №'+o.id+'</b>'+chipS(o.status)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">Создан '+fmtDate(iso(o.created))+(o.price!=null?', '+money(o.price):'')+(o.status==='delivered'&&bonusFor(o)?' · +'+bns(bonusFor(o)):'')+'</span></button>').join('')+'</div>';
 };
 AFTER.orders=()=>{if(!ordersLoaded){setTimeout(()=>{ordersLoaded=true;if(view.name==='orders')render()},reduce()?0:450)}};
 function tracker(o){
@@ -954,14 +1039,15 @@ VIEWS.order=()=>{
  '<div class="card">'+tracker(o)+'</div>'+
  (o.status==='cancelled'?'<button class="btn pri" data-act="reorder" data-id="'+o.id+'">Оформить заново</button>':'')+
  '<div class="card"><dl class="kv">'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Ваш комментарий</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'</dl></div>'+
- '<div class="card stack"><h3>Предварительная цена</h3>'+(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">Рассчитаем после выезда</p>')+'</div>'+
+ '<div class="card stack"><h3>Предварительная цена</h3>'+(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">Рассчитаем после выезда</p>')+(o.status!=='cancelled'?payLines(o):'')+(o.status==='delivered'&&bonusFor(o)?'<div class="bonus-line">'+ic('gift')+'<span>Начислено '+bns(bonusFor(o))+'</span></div>':o.status!=='cancelled'?earnLine(o.price-(o.bonusUse||0)):(o.bonusUse?'<p class="xs muted">Бонусы вернулись на счёт.</p>':''))+'</div>'+
  '<div class="card stack"><h3>Фото</h3>'+(o.photos.length?'<div class="photos">'+o.photos.map((p,i)=>'<button class="ph view" data-act="lightbox" data-src="'+i+'" data-id="'+o.id+'" aria-label="Открыть фото '+(i+1)+'"><img src="'+p+'" alt="Фото '+(i+1)+'"></button>').join('')+'</div>':'<p class="muted small">Фото не добавлены</p>')+'</div>'+
  '<p class="xs muted">Статус меняет оператор.'+(['accepted','cancelled'].includes(o.status)?'':' Отменить заказ в этом статусе нельзя.')+' Вопросы по заказу: +7 900 000-00-00</p>'+
  (o.status==='accepted'?'<button class="btn dng" data-act="cancelAsk" data-id="'+o.id+'">Отменить заказ</button>':'');
 
 };
+AFTER.profile=barIn;
 VIEWS.profile=()=>'<h1 class="h1">Профиль</h1>'+
- (S.user?'<div class="card stack"><div class="row"><span class="ico">'+ic('user')+'</span><div><b>Аминат Р.</b><div class="small muted">'+esc(S.user.email)+'</div></div></div><button class="btn out" data-act="logout">Выйти</button></div>':'<div class="card stack"><p class="muted">Вы не вошли. Каталог можно смотреть без входа, вход нужен при отправке заявки.</p><button class="btn pri" data-act="goLogin">Вход</button></div>')+
+ (S.user?'<div class="card stack"><div class="row"><span class="ico">'+ic('user')+'</span><div><b>Аминат Р.</b><div class="small muted">'+esc(S.user.email)+'</div></div></div><button class="btn out" data-act="logout">Выйти</button></div>'+lvlCard(myL(),true):'<div class="card stack"><p class="muted">Вы не вошли. Каталог можно смотреть без входа, вход нужен при отправке заявки.</p><button class="btn pri" data-act="goLogin">Вход</button></div>'+promo())+
  '<div class="card stack"><h3>Связаться с нами</h3><p class="small">Телефон и WhatsApp: +7 900 000-00-00</p></div>'+
  '<div class="card stack"><h3>Политика конфиденциальности</h3><p class="small">Адрес, телефон и фото используются только для выполнения заказа.</p></div>'+
  '<div class="stack"><button class="btn out" data-act="mode" data-v="admin">Режим владельца</button><button class="btn sec" data-act="reset">Сбросить данные</button></div>';
@@ -1002,9 +1088,9 @@ VIEWS.acard=()=>{
  const o=byId(view.id);if(!o)return backBtn()+empty('Заказ не найден','Такого заказа нет.');
  const idx=FLOW.findIndex(f=>f.c===o.status),next=o.status==='cancelled'||idx>=4?null:FLOW[idx+1];
  return backBtn()+'<div class="head"><h1 class="h1">Заявка №'+o.id+'</h1>'+chipS(o.status)+'</div>'+
- '<div class="card"><dl class="kv"><div><dt>Клиент</dt><dd>'+esc(o.name)+'</dd></div><div><dt>Телефон</dt><dd><a href="tel:'+esc(o.phone.replace(/[^+\d]/g,''))+'" class="tel">'+esc(o.phone)+'</a></dd></div>'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Комментарий клиента</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'<div class="wide"><dt>Исполнитель</dt><dd>'+(o.staff?esc(o.staff):'Не назначен')+'</dd></div></dl></div>'+
+ '<div class="card"><dl class="kv"><div><dt>Клиент</dt><dd>'+esc(o.name)+'</dd></div><div><dt>Уровень</dt><dd>'+(L=>'«'+L.lv.n+'» · '+L.lv.p+'%'+(L.lv.p===10?'<br><span class="small muted">Личный менеджер</span>':''))(clientL(o))+'</dd></div><div><dt>Телефон</dt><dd><a href="tel:'+esc(o.phone.replace(/[^+\d]/g,''))+'" class="tel">'+esc(o.phone)+'</a></dd></div>'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Комментарий клиента</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'<div class="wide"><dt>Исполнитель</dt><dd>'+(o.staff?esc(o.staff):'Не назначен')+'</dd></div></dl></div>'+
  '<div class="card stack"><h3>Фото клиента</h3>'+(o.photos.length?'<div class="photos">'+o.photos.map((p,i)=>'<button class="ph view" data-act="lightbox" data-src="'+i+'" data-id="'+o.id+'" aria-label="Открыть фото '+(i+1)+'"><img src="'+p+'" alt="Фото '+(i+1)+'"></button>').join('')+'</div>':'<p class="muted small">Клиент не приложил фото.</p>')+'</div>'+
- '<div class="card stack"><h3>Предварительная цена</h3>'+(o.service==='facade'?'<p class="small muted">Цена после выезда. Введите итог вручную.</p><div class="sum-in"><div class="inp-wrap"><input class="inp" id="aprice" inputmode="numeric" placeholder="Сумма" aria-label="Итоговая цена, ₽" value="'+(o.price!=null?o.price:'')+'"><span aria-hidden="true">₽</span></div>'+demoChip()+'</div>':(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">—</p>'))+'</div>'+
+ '<div class="card stack"><h3>Предварительная цена</h3>'+(o.service==='facade'?'<p class="small muted">Цена после выезда. Введите итог вручную.</p><div class="sum-in"><div class="inp-wrap"><input class="inp" id="aprice" inputmode="numeric" placeholder="Сумма" aria-label="Итоговая цена, ₽" value="'+(o.price!=null?o.price:'')+'"><span aria-hidden="true">₽</span></div>'+demoChip()+'</div>':(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">—</p>'))+(o.status!=='cancelled'&&o.bonusUse?payLines(o)+'<p class="xs muted">Клиент оплачивает бонусами. Возьмите при получении только сумму «к оплате».</p>':'')+'</div>'+
  '<div class="card stack"><h3>Сменить статус</h3>'+
  (o.status==='cancelled'?'<p class="small muted">Заказ отменён'+(o.cancelReason?': '+esc(o.cancelReason):'')+'.</p>':
    (next?'<button class="btn pri" id="nextBtn" data-act="astatus" data-id="'+o.id+'" data-v="'+next.c+'">'+ic(next.i)+' '+next.n+'</button>':'<p class="small muted">Заказ доставлен. Следующих шагов нет.</p>')+
@@ -1018,8 +1104,9 @@ function applyStatus(id,c,reason,btn){
  const o=byId(id);
  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span>'}
  setTimeout(()=>{
-  o.status=c;const h={s:c,t:Date.now()};if(c==='cancelled'){o.cancelReason=reason;h.note=reason}
-  o.history.push(h);save();closeSheet();render();toast('Статус изменён: '+stOf(c).n);
+  const L0=clientL(o).lv;o.status=c;const h={s:c,t:Date.now()};if(c==='cancelled'){o.cancelReason=reason;h.note=reason}
+  o.history.push(h);save();closeSheet();render();
+  let t='Статус изменён: '+stOf(c).n;if(c==='delivered'){const b=bonusFor(o),L1=clientL(o).lv;if(b)t+='. Клиенту начислено '+bns(b);if(L1!==L0)t+='. Новый уровень «'+L1.n+'»'}toast(t);
  },reduce()?0:350);
 }
 VIEWS.aday=()=>{
@@ -1066,6 +1153,8 @@ const ACT={
  mail:()=>{const v=($('#f_mail').value||'').trim();if(!/^\S+@\S+\.\S+$/.test(v)){errs.mail='Проверьте адрес почты.';loginMail=v;render();return}errs={};loginMail=v;loginStep=1;render()},
  cont:()=>afterLogin(),
  goLogin:()=>go('login'),
+ bonus:()=>go('bonus'),
+ useB:()=>{draft.useBonus=!draft.useBonus;$('#totalIn').innerHTML=formTotal()},
  logout:()=>{S.user=null;save();render()},
  open:b=>{if(view.name==='done'||view.name==='home'){stack=[{name:view.name==='done'?'orders':'home'}]}go('order',{id:+b.dataset.id})},
  ofilter:b=>{ordersFilter=b.dataset.v;render()},
