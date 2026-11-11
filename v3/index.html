@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wimcleaning</title>
+<meta name="theme-color" content="#2A45D4" id="themeColor">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wimcleaning">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;600&display=swap">
+<style>
+/* Раскладка: рамка телефона по центру (на телефоне на весь экран): полоса «Прототип», экран с прокруткой, нижняя панель. */
+:root{
+  /* «Синька и кайма»: синька — средство для подсинивания белья; охра — нить ковровой каймы */
+  --ink:#161C3D; --primary:#2A45D4; --primary-dark:#1B2B8C; --on-primary:#FFFFFF;
+  --accent:var(--primary);
+  --bg:#F2F5FA; --surface:#FFFFFF; --mist:#E4EAFB; --line:#DCE2EE; --muted:#545E7E;
+  --ochre:#C99A2E; --ochre-ink:#6B4C00; --ochre-bg:#FBF2DC;
+  --ok:#1F7A4D; --warn:#8A5A00; --danger:#B4232F; --demo:var(--ochre-ink); --demo-bg:var(--ochre-bg);
+  --stage:#DCE3F0;
+  /* шкала отступов (design.md §5.1): других значений нет */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --font:'Golos Text',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --display:'Unbounded','Golos Text',system-ui,sans-serif;
+  --kaima:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='14' viewBox='0 0 24 14'%3E%3Cpath d='M12 1l6 6-6 6-6-6z' fill='%23C99A2E'/%3E%3Cpath d='M12 4.5l2.5 2.5-2.5 2.5-2.5-2.5z' fill='%23161C3D'/%3E%3Cpath d='M0 7l3-3 3 3-3 3zM24 7l-3-3-3 3 3 3z' fill='%23F2F5FA'/%3E%3C/svg%3E");
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+/* полосы прокрутки скрыты, прокрутка жестом работает */
+*{scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{display:none;width:0;height:0}
+body{background:var(--stage);color:var(--ink);font:400 16px/1.5 var(--font);-webkit-text-size-adjust:100%;overflow-x:hidden}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{text-wrap:balance;font-weight:600}
+.h1,.h2,.big{font-family:var(--display);letter-spacing:-.01em}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:8px}
+.stage{height:100%;height:100dvh;display:grid;place-items:center}
+.phone{width:100%;height:100%;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;min-width:0}
+@media(min-width:600px){
+  .stage{padding:16px}
+  .phone{width:392px;height:min(860px,100%);border-radius:40px;border:8px solid var(--ink);box-shadow:0 24px 60px rgba(22,28,61,.25)}
+}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* полоса прототипа */
+.proto{flex:none;height:env(safe-area-inset-top,0px);background:var(--bg)}
+.proto[data-tone=hero]{background:var(--primary)}
+.proto[data-tone=admin]{background:var(--ink)}
+.ahead .exit{margin-left:auto;color:#fff;font-size:14px;line-height:20px;font-weight:600;min-height:44px;padding:0 var(--s3);border-radius:99px;background:rgba(255,255,255,.14)}
+
+.ahead{background:var(--ink);color:#fff;flex:none;height:52px;display:flex;align-items:center;gap:var(--s3);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.ahead b{font-size:16px;line-height:22px;font-weight:600}
+
+.screen{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:var(--s4);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.screen>.in{display:grid;gap:var(--s5);animation:slide .22s ease-out both;align-content:start;min-width:0}
+.screen>.in>*{min-width:0}
+/* заголовок экрана: «Назад» → 8 → заголовок → 16 → первый блок */
+.in>.back{margin-bottom:calc(var(--s2) - var(--s5))}
+.in>.h1,.in>.head{margin-bottom:calc(var(--s4) - var(--s5))}
+.head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s3)}
+.head .h1{min-width:0}
+.head .chip{flex:none}
+.head-ico{display:flex;align-items:center;gap:var(--s3)}
+/* закреплённая главная кнопка (§5.5) */
+.cta-bar{flex:none;background:var(--surface);border-top:1px solid var(--line);padding-block:var(--s3);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.cta-bar .btn{min-height:48px}
+.textbtn{min-height:44px;width:100%;color:var(--muted);font-weight:500;font-size:14px;line-height:20px;text-align:center}
+@keyframes slide{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+
+.tabbar{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--surface);border-top:1px solid var(--line);padding:4px 8px calc(4px + env(safe-area-inset-bottom,0px))}
+.tabbar button{display:grid;justify-items:center;gap:2px;font-size:12px;font-weight:500;color:var(--muted);min-height:52px;padding:6px 2px;border-radius:14px}
+.tabbar button[aria-current=page]{color:var(--primary);font-weight:600}
+.tabbar button[aria-current=page] svg{stroke-width:2.25}
+.tabbar svg{width:24px;height:24px}
+.tabbar button{position:relative}
+.tabbar .badge{position:absolute;top:2px;left:calc(50% + 4px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--primary);color:#fff;font-size:11px;line-height:18px;font-weight:700;font-variant-numeric:tabular-nums}
+/* Пикап: позиции на странице услуги */
+.pos{display:grid;gap:var(--s3);padding:var(--s4) 0;border-top:1px solid var(--line)}
+.pos:first-child{border-top:0;padding-top:var(--s2)}
+.pos-h{display:flex;align-items:center;justify-content:space-between;min-height:40px}
+.iconbtn.sm{width:40px;height:40px;border-radius:12px;background:transparent;color:var(--muted)}
+.iconbtn.sm svg{width:20px;height:20px}
+.dims{display:grid;grid-template-columns:1fr 12px 1fr 72px;gap:var(--s2);align-items:end}
+.dim{display:grid;gap:4px;min-width:0}
+.dim label,.area span{font-size:12px;line-height:16px;color:var(--muted)}
+.dim .inp{text-align:center;font-weight:600;font-variant-numeric:tabular-nums;padding:10px 4px}
+.dims .x{padding-bottom:13px;color:var(--muted);text-align:center}
+.area{display:grid;gap:4px;justify-items:end;min-width:0}
+.area b{min-height:48px;display:flex;align-items:center;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pos-f{display:flex;justify-content:space-between;align-items:center;gap:var(--s2);min-height:20px}
+.pos-f .err{color:var(--danger);font-size:12px;line-height:16px}
+.pos-f b{font-variant-numeric:tabular-nums;white-space:nowrap;margin-left:auto}
+.pos .inp.bad{border-color:var(--danger)}
+.seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.seg3 .pick{padding:0 4px}
+.addpos{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;width:100%;border:1.5px dashed var(--primary);border-radius:14px;color:var(--primary);font-weight:600}
+.addpos svg{width:20px;height:20px}
+.ed-total{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--line)}
+.ed-total b,.sumbig{font-size:20px;line-height:24px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.grp-h{display:flex;gap:var(--s3);align-items:center}
+.grow{flex:1;min-width:0}
+.nowrap{white-space:nowrap}
+.lines{margin:0;padding-left:18px;display:grid;gap:2px;color:var(--muted);font-size:14px;line-height:20px}
+.brief{display:grid;gap:4px}
+
+svg.ic{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* знак */
+.logo{display:block;width:156px;height:auto;aspect-ratio:778/320;color:var(--ink);fill:currentColor;flex:none}
+.hero .logo{color:#fff}
+.ahead .logo{width:72px;color:#fff}
+/* шапка главной: единственное яркое место; кайма по нижнему краю */
+.hero{margin:calc(-1 * var(--s4)) calc(-1 * var(--s4)) 0;padding:20px var(--s4) 28px;background:var(--primary);color:var(--on-primary);display:grid;gap:var(--s4);position:relative}
+.hero{text-align:center;justify-items:center}
+.hero .brand{display:grid;gap:var(--s3);justify-items:center}
+.hero .lead{display:grid;gap:var(--s2);justify-items:center;max-width:32ch}
+/* синее продолжение шапки вверх: видно только при оттягивании экрана вниз */
+.hero::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:100vh;background:var(--primary);pointer-events:none}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-7px;height:14px;background:var(--kaima) repeat-x center/24px 14px}
+.hero .muted{color:#D9DFFB}
+.hero .h1{font-size:24px;line-height:30px}
+.hero :focus-visible{outline-color:#fff}
+/* призовая карусель GRASS в шапке (design.md «Версия 2»); всё под префиксом .lot */
+.lot{width:100%;max-width:400px;display:grid;justify-items:center;margin-bottom:var(--s2)}
+.lot-h{font:600 22px/28px var(--display);letter-spacing:-.01em;color:#fff}
+.lot-sub{margin-top:var(--s2);max-width:30ch}
+.lot-scene{--W:343px;position:relative;width:100%;height:calc(var(--W) * .64 + 6px);margin-top:var(--s3);
+  --R:calc(var(--W) * .32);--yc:calc(var(--W) * .48 + 6px);/* +6px = LOT_OFF в JS */--brx:calc(var(--W) * .42);--bry:calc(var(--W) * .10);--side:calc(var(--W) * .05);--hc:calc(var(--W) * .48)}
+.lot-scene>*{pointer-events:none}
+.lot-glow{position:absolute;left:50%;top:calc(var(--yc) + var(--side) + var(--bry) - var(--W)*.03);width:calc(var(--brx)*2.3);height:calc(var(--W)*.12);transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(10,18,84,.42),rgba(10,18,84,.18) 55%,rgba(10,18,84,0))}
+.lot-halo{position:absolute;left:50%;top:calc(var(--yc) - var(--bry)*1.6);width:calc(var(--brx)*2.5);height:calc(var(--bry)*2 + var(--side) + var(--bry)*1.6 + var(--W)*.03);transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(148,190,255,.40),rgba(148,190,255,.14) 60%,rgba(148,190,255,0))}
+.lot-side{position:absolute;left:50%;top:var(--yc);width:calc(var(--brx)*2);height:calc(var(--side) + var(--bry));transform:translateX(-50%);
+  border-radius:0 0 var(--brx) var(--brx) / 0 0 var(--bry) var(--bry);
+  background:linear-gradient(180deg,rgba(255,255,255,0) 55%,rgba(196,216,255,.55) 100%),linear-gradient(90deg,#A9BCEF 0%,#DCE5FC 14%,#F7F9FF 38%,#FFFFFF 50%,#EDF2FE 66%,#C8D5F7 88%,#9FB3EB 100%);
+  box-shadow:inset 0 -2px 0 rgba(255,255,255,.75)}
+.lot-top{position:absolute;left:50%;top:calc(var(--yc) - var(--bry));width:calc(var(--brx)*2);height:calc(var(--bry)*2);transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse 70% 80% at 50% 60%,#FFFFFF 0%,#F6F8FF 50%,#E3EAFC 82%,#CFDBF8 100%);
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.95),inset 0 -3px 6px rgba(120,150,230,.25),0 0 0 1px rgba(205,222,255,.55)}
+.lot-top::after{content:"";position:absolute;inset:14% 9%;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(170,195,245,.45)}
+.lot-spot{position:absolute;left:50%;top:calc(var(--yc) + var(--W)*.077 - var(--W)*.05);width:calc(var(--W)*.36);height:calc(var(--W)*.10);transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(150,190,255,.60),rgba(150,190,255,.26) 55%,rgba(150,190,255,0));opacity:0;transition:opacity .2s ease-out}
+.lot-beam{position:absolute;left:50%;bottom:calc(100% - var(--yc) - var(--W)*.077);width:calc(var(--W)*.42);height:calc(var(--W)*.50);transform:translateX(-50%);
+  background:radial-gradient(ellipse 50% 100% at 50% 100%,rgba(205,224,255,.38),rgba(205,224,255,0) 100%);opacity:0;transition:opacity .2s ease-out}
+.lot-ring{position:absolute;inset:0}
+.lot-item{position:absolute;left:50%;top:0;width:0;height:0;will-change:transform,opacity}
+.lot-item img{position:absolute;left:0;bottom:0;height:calc(var(--hc) * var(--k));width:auto;max-width:none;transform:translate(calc(-50% + var(--dx)*1%),calc(var(--drop)*1%));
+  -webkit-user-drag:none;user-select:none;transition:transform .32s ease-out}
+.lot-item i{position:absolute;left:0;bottom:0;width:calc(var(--hc) * var(--sw));height:calc(var(--hc) * var(--sw) * .24);transform:translate(-50%,45%);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(18,30,110,.50),rgba(18,30,110,.20) 60%,rgba(18,30,110,0))}
+.lot-pointer{position:absolute;left:50%;top:4px;width:16px;height:11px;transform:translateX(-50%);z-index:300;filter:drop-shadow(0 2px 2px rgba(10,18,80,.35))}
+.lot-pointer svg{display:block;width:16px;height:11px}
+.lot[data-state=result] .lot-spot,.lot[data-state=result] .lot-beam{opacity:1;transition-duration:.45s}
+.lot[data-state=result] .lot-item.win img{transform:translate(calc(-50% + var(--dx)*1%),calc(var(--drop)*1%)) scale(1.04)}
+.lot[data-state=loading] .lot-ring,.lot[data-state=error] .lot-ring{visibility:hidden}
+.lot-cap{min-height:72px;margin-top:var(--s2);display:grid;align-content:start;gap:var(--s1);max-width:28ch}
+.lot-kick{font:500 14px/20px var(--font);color:#D9DFFB}
+.lot-name{font:600 18px/24px var(--font);color:#fff;overflow-wrap:anywhere}
+.lot[data-state=spinning] .lot-name{color:#D9DFFB;font-weight:500}
+.lot:not([data-state=result]) .lot-kick{visibility:hidden}
+.lot-btn{margin-top:var(--s3);width:100%;max-width:320px;min-height:56px;padding:var(--s3) var(--s5);border-radius:14px;background:#fff;color:var(--primary);font:600 17px/24px var(--font);transition:background-color .1s,transform .1s}
+.lot-btn:active{transform:scale(.97);background:var(--mist)}
+.hero .lot-btn:focus-visible{outline:3px solid #fff;outline-offset:3px;border-radius:14px}
+.lot-btn[aria-disabled=true]{background:#C9D1F5;color:var(--primary-dark);cursor:default;transform:none}
+@media (prefers-reduced-motion:reduce){.lot-spot,.lot-beam,.lot-item img,.lot[data-state=result] .lot-spot,.lot[data-state=result] .lot-beam{transition:none}.lot[data-state=result] .lot-item.win img{transform:translate(calc(-50% + var(--dx)*1%),calc(var(--drop)*1%))}}
+
+/* элементы */
+.card{background:var(--surface);border-radius:20px;padding:var(--s4);box-shadow:0 0 0 1px var(--line) inset}
+.card>:first-child{margin-top:0}
+.card.tap{display:block;width:100%;text-align:left}
+.card.tap.ocard,.card.tap.active-order{display:grid}
+.stack{display:grid;gap:var(--s2)}
+.card.stack{gap:var(--s3)}
+.card.stack.roomy{gap:var(--s4)}
+.stack.tight{gap:var(--s1)}
+.card.stack>.after-btns{margin-top:calc(var(--s2) - var(--s3))}
+.grid2 .btn{min-height:44px}
+.center{text-align:center}
+.row{display:flex;align-items:center;gap:var(--s3)}
+.row.sb{justify-content:space-between}
+.muted{color:var(--muted)}
+.small{font-size:14px;line-height:20px}
+.xs{font-size:12px;line-height:16px}
+.h1{font-size:24px;line-height:30px}
+.h2{font-size:18px;line-height:24px}
+h3{font-size:16px;line-height:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 20px;border-radius:14px;font-weight:600;transition:transform .1s;width:100%;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn.pri{background:var(--primary);color:var(--on-primary)}
+.btn.pri:active{background:var(--primary-dark)}
+.btn.sec{background:var(--mist);color:var(--primary-dark)}
+.btn.out{background:var(--surface);box-shadow:0 0 0 1.5px var(--line) inset}
+.btn.dng{background:var(--surface);color:var(--danger);box-shadow:0 0 0 1.5px var(--danger) inset}
+.btn.dark{background:var(--ink);color:#fff}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.btn.ok{background:var(--ok);color:#fff}
+.btn.ok svg{stroke-width:3}
+.iconbtn{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--mist);color:var(--primary-dark)}
+.back{display:inline-flex;align-items:center;gap:var(--s1);color:var(--primary);font-weight:600;min-height:44px;margin-top:calc(-1 * var(--s2));margin-left:calc(-1 * var(--s2));padding:0 var(--s2);justify-self:start}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:600;padding:var(--s1) var(--s3);border-radius:99px;white-space:nowrap;background:var(--mist);color:var(--primary-dark);flex:none}
+.chip.demo{background:var(--demo-bg);color:var(--demo);box-shadow:0 0 0 1px rgba(201,154,46,.55) inset;border-radius:4px 99px 99px 4px;padding:2px var(--s2);height:20px}
+/* цена и бирка ДЕМО — одна строка, бирка не переносится (§5.3) */
+.price-line{display:flex;align-items:center;gap:var(--s2);flex-wrap:nowrap;white-space:nowrap}
+.price-line b{font-weight:600}
+.price-line.md{font-size:20px;line-height:24px}
+.chip.demo::before{content:"";width:5px;height:5px;border-radius:99px;background:var(--surface);box-shadow:0 0 0 1px var(--ochre)}
+.chip.s-accepted{background:#E7EAF2;color:#2E3655}
+.chip.s-picked_up{background:#DDF0F4;color:#0F5466}
+.chip.s-in_progress{background:var(--mist);color:var(--primary-dark)}
+.chip.s-ready{background:#DFF2E6;color:#1B6B3F}
+.chip.s-delivered{background:var(--ok);color:#fff}
+.chip.s-cancelled{background:#FBE3E3;color:#A11D2B}
+.ico{width:48px;height:48px;border-radius:14px;background:var(--mist);color:var(--primary);display:grid;place-items:center;flex:none}
+.ico svg{width:26px;height:26px}
+.notice{background:var(--demo-bg);color:var(--ochre-ink);border-radius:14px;padding:var(--s3);font-size:14px;line-height:20px}
+.notice.warn{background:#FFF1D6;color:#6B4200}
+.notice.err{background:#FBE3E3;color:#8E1A25}
+.list{margin:0;padding-left:20px;display:grid;gap:var(--s2)}
+.hr{height:1px;background:var(--line);border:0;margin:0}
+.sect{display:grid;gap:var(--s3)}
+
+/* формы */
+.form{display:grid;gap:var(--s4)}
+.field{display:grid;gap:0}
+.field>label,.field>.lbl{font-weight:600;font-size:14px;line-height:20px;margin-bottom:var(--s2)}
+.field>.lbl.row{display:flex;justify-content:space-between}
+.field>.lbl .cnt-ph{font-weight:500;color:var(--muted)}
+.field .help{font-size:12px;line-height:16px;color:var(--muted);margin-top:var(--s1)}
+.field .error{font-size:14px;line-height:20px;color:var(--danger);font-weight:500;margin-top:var(--s1)}
+.inp{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface)}
+.inp:focus{outline:3px solid rgba(42,69,212,.30);border-color:var(--primary)}
+.inp.bad{border-color:var(--danger)}
+textarea.inp{min-height:84px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.pick{min-height:44px;padding:0 var(--s3);border-radius:14px;border:1.5px solid var(--line);background:var(--surface);font-weight:500;font-size:14px;line-height:20px;white-space:nowrap;text-align:center}
+.pick[aria-pressed=true]{background:var(--primary);color:#fff;border-color:var(--primary)}
+/* ровная сетка чипов выбора: 2 колонки одинаковой ширины (§5.4) */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.grid2 .pick{min-height:48px;font-variant-numeric:tabular-nums}
+.grid2 .pick.s44{min-height:44px}
+.grid2 .full{grid-column:1/-1}
+/* сегмент-переключатель (§5.4а) */
+.segm{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--mist);border-radius:14px;padding:var(--s1);min-height:44px}
+.segm button{border-radius:10px;font-size:14px;line-height:20px;font-weight:500;color:var(--muted);min-height:36px;white-space:nowrap;padding:0 var(--s1)}
+.segm button[aria-pressed=true]{background:var(--surface);box-shadow:0 0 0 1px var(--line) inset;color:var(--ink);font-weight:600}
+/* горизонтальная лента чипов (админка) */
+.ribbon{display:flex;gap:var(--s2);margin:0 calc(-1 * var(--s4));padding:var(--s1) var(--s4);overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none}
+.ribbon::-webkit-scrollbar{display:none}
+.ribbon button{flex:none;scroll-snap-align:start;height:36px;padding:0 var(--s3);border-radius:99px;border:1.5px solid var(--line);background:var(--surface);font-size:14px;line-height:20px;font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;position:relative}
+.ribbon button::after{content:'';position:absolute;left:0;right:0;top:-4px;bottom:-4px}
+.ribbon button b{font-weight:600;font-variant-numeric:tabular-nums}
+.ribbon button[aria-pressed=true]{background:var(--primary);color:#fff;border-color:var(--primary)}
+.stepper{display:grid;grid-template-columns:48px 1fr 48px;gap:var(--s2);align-items:center}
+.stepper input{text-align:center;font-weight:600;font-size:20px;line-height:24px;font-variant-numeric:tabular-nums}
+.stepper .iconbtn{width:48px;height:48px}
+.stepper.mini{grid-template-columns:44px 32px 44px}
+.stepper.mini .iconbtn{width:44px;height:44px}
+.stepper .num{text-align:center;font-size:20px;line-height:24px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* каталог */
+.svc-list{background:var(--surface);border-radius:20px;box-shadow:0 0 0 1px var(--line) inset;display:grid;overflow:hidden}
+.svc{display:grid;grid-template-columns:48px 1fr 20px;gap:var(--s3);align-items:center;text-align:left;width:100%;padding:var(--s3) var(--s4);min-height:72px;transition:background-color .12s}
+.svc>span{display:grid;gap:2px;min-width:0}
+.svc+.svc{border-top:1px solid var(--line)}
+.svc:active{background:var(--mist)}
+.svc .chev{color:var(--muted);width:20px;height:20px}
+.svc h3{font-size:17px;line-height:22px}
+.svc .price-line{font-size:14px;line-height:20px;font-weight:600}
+.svc .note{font-size:14px;line-height:20px;color:var(--muted)}
+.active-order{display:grid;gap:0}
+.home-progress{display:block;height:6px;border-radius:9px;background:var(--mist);overflow:hidden;margin:10px 0 5px}
+.home-progress i{display:block;height:100%;border-radius:inherit;background:var(--primary)}
+.compact-promo{padding:10px 14px;border-radius:16px}
+.compact-promo .pp{min-width:70px;font-size:16px;line-height:20px}
+.quick-repeat{padding:4px 0}
+.quick-repeat .row{gap:12px}.quick-repeat .btn{flex:none;padding-inline:14px;min-height:44px}
+.active-order .row{margin-top:var(--s1)}
+.active-order .clamp{margin-top:var(--s2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* калькулятор */
+.calc{display:grid;gap:var(--s3);min-width:0}
+.calc>*{min-width:0}
+.calc .hint:empty{display:none}
+.calc .total{margin-top:var(--s1)}
+.calc .total p{margin-top:var(--s1)}
+.slider{display:grid}
+.slider>.row{margin-bottom:var(--s2)}
+.rug-wrap{border-radius:16px;background:var(--bg);padding:10px;box-shadow:0 0 0 1px var(--line) inset}
+.rug{display:block;width:100%;height:auto;border-radius:6px}
+.big{font-size:36px;line-height:40px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.area-read{display:flex;align-items:baseline;gap:6px;font-size:20px;line-height:24px;font-weight:600;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:44px;background:transparent;margin:0;touch-action:pan-y}
+input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:99px;background:linear-gradient(90deg,var(--primary) var(--p,0%),var(--mist) var(--p,0%))}
+input[type=range]::-moz-range-track{height:10px;border-radius:99px;background:var(--mist)}
+input[type=range]::-moz-range-progress{height:10px;border-radius:99px;background:var(--primary)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;margin-top:-10px;background:var(--primary);border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(22,28,61,.35)}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;background:var(--primary);border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(22,28,61,.35)}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+
+/* фото */
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ph{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--mist)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph button.rm{position:absolute;top:0;right:0;width:44px;height:44px;border-radius:99px;background:none;color:#fff;display:grid;place-items:center}
+.ph button.rm::before{content:'';position:absolute;inset:6px;border-radius:99px;background:rgba(22,28,61,.82)}
+.ph button.rm svg{width:16px;height:16px;position:relative}
+.ph.view{cursor:zoom-in}
+.addph{aspect-ratio:1;border:2px dashed var(--primary);border-radius:12px;color:var(--primary);display:grid;place-content:center;justify-items:center;gap:var(--s1);font-size:12px;line-height:16px;font-weight:600;background:var(--surface);text-align:center;padding:var(--s1)}
+.drop-hint{border:2px dashed var(--primary);border-radius:14px;height:96px;color:var(--primary);display:flex;align-items:center;justify-content:center;gap:var(--s2);font-weight:600;background:var(--surface);width:100%}
+
+/* трекер */
+.track{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.step{display:grid;grid-template-columns:28px 1fr;gap:var(--s3);position:relative;padding-bottom:var(--s4);min-height:44px}
+.step:last-child{padding-bottom:0}
+.dot{width:28px;height:28px;border-radius:99px;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;color:#fff;position:relative;z-index:1}
+.dot svg{width:16px;height:16px;stroke-width:3}
+.step::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--line)}
+.step:last-child::before{display:none}
+.step::after{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--primary);transform:scaleY(0);transform-origin:top}
+.step.done::after{transform:scaleY(1);animation:flow .3s ease-out}
+.step.done.last::after{transform:scaleY(0)}
+.step.done .dot{background:var(--primary);border-color:var(--primary)}
+.step.now .dot{background:var(--surface);border:3px solid var(--primary);color:var(--primary);animation:pop .3s ease-out}
+.step.now .dot::before{content:'';width:10px;height:10px;border-radius:99px;background:var(--primary)}
+.step.bad .dot{background:var(--danger);border-color:var(--danger)}
+.step.bad::before,.step.bad::after{display:none}
+.step.skip .dot{opacity:.5}
+.step h4{margin:0;font-size:16px;font-weight:600;line-height:28px}
+.step.future h4{color:var(--muted);font-weight:500}
+.step p{font-size:14px;line-height:20px;color:var(--muted);margin-top:2px}
+.step time{display:block;font-size:12px;line-height:16px;color:var(--muted);margin-top:2px}
+@keyframes flow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes pop{from{transform:scale(.6);opacity:.4}to{transform:none;opacity:1}}
+
+/* штамп «принято» */
+.stamp{width:96px;height:96px;border-radius:99px;background:var(--mist);display:grid;place-items:center;margin:var(--s2) auto 0}
+.stamp svg{width:56px;height:56px;fill:none;stroke:var(--primary);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.stamp path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .5s .15s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* скелетоны */
+.skel{height:84px;border-radius:20px;background:linear-gradient(90deg,#E6EBF4,#F4F6FB,#E6EBF4);background-size:200% 100%;animation:shimmer 1.8s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.spin{width:18px;height:18px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:99px;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* админка */
+.filters{display:grid}
+.filters>.inp{margin-bottom:var(--s3)}
+.filters>.ribbon+.ribbon{margin-top:var(--s2)}
+.filters>.segm{margin-top:var(--s2)}
+.filters>.stack{margin-top:var(--s2)}
+.listhead{display:grid;gap:var(--s2);margin-top:calc(var(--s4) - var(--s5))}
+.cards{display:grid;gap:var(--s3)}
+.ocard{display:grid;gap:0}
+.ocard .row{gap:var(--s2)}
+.ocard>.row+*{margin-top:var(--s1)}
+.ocard>.xs{margin-top:var(--s1)}
+/* подпись над значением, по левому краю (§5.7) */
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3) var(--s4);margin:0}
+.kv>div{min-width:0;display:grid;gap:var(--s1)}
+.kv>.wide{grid-column:1/-1}
+.kv dt{font-size:12px;line-height:16px;color:var(--muted)}
+.kv dd{margin:0;font-size:16px;line-height:22px;color:var(--ink);overflow-wrap:anywhere}
+.kv a.tel{display:inline-flex;align-items:center;min-height:44px;margin-block:-11px;color:var(--primary);font-weight:600}
+.sum-in{display:grid;grid-template-columns:1fr auto;gap:var(--s2);align-items:center}
+.sum-in .inp-wrap{position:relative}
+.sum-in .inp-wrap .inp{padding-right:36px}
+.sum-in .inp-wrap span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.wrap{min-width:0;overflow-wrap:anywhere}
+.slot{display:grid;gap:var(--s2)}
+.bar{height:8px;border-radius:99px;background:var(--mist);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--primary);border-radius:99px}
+.bar i.full{background:var(--danger)}
+.hist{display:grid;margin:0;padding:0;list-style:none;font-size:14px;line-height:20px}
+.hist li{display:flex;justify-content:space-between;gap:var(--s2);padding-block:var(--s2)}
+.hist li+li{border-top:1px solid var(--line)}
+.hist li .muted{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* оверлеи */
+.overlay{position:absolute;inset:0;background:rgba(22,28,61,.6);display:flex;align-items:flex-end;z-index:20;animation:fade .16s ease-out}
+.sheet{background:var(--surface);width:100%;border-radius:24px 24px 0 0;padding:var(--s5) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom,0px));display:grid;gap:var(--s3);animation:up .22s ease-out;max-height:90%;overflow:auto}
+.lightbox{align-items:center;justify-content:center;background:rgba(12,15,34,.94);flex-direction:column;gap:var(--s3);padding:var(--s4)}
+.lightbox .btn{width:auto}
+.lightbox img{max-width:100%;max-height:70%;border-radius:12px}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+.a2hs{position:absolute;left:var(--s3);right:var(--s3);bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:25;background:var(--ink);color:#fff;border-radius:16px;padding:12px 44px 12px 14px;display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:center;box-shadow:0 12px 30px rgba(10,16,60,.35);animation:fade .2s}
+.a2hs .ai{width:40px;height:40px;border-radius:10px;overflow:hidden}
+.a2hs .ai img{width:100%;height:100%;display:block}
+.a2hs p{font-size:14px;line-height:20px}
+.a2hs svg.sh{width:18px;height:18px;vertical-align:-3px;stroke:#fff;fill:none;stroke-width:2}
+.a2hs .cl{position:absolute;top:4px;right:4px;width:40px;height:40px;display:grid;place-items:center;color:#fff}
+.toast{position:absolute;left:var(--s4);right:var(--s4);bottom:84px;background:var(--ink);color:#fff;border-radius:14px;padding:12px 16px;font-weight:500;z-index:30;text-align:center;animation:fade .16s}
+
+.phone.has-cta .toast{bottom:156px}
+.empty{text-align:center;display:grid;gap:var(--s3);justify-items:center;padding:var(--s6) var(--s4)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .skel{animation:none}
+}
+/* бонусы и уровни */
+.lvl{background:var(--primary);color:#fff;border-radius:20px;padding:var(--s4);display:grid;gap:var(--s3)}
+.lvl .top{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s3)}
+.lvl .eyebrow{font-size:12px;line-height:16px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#F3D489}
+.lvl .name{font-family:var(--display);font-size:20px;line-height:26px}
+.lvl .pct{font-family:var(--display);font-size:44px;line-height:44px;font-weight:700;letter-spacing:-.02em}
+.lvl .sub{color:#D9DFFB;font-size:14px;line-height:20px}
+.lvl .bal{display:flex;justify-content:space-between;align-items:center;padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.2);font-size:14px;line-height:20px}
+.lvl .bal b{font-family:var(--display);font-size:18px;line-height:24px}
+.lvl .btn{background:rgba(255,255,255,.14);color:#fff;min-height:44px}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ochre);border-radius:99px;transform-origin:left center}
+.promo{display:flex;align-items:center;gap:var(--s3);width:100%;text-align:left;background:var(--ochre-bg);color:var(--ink);border-radius:20px;padding:var(--s3) var(--s4);box-shadow:0 0 0 1px rgba(201,154,46,.5) inset}
+.promo .pp{flex:none;min-width:60px;display:grid;justify-items:center;font-family:var(--display);font-weight:700;font-size:20px;line-height:24px;color:var(--ochre-ink)}
+.promo .pp small{font-size:11px;line-height:12px;font-weight:600}
+.promo .grow{display:grid;gap:2px}
+.promo b{font-size:15px;line-height:20px}
+.promo .chev{flex:none;color:var(--ochre-ink)}
+.bonus-line{display:flex;align-items:center;gap:var(--s2);font-size:14px;line-height:20px;color:var(--ochre-ink);background:var(--ochre-bg);border-radius:12px;padding:var(--s2) var(--s3)}
+.bonus-line .ic{width:18px;height:18px;flex:none}
+.tiers{display:grid;gap:var(--s2);list-style:none;padding:0;margin:0}
+.tier{display:grid;grid-template-columns:60px 1fr;gap:var(--s3);align-items:center;background:var(--surface);border-radius:16px;padding:var(--s3);box-shadow:0 0 0 1px var(--line) inset}
+.tier.cur{box-shadow:0 0 0 2px var(--primary) inset}
+.tier .tp{font-family:var(--display);font-size:20px;line-height:24px;font-weight:700;color:var(--primary);text-align:center}
+.tier h3{margin:0;font-size:16px;line-height:22px}
+.chip.lv{background:var(--ochre-bg);color:var(--ochre-ink)}
+.bswitch{display:flex;align-items:center;gap:var(--s3);width:100%;text-align:left;padding:var(--s3);border-radius:14px;background:var(--ochre-bg);color:var(--ink);min-height:56px}
+.bswitch .grow{display:grid;gap:2px}
+.bswitch .knob{flex:none;width:44px;height:26px;border-radius:99px;background:#CFC6AE;position:relative;transition:background .2s}
+.bswitch .knob::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:99px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s}
+.bswitch[aria-checked=true] .knob{background:var(--primary)}
+.bswitch[aria-checked=true] .knob::after{transform:translateX(18px)}
+#totalIn{display:grid;gap:var(--s3)}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+<!-- Логотип Wimcleaning (Материалы/Логотип/wim cleaning.svg, обрезан без белого фона), цвет через currentColor -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="wim-logo" viewBox="206 265 778 320"><path d="M212.9 272.0 L212.9 549.0 L269.64 549.0 L269.64 541.7 L220.2 541.7 L220.2 279.3 L970.3 279.3 L970.3 541.7 L920.86 541.7 L920.86 549.0 L977.6 549.0 L977.6 272.0 Z"/><path d="M689.045 472.874 L691.484 474.620 C693.724 476.223 692.590 479.754 689.837 479.754 L660.585 479.754 C657.813 479.754 656.691 476.182 658.969 474.598 C659.899 473.950 660.625 473.049 661.060 472.001 L718.636 332.953 C719.134 331.750 718.747 330.363 717.699 329.590 L714.511 327.241 C712.311 325.619 713.457 322.129 716.191 322.129 L746.118 322.129 C748.852 322.129 749.998 325.619 747.798 327.240 L746.201 328.417 C745.782 328.726 745.457 329.144 745.260 329.625 L688.072 469.500 C687.576 470.714 687.979 472.110 689.045 472.874 M694.509 320.466 L709.867 331.781 C710.912 332.551 711.300 333.932 710.809 335.133 L694.758 374.395 L655.826 468.412 C655.619 468.913 655.273 469.345 654.827 469.654 L637.980 481.371 C635.703 482.954 636.823 486.527 639.597 486.527 L711.739 486.527 C714.473 486.527 715.619 483.037 713.419 481.416 L698.066 470.101 C697.022 469.330 696.634 467.950 697.124 466.749 L736.450 370.560 L737.193 368.752 C738.175 366.366 741.575 366.428 742.469 368.848 L782.551 477.403 C783.462 479.871 786.952 479.871 787.863 477.403 L827.947 368.849 C828.841 366.428 832.241 366.367 833.223 368.753 L873.451 466.626 C873.944 467.827 873.558 469.211 872.512 469.981 L856.997 481.416 C854.797 483.037 855.943 486.527 858.677 486.527 L929.817 486.527 C932.551 486.527 933.697 483.037 931.497 481.416 L914.842 469.142 C914.423 468.833 914.098 468.415 913.900 467.934 L859.459 334.773 C858.963 333.559 859.365 332.163 860.433 331.399 L875.673 320.489 C877.912 318.886 876.778 315.355 874.025 315.355 L802.078 315.355 C799.306 315.355 798.186 318.928 800.462 320.511 L817.268 332.199 C817.738 332.526 818.099 332.989 818.301 333.526 L820.113 338.343 C820.354 338.982 820.356 339.687 820.117 340.327 L787.861 427.092 C786.947 429.552 783.468 429.552 782.554 427.092 L750.299 340.327 C750.062 339.687 750.063 338.982 750.303 338.343 L752.114 333.526 C752.316 332.989 752.677 332.526 753.148 332.199 L769.953 320.511 C772.230 318.928 771.109 315.355 768.337 315.355 L696.189 315.355 C693.455 315.355 692.308 318.845 694.509 320.466"/><path d="M577.356 479.754 L548.105 479.754 C545.332 479.754 544.211 476.182 546.488 474.598 C547.419 473.950 548.145 473.049 548.579 472.001 L606.156 332.953 C606.654 331.750 606.267 330.363 605.219 329.590 L602.030 327.241 C599.830 325.619 600.977 322.129 603.710 322.129 L633.637 322.129 C636.371 322.129 637.518 325.619 635.318 327.240 L633.721 328.418 C633.302 328.726 632.976 329.144 632.780 329.625 L575.592 469.500 C575.096 470.714 575.498 472.110 576.565 472.874 L579.004 474.620 C581.243 476.223 580.109 479.754 577.356 479.754 M639.269 332.740 L655.924 320.466 C658.125 318.844 656.978 315.355 654.245 315.355 L583.104 315.355 C580.371 315.355 579.224 318.844 581.424 320.466 L596.935 331.897 C597.983 332.669 598.369 334.057 597.871 335.259 L542.736 468.412 C542.529 468.913 542.182 469.345 541.737 469.654 L524.889 481.370 C522.612 482.954 523.732 486.527 526.505 486.527 L598.452 486.527 C601.205 486.527 602.338 482.995 600.100 481.393 L584.860 470.483 C583.793 469.719 583.391 468.322 583.887 467.108 L638.328 333.948 C638.525 333.466 638.850 333.048 639.269 332.740"/><path d="M466.369 479.754 L437.118 479.754 C434.345 479.754 433.224 476.182 435.501 474.598 C436.432 473.950 437.158 473.049 437.592 472.001 L495.168 332.953 C495.666 331.750 495.280 330.363 494.232 329.590 L491.043 327.241 C488.843 325.619 489.989 322.129 492.723 322.129 L522.650 322.129 C525.384 322.129 526.530 325.619 524.330 327.241 L522.733 328.418 C522.314 328.726 521.989 329.144 521.792 329.625 L464.605 469.500 C464.108 470.714 464.511 472.110 465.577 472.874 L468.017 474.620 C470.256 476.223 469.122 479.754 466.369 479.754 M529.186 332.740 L545.841 320.466 C548.041 318.844 546.894 315.355 544.161 315.355 L473.020 315.355 C470.287 315.355 469.140 318.844 471.340 320.466 L486.850 331.897 C487.898 332.669 488.285 334.057 487.786 335.259 L447.420 432.747 C446.434 435.128 443.040 435.062 442.147 432.645 L402.207 324.479 C401.296 322.011 397.806 322.011 396.894 324.479 L356.812 433.033 C355.919 435.453 352.518 435.515 351.537 433.129 L311.307 335.256 C310.813 334.055 311.201 332.671 312.246 331.900 L327.762 320.466 C329.962 318.844 328.815 315.355 326.082 315.355 L254.942 315.355 C252.208 315.355 251.061 318.844 253.262 320.466 L269.916 332.740 C270.335 333.048 270.661 333.466 270.858 333.948 L325.299 467.108 C325.795 468.322 325.393 469.719 324.327 470.483 L309.086 481.393 C306.847 482.995 307.981 486.527 310.734 486.527 L382.680 486.527 C385.453 486.527 386.573 482.954 384.297 481.371 L367.491 469.683 C367.020 469.356 366.660 468.892 366.457 468.355 L364.646 463.538 C364.406 462.900 364.405 462.195 364.642 461.555 L396.897 374.790 C397.811 372.330 401.290 372.330 402.205 374.790 L434.460 461.555 C434.699 462.195 434.697 462.900 434.456 463.539 L432.644 468.356 C432.442 468.893 432.081 469.356 431.611 469.683 L414.805 481.371 C412.528 482.954 413.649 486.527 416.422 486.527 L488.369 486.527 C491.122 486.527 492.256 482.995 490.017 481.393 L474.777 470.483 C473.710 469.719 473.307 468.322 473.804 467.108 L528.245 333.948 C528.442 333.466 528.767 333.048 529.186 332.740"/><path d="M335.0707692307692 570.0846153846154Q330.0092307692308 570.0846153846154 325.3092307692308 568.3492307692308Q320.60923076923075 566.6138461538461 316.9215384615385 563.3961538461538Q313.2338461538462 560.1784615384615 311.10076923076923 555.6592307692308Q308.9676923076923 551.14 308.9676923076923 545.6446153846153Q308.9676923076923 540.3661538461538 311.20923076923077 535.8830769230769Q313.45076923076925 531.4 317.35538461538465 528.0738461538461Q321.26 524.7476923076923 326.2853846153846 522.9038461538462Q331.3107692307692 521.06 336.8784615384615 521.06Q339.6984615384615 521.06 341.65076923076924 521.276923076923Q343.6030769230769 521.4938461538461 345.4469230769231 521.8915384615384Q347.29076923076923 522.2892307692308 349.7492307692308 522.94Q350.83384615384614 523.2292307692308 351.30384615384617 523.8076923076924Q351.77384615384614 524.3861538461539 351.84615384615387 525.3984615384616Q351.9907692307692 527.0615384615385 352.2076923076923 528.9776923076923Q352.4246153846154 530.8938461538462 352.49692307692305 533.7138461538461Q352.5692307692308 534.22 352.0269230769231 534.5453846153846Q351.4846153846154 534.8707692307693 350.87 534.7261538461539Q350.2553846153846 534.5815384615385 350.03846153846155 533.7861538461539Q349.31538461538463 531.0384615384615 348.37538461538463 529.05Q347.43538461538463 527.0615384615385 345.5553846153846 525.76Q343.7476923076923 524.5307692307692 341.1807692307692 523.9161538461539Q338.61384615384617 523.3015384615385 335.64923076923077 523.3015384615385Q331.4553846153846 523.3015384615385 327.87615384615384 525.0007692307693Q324.29692307692306 526.7 321.73 529.6284615384616Q319.1630769230769 532.5569230769231 317.7169230769231 536.2446153846154Q316.27076923076925 539.9323076923077 316.27076923076925 543.9092307692308Q316.27076923076925 548.32 317.6807692307692 552.5861538461538Q319.09076923076924 556.8523076923077 321.73 560.2869230769231Q324.36923076923074 563.7215384615384 328.02076923076925 565.7823076923078Q331.6723076923077 567.843076923077 336.1553846153846 567.843076923077Q341.36153846153843 567.843076923077 344.76 565.4569230769231Q348.15846153846155 563.0707692307692 350.5446153846154 558.8046153846154Q351.0507692307692 557.8646153846154 352.0269230769231 557.8646153846154Q353.00307692307695 557.8646153846154 353.00307692307695 559.0215384615385Q353.00307692307695 559.6 352.71384615384613 560.8653846153846Q352.4246153846154 562.1307692307693 351.9546153846154 563.5407692307692Q351.4846153846154 564.9507692307692 351.0507692307692 566.0353846153846Q350.5446153846154 567.0476923076923 350.21923076923076 567.3369230769231Q349.89384615384614 567.6261538461539 348.73692307692306 567.9876923076923Q346.0615384615385 569.0723076923077 342.33769230769235 569.5784615384616Q338.61384615384617 570.0846153846154 335.0707692307692 570.0846153846154Z"/><path d="M389.9569230769231 569.3615384615384Q389.0169230769231 569.3615384615384 388.4746153846154 569.1084615384616Q387.9323076923077 568.8553846153847 387.9323076923077 568.4938461538461Q387.9323076923077 567.843076923077 388.61923076923074 567.59Q389.30615384615385 567.3369230769231 389.5230769230769 567.2646153846154Q392.3430769230769 566.6861538461538 393.86153846153843 565.5653846153846Q395.38 564.4446153846154 395.38 562.0584615384615V528.5076923076923Q395.38 526.7723076923077 395.01846153846157 525.9407692307692Q394.6569230769231 525.1092307692307 393.7169230769231 524.7115384615385Q392.7769230769231 524.3138461538462 390.96923076923076 524.0246153846153Q388.58307692307693 523.5907692307692 388.58307692307693 522.5784615384615Q388.58307692307693 522.1446153846153 389.1615384615385 521.9638461538461Q389.74 521.7830769230769 390.68 521.7830769230769Q392.63230769230773 521.7830769230769 393.8253846153847 521.8553846153845Q395.01846153846157 521.9276923076923 396.10307692307697 521.9638461538461Q397.1876923076923 522.0 398.77846153846156 522.0Q400.5861538461539 522.0 401.8876923076923 521.9638461538461Q403.1892307692308 521.9276923076923 404.56307692307695 521.8553846153845Q405.9369230769231 521.7830769230769 407.8892307692308 521.7830769230769Q408.8292307692308 521.7830769230769 409.4076923076923 521.9638461538461Q409.98615384615385 522.1446153846153 409.98615384615385 522.5784615384615Q409.98615384615385 523.0846153846154 409.4076923076923 523.4461538461538Q408.8292307692308 523.8076923076923 407.6 524.0246153846153Q404.9246153846154 524.5307692307692 403.0446153846154 525.2176923076922Q401.1646153846154 525.9046153846153 401.1646153846154 528.0015384615384V562.0584615384615Q401.1646153846154 564.3 402.1769230769231 565.3846153846154Q403.1892307692308 566.4692307692308 406.7323076923077 566.4692307692308H415.6984615384616Q417.65076923076924 566.4692307692308 419.13307692307694 565.8546153846154Q420.61538461538464 565.24 421.33846153846156 564.5892307692308Q422.7846153846154 563.36 423.47153846153844 562.3838461538462Q424.15846153846155 561.4076923076923 425.09846153846155 559.4553846153846Q425.24307692307696 559.0215384615385 425.713076923077 558.1538461538462Q426.18307692307695 557.2861538461539 426.6892307692308 557.2861538461539Q427.12307692307695 557.2861538461539 427.34000000000003 557.72Q427.5569230769231 558.1538461538462 427.5569230769231 558.5876923076924Q427.5569230769231 558.66 427.52076923076925 558.7684615384615Q427.4846153846154 558.876923076923 427.4846153846154 558.9492307692308Q426.97846153846154 560.8292307692308 426.58076923076925 562.3476923076923Q426.18307692307695 563.8661538461538 425.93000000000006 565.24Q425.6769230769231 566.6138461538461 425.5323076923077 568.1323076923077Q425.46000000000004 568.6384615384616 425.2792307692308 569.0Q425.09846153846155 569.3615384615384 424.52000000000004 569.3615384615384Q420.9046153846154 569.3615384615384 417.5784615384615 569.2892307692307Q414.2523076923077 569.2169230769231 411.1792307692308 569.1807692307692Q408.10615384615386 569.1446153846153 405.28615384615387 569.0723076923077Q402.4661538461539 569.0 399.71846153846155 569.0Q397.91076923076923 569.0 395.63307692307694 569.0723076923077Q393.35538461538465 569.1446153846153 391.65615384615387 569.2530769230768Q389.9569230769231 569.3615384615384 389.9569230769231 569.3615384615384Z"/><path d="M461.9800000000001 569.3615384615384Q461.04 569.3615384615384 460.46153846153845 569.1807692307692Q459.88307692307694 569.0 459.88307692307694 568.5661538461538Q459.88307692307694 567.6984615384615 462.26923076923083 567.2646153846154Q465.01692307692315 566.7584615384616 466.31846153846163 565.6015384615384Q467.62000000000006 564.4446153846154 467.62000000000006 561.8415384615384V529.3030769230769Q467.62000000000006 526.7 466.5715384615385 525.6153846153846Q465.523076923077 524.5307692307692 462.77538461538467 524.0246153846153Q461.5461538461539 523.8076923076923 460.96769230769235 523.4461538461538Q460.38923076923083 523.0846153846154 460.38923076923083 522.5784615384615Q460.38923076923083 522.1446153846153 460.96769230769235 521.9638461538461Q461.5461538461539 521.7830769230769 462.4861538461539 521.7830769230769Q465.23384615384623 521.7830769230769 467.1500000000001 521.8553846153845Q469.0661538461539 521.9276923076923 470.9100000000001 521.9638461538461Q472.7538461538462 522.0 475.28461538461545 522.0Q477.6707692307693 522.0 480.31000000000006 521.9638461538461Q482.94923076923084 521.9276923076923 485.19076923076926 521.9276923076923Q487.6492307692308 521.8553846153847 489.3484615384616 521.8192307692308Q491.0476923076924 521.7830769230769 491.33692307692314 521.7830769230769Q491.6984615384616 521.7830769230769 492.13230769230773 521.9276923076923Q492.5661538461539 522.0723076923077 492.63846153846157 522.4338461538462Q493.00000000000006 524.4584615384615 493.36153846153854 526.446923076923Q493.723076923077 528.4353846153846 493.723076923077 529.8815384615384Q493.723076923077 530.5323076923077 493.39769230769235 530.7492307692307Q493.07230769230773 530.9661538461538 492.7107692307693 530.9661538461538Q492.3492307692308 530.9661538461538 492.2046153846154 530.7853846153846Q492.06000000000006 530.6046153846154 491.91538461538465 530.243076923077Q491.5538461538462 529.0138461538462 491.19230769230774 527.8930769230769Q490.8307692307693 526.7723076923077 490.3246153846154 526.2661538461539Q489.31230769230774 525.1092307692307 488.083076923077 524.7115384615385Q486.8538461538462 524.3138461538462 485.48 524.3138461538462H476.00769230769237Q475.4292307692308 524.3138461538462 474.4169230769231 524.9646153846154Q473.40461538461545 525.6153846153846 473.40461538461545 526.6276923076923V541.9569230769231Q473.40461538461545 542.6076923076923 473.80230769230775 543.0776923076924Q474.20000000000005 543.5476923076923 474.7061538461539 543.5476923076923H481.86461538461543Q483.9615384615385 543.5476923076923 484.75692307692316 542.7884615384615Q485.55230769230775 542.0292307692308 486.0584615384616 540.0046153846154Q486.49230769230775 538.4138461538462 487.36000000000007 538.4138461538462Q487.6492307692308 538.4138461538462 487.97461538461545 538.7030769230769Q488.30000000000007 538.9923076923077 488.30000000000007 539.5707692307692Q488.30000000000007 539.86 488.2638461538462 540.8723076923077Q488.22769230769234 541.8846153846154 488.15538461538466 542.9692307692308Q488.083076923077 544.0538461538462 488.083076923077 544.6323076923077Q488.083076923077 545.3553846153847 488.11923076923085 546.5484615384615Q488.15538461538466 547.7415384615384 488.19153846153847 548.8261538461538Q488.22769230769234 549.9107692307692 488.22769230769234 550.2Q488.22769230769234 550.7061538461538 488.1192307692308 551.0676923076924Q488.01076923076926 551.4292307692308 487.57692307692315 551.4292307692308Q486.49230769230775 551.4292307692308 485.9138461538462 549.1153846153846Q485.48 547.4523076923077 484.7569230769231 546.656923076923Q484.0338461538462 545.8615384615384 482.58769230769235 545.8615384615384H475.86307692307696Q474.6338461538462 545.8615384615384 474.01923076923083 546.186923076923Q473.40461538461545 546.5123076923077 473.40461538461545 547.7415384615384V561.6246153846154Q473.40461538461545 564.3723076923077 474.56153846153853 565.4207692307692Q475.7184615384616 566.4692307692308 478.1769230769231 566.4692307692308H483.52769230769235Q485.8415384615385 566.4692307692308 487.3961538461539 566.2161538461538Q488.95076923076925 565.9630769230769 490.10769230769233 565.24Q491.2646153846154 564.4446153846154 492.16846153846154 563.1430769230769Q493.07230769230773 561.8415384615384 494.2292307692308 559.6723076923076Q494.4461538461539 559.2384615384616 494.73538461538465 558.9492307692308Q495.02461538461546 558.66 495.3861538461539 558.7323076923077Q495.7476923076924 558.8046153846154 495.9646153846154 559.0576923076924Q496.1815384615385 559.3107692307692 496.1815384615385 559.7446153846154Q496.1815384615385 560.3953846153846 495.82000000000005 562.0223076923078Q495.45846153846156 563.6492307692308 494.91615384615386 565.3846153846155Q494.3738461538462 567.12 493.94000000000005 568.1323076923077Q493.723076923077 568.6384615384616 493.54230769230776 569.0Q493.3615384615385 569.3615384615384 492.9276923076924 569.3615384615384Q489.45692307692315 569.3615384615384 486.49230769230775 569.2892307692307Q483.52769230769235 569.2169230769231 480.8523076923077 569.1446153846155Q478.1769230769231 569.0723076923077 475.61 569.0Q473.04307692307697 568.9276923076923 470.29538461538465 568.9276923076923Q468.7046153846154 568.9276923076923 467.54769230769233 569.0361538461539Q466.39076923076925 569.1446153846153 465.1615384615385 569.2530769230768Q463.93230769230775 569.3615384615384 461.9800000000001 569.3615384615384Z"/><path d="M528.9415384615386 569.3615384615384Q528.0015384615385 569.3615384615384 527.423076923077 569.1084615384616Q526.8446153846155 568.8553846153847 526.8446153846155 568.4215384615385Q526.8446153846155 567.9153846153846 527.4592307692309 567.5176923076923Q528.0738461538463 567.12 529.2307692307693 566.7584615384616Q531.1107692307693 566.18 532.7015384615386 565.0230769230768Q534.2923076923078 563.8661538461538 535.4492307692309 561.1907692307692Q537.4738461538462 556.5630769230769 539.173076923077 552.5138461538461Q540.8723076923078 548.4646153846154 542.3907692307694 544.56Q543.9092307692308 540.6553846153846 545.5361538461539 536.4253846153846Q547.163076923077 532.1953846153846 548.9707692307693 527.2061538461538Q549.3323076923078 526.1938461538462 549.6215384615386 525.1815384615385Q549.9107692307693 524.1692307692308 549.983076923077 523.0123076923077Q550.6338461538462 522.7953846153846 551.2846153846154 522.5784615384615Q551.9353846153847 522.3615384615384 552.5861538461539 521.9276923076923Q553.2369230769232 521.4938461538461 553.4900000000001 520.6261538461538Q553.7430769230771 519.7584615384616 553.96 519.4692307692308Q554.0323076923078 519.396923076923 554.1407692307694 519.396923076923Q554.2492307692308 519.396923076923 554.3215384615386 519.5415384615385Q554.4661538461539 519.8307692307692 554.5746153846155 520.2646153846154Q554.683076923077 520.6984615384615 554.8276923076924 521.1323076923077Q556.563076923077 526.6276923076923 558.443076923077 532.34Q560.323076923077 538.0523076923077 562.0946153846155 543.3669230769231Q563.8661538461539 548.6815384615385 565.3484615384616 552.9115384615385Q566.8307692307693 557.1415384615385 567.6984615384616 559.7446153846154Q568.7107692307693 562.636923076923 569.8676923076923 564.083076923077Q571.0246153846155 565.5292307692308 572.2900000000001 566.1076923076923Q573.5553846153847 566.6861538461538 575.0015384615385 566.9753846153847Q576.2307692307693 567.1923076923077 576.8092307692309 567.6623076923076Q577.3876923076924 568.1323076923077 577.3876923076924 568.6384615384616Q577.3876923076924 569.0723076923077 576.8092307692309 569.2169230769231Q576.2307692307693 569.3615384615384 575.2907692307693 569.3615384615384Q574.2784615384617 569.3615384615384 572.543076923077 569.2530769230768Q570.8076923076924 569.1446153846153 568.8553846153848 569.0361538461539Q566.903076923077 568.9276923076923 565.2400000000001 568.9276923076923Q563.8661538461539 568.9276923076923 562.4200000000001 568.9276923076923Q560.9738461538462 568.9276923076923 559.7446153846155 568.9638461538461Q558.5153846153847 569.0 557.6476923076924 569.0Q556.7076923076924 569.0 556.1292307692308 568.7830769230769Q555.5507692307693 568.5661538461538 555.5507692307693 568.1323076923077Q555.5507692307693 567.6261538461539 556.2738461538463 567.2646153846154Q556.9969230769232 566.9030769230769 557.9369230769232 566.7584615384616Q560.323076923077 566.396923076923 561.3353846153847 565.5292307692307Q562.3476923076923 564.6615384615385 562.3476923076923 563.5046153846154Q562.3476923076923 562.42 561.8776923076923 560.3592307692307Q561.4076923076924 558.2984615384615 560.7569230769232 555.9484615384615Q560.1061538461539 553.5984615384615 559.5276923076924 551.7907692307692Q559.383076923077 551.2123076923077 558.9853846153846 551.1038461538462Q558.5876923076924 550.9953846153846 557.5753846153847 550.9953846153846H543.9092307692308Q543.6200000000001 550.9953846153846 543.2946153846156 551.2484615384615Q542.9692307692309 551.5015384615384 542.6800000000001 552.2969230769231Q542.463076923077 553.02 541.9569230769232 554.5746153846153Q541.4507692307693 556.1292307692307 540.9446153846154 557.8646153846154Q540.4384615384616 559.6 540.0769230769231 560.9738461538461Q539.7153846153847 562.3476923076923 539.7153846153847 562.7092307692308Q539.7153846153847 564.3 540.9446153846154 565.3484615384615Q542.1738461538463 566.396923076923 543.9092307692308 566.8307692307692Q546.2953846153847 567.4815384615384 546.2953846153847 568.276923076923Q546.2953846153847 568.7107692307692 545.7169230769232 568.8915384615384Q545.1384615384616 569.0723076923077 544.1984615384616 569.0723076923077Q543.2584615384616 569.0723076923077 541.4507692307693 569.0Q539.643076923077 568.9276923076923 537.6184615384616 568.9276923076923Q535.2323076923078 568.9276923076923 532.9907692307693 569.1446153846153Q530.7492307692308 569.3615384615384 528.9415384615386 569.3615384615384ZM545.8615384615385 548.6092307692307H557.0692307692309Q558.0815384615386 548.6092307692307 558.0815384615386 548.2476923076923Q558.0815384615386 548.103076923077 558.0453846153847 547.9223076923076Q558.0092307692308 547.7415384615384 557.9369230769232 547.5246153846153L552.2969230769231 529.8815384615384Q551.863076923077 528.58 551.646153846154 528.58Q551.5015384615385 528.58 551.0676923076924 529.8092307692308L544.4876923076924 547.5246153846153Q544.343076923077 547.9584615384615 544.343076923077 548.103076923077Q544.343076923077 548.4646153846154 544.7407692307693 548.5369230769231Q545.1384615384616 548.6092307692307 545.8615384615385 548.6092307692307Z"/><path d="M654.3276923076924 570.2292307692308Q653.6769230769231 570.2292307692308 651.7607692307693 569.1446153846153Q649.8446153846154 568.06 648.1092307692307 565.6738461538462Q647.82 565.3123076923077 646.3376923076924 563.5046153846154Q644.8553846153847 561.6969230769231 642.5776923076924 558.9853846153846Q640.3000000000001 556.2738461538462 637.6246153846155 553.0923076923077Q634.9492307692308 549.9107692307692 632.2738461538462 546.7292307692308Q629.5984615384616 543.5476923076923 627.2846153846154 540.8361538461538Q624.9707692307693 538.1246153846154 623.416153846154 536.2807692307692Q621.8615384615385 534.4369230769231 621.5 534.003076923077Q620.9938461538462 533.3523076923077 620.6323076923077 533.0992307692308Q620.2707692307692 532.8461538461538 619.9815384615384 532.8461538461538Q619.62 532.8461538461538 619.4753846153847 533.3884615384616Q619.3307692307693 533.9307692307692 619.3307692307693 534.3646153846154Q619.2584615384616 537.9076923076923 619.186153846154 542.5353846153846Q619.1138461538462 547.1630769230769 619.0415384615385 552.0799999999999Q618.9692307692308 556.996923076923 618.9692307692308 561.48Q618.9692307692308 563.4323076923077 619.9453846153847 565.0953846153847Q620.9215384615385 566.7584615384616 623.5969230769231 567.2646153846154Q624.8261538461538 567.4815384615384 625.4046153846155 567.7707692307692Q625.983076923077 568.06 625.983076923077 568.5661538461538Q625.983076923077 569.0 625.4046153846155 569.1807692307692Q624.8261538461538 569.3615384615384 623.8861538461539 569.3615384615384Q621.9338461538462 569.3615384615384 620.9576923076922 569.2530769230768Q619.9815384615384 569.1446153846153 619.2223076923077 569.0723076923077Q618.463076923077 569.0 617.0892307692308 569.0Q615.7876923076923 569.0 615.0646153846153 569.0723076923077Q614.3415384615384 569.1446153846153 613.4015384615384 569.2530769230768Q612.4615384615385 569.3615384615384 610.5092307692308 569.3615384615384Q609.5692307692308 569.3615384615384 608.9907692307693 569.1807692307692Q608.4123076923078 569.0 608.4123076923078 568.5661538461538Q608.4123076923078 568.06 608.9907692307693 567.7707692307692Q609.5692307692308 567.4815384615384 610.7984615384615 567.1923076923077Q612.8953846153846 566.6138461538461 613.8353846153846 565.0592307692307Q614.7753846153846 563.5046153846154 614.9923076923077 561.2630769230769Q615.2815384615385 558.5153846153846 615.5707692307692 553.9961538461539Q615.86 549.4769230769231 616.0769230769231 543.873076923077Q616.2938461538462 538.2692307692307 616.2938461538462 532.34Q616.2938461538462 528.5076923076923 614.3053846153846 526.8446153846154Q612.3169230769231 525.1815384615385 609.1353846153846 524.1692307692308Q608.8461538461539 524.0246153846153 607.8700000000001 523.5546153846153Q606.8938461538462 523.0846153846154 606.8938461538462 522.4338461538462Q606.8938461538462 521.7830769230769 607.5446153846154 521.6023076923077Q608.1953846153847 521.4215384615385 608.5569230769231 521.4215384615385Q610.6538461538462 521.4938461538461 611.9553846153847 521.53Q613.2569230769232 521.5661538461538 614.2692307692308 521.6384615384616Q615.2815384615385 521.7107692307692 616.5107692307693 521.746923076923Q617.74 521.7830769230769 619.6923076923077 521.7830769230769Q620.343076923077 521.7830769230769 620.7046153846154 522.1446153846155Q621.0661538461538 522.5061538461539 621.4276923076924 523.0123076923077Q621.7169230769231 523.4461538461538 623.3438461538462 525.4346153846154Q624.9707692307693 527.4230769230769 627.3930769230769 530.4238461538462Q629.8153846153847 533.4246153846154 632.7076923076924 536.9315384615385Q635.6 540.4384615384615 638.4923076923078 543.9453846153847Q641.3846153846155 547.4523076923077 643.843076923077 550.4530769230769Q646.3015384615385 553.4538461538461 647.9284615384615 555.4061538461538Q649.5553846153847 557.3584615384615 649.8446153846154 557.72Q650.1338461538462 558.0092307692307 650.676153846154 558.5876923076924Q651.2184615384616 559.1661538461539 651.6523076923078 559.1661538461539Q652.3030769230769 559.1661538461539 652.3753846153846 557.6476923076923Q652.3753846153846 556.6353846153846 652.4115384615385 553.7792307692307Q652.4476923076924 550.9230769230769 652.4838461538461 546.8376923076924Q652.52 542.7523076923077 652.52 537.98Q652.52 533.2076923076924 652.52 528.2184615384615Q652.4476923076924 526.7723076923077 651.0015384615385 525.6153846153845Q649.5553846153847 524.4584615384615 648.3261538461538 524.2415384615384Q647.0969230769231 524.0246153846153 646.0846153846154 523.6630769230769Q645.0723076923077 523.3015384615385 645.0723076923077 522.7953846153846Q645.0723076923077 522.3615384615384 646.0846153846154 522.1807692307692Q647.0969230769231 522.0 648.0369230769231 522.0Q648.76 522.0 649.4469230769231 522.0Q650.1338461538462 522.0 650.8207692307692 522.0Q651.5076923076923 522.0 652.1584615384616 522.0Q653.8938461538462 522.0 654.9061538461539 521.9638461538461Q655.9184615384615 521.9276923076923 657.1115384615384 521.8553846153845Q658.3046153846154 521.7830769230769 660.4738461538461 521.7830769230769Q661.4138461538462 521.7830769230769 661.9923076923077 521.9638461538461Q662.5707692307692 522.1446153846153 662.5707692307692 522.5784615384615Q662.5707692307692 523.5907692307692 660.1846153846154 524.0246153846153Q657.5092307692308 524.5307692307692 656.6415384615385 525.3261538461538Q655.7738461538462 526.1215384615384 655.6292307692308 527.9292307692308Q655.6292307692308 528.2907692307692 655.593076923077 530.7492307692307Q655.5569230769231 533.2076923076924 655.5569230769231 536.9676923076923Q655.5569230769231 540.7276923076923 655.5207692307692 545.0661538461538Q655.4846153846154 549.4046153846153 655.4846153846154 553.706923076923Q655.4846153846154 558.0092307692307 655.4846153846154 561.4076923076923Q655.4846153846154 563.1430769230769 655.593076923077 564.5530769230769Q655.7015384615385 565.9630769230769 655.7738461538462 566.9392307692308Q655.8461538461539 567.9153846153846 655.8461538461539 568.4215384615385Q655.8461538461539 569.5784615384615 655.3761538461539 569.9038461538462Q654.9061538461539 570.2292307692308 654.3276923076924 570.2292307692308Z"/><path d="M695.7646153846154 569.3615384615384Q694.8246153846154 569.3615384615384 694.2461538461539 569.1807692307692Q693.6676923076923 569.0 693.6676923076923 568.5661538461538Q693.6676923076923 567.6984615384615 696.0538461538462 567.2646153846154Q698.8015384615385 566.7584615384616 700.2476923076923 565.6015384615384Q701.6938461538462 564.4446153846154 701.6938461538462 561.9138461538462V529.2307692307693Q701.6938461538462 526.7 700.6453846153846 525.6153846153846Q699.5969230769231 524.5307692307692 696.8492307692308 524.0246153846153Q694.463076923077 523.5907692307692 694.463076923077 522.5784615384615Q694.463076923077 522.1446153846153 695.0415384615385 521.9638461538461Q695.62 521.7830769230769 696.5600000000001 521.7830769230769Q698.5123076923077 521.7830769230769 699.7776923076923 521.8553846153845Q701.0430769230769 521.9276923076923 702.2 521.9638461538461Q703.3569230769231 522.0 705.02 522.0Q706.6107692307693 522.0 707.623076923077 521.9638461538461Q708.6353846153846 521.9276923076923 709.7923076923078 521.8553846153845Q710.9492307692308 521.7830769230769 712.9015384615385 521.7830769230769Q713.8415384615384 521.7830769230769 714.4200000000001 521.9638461538461Q714.9984615384616 522.1446153846153 714.9984615384616 522.5784615384615Q714.9984615384616 523.0846153846154 714.4200000000001 523.4461538461538Q713.8415384615384 523.8076923076923 712.6123076923077 524.0246153846153Q709.9369230769231 524.5307692307692 708.7076923076924 525.6153846153846Q707.4784615384616 526.7 707.4784615384616 529.2307692307693V561.9138461538462Q707.4784615384616 564.4446153846154 708.9969230769232 565.6015384615384Q710.5153846153846 566.7584615384616 713.1907692307692 567.2646153846154Q714.4200000000001 567.4815384615384 714.9984615384616 567.7707692307692Q715.5769230769231 568.06 715.5769230769231 568.5661538461538Q715.5769230769231 569.0 714.9984615384616 569.1807692307692Q714.4200000000001 569.3615384615384 713.48 569.3615384615384Q711.5276923076923 569.3615384615384 710.2623076923077 569.2530769230768Q708.996923076923 569.1446153846153 707.8399999999999 569.0723076923077Q706.6830769230769 569.0 705.02 569.0Q703.2123076923077 569.0 701.8746153846155 569.0723076923077Q700.5369230769231 569.1446153846153 699.126923076923 569.2530769230768Q697.7169230769231 569.3615384615384 695.7646153846154 569.3615384615384Z"/><path d="M794.1800000000001 570.2292307692308Q793.5292307692308 570.2292307692308 791.613076923077 569.1446153846153Q789.6969230769231 568.06 787.9615384615385 565.6738461538462Q787.6723076923078 565.3123076923077 786.19 563.5046153846154Q784.7076923076924 561.6969230769231 782.4300000000001 558.9853846153846Q780.1523076923078 556.2738461538462 777.4769230769232 553.0923076923077Q774.8015384615385 549.9107692307692 772.1261538461539 546.7292307692308Q769.4507692307693 543.5476923076923 767.1369230769232 540.8361538461538Q764.823076923077 538.1246153846154 763.2684615384617 536.2807692307692Q761.7138461538462 534.4369230769231 761.3523076923077 534.003076923077Q760.8461538461539 533.3523076923077 760.4846153846154 533.0992307692308Q760.123076923077 532.8461538461538 759.8338461538461 532.8461538461538Q759.4723076923077 532.8461538461538 759.3276923076924 533.3884615384616Q759.183076923077 533.9307692307692 759.183076923077 534.3646153846154Q759.1107692307693 537.9076923076923 759.0384615384617 542.5353846153846Q758.9661538461539 547.1630769230769 758.8938461538462 552.0799999999999Q758.8215384615385 556.996923076923 758.8215384615385 561.48Q758.8215384615385 563.4323076923077 759.7976923076924 565.0953846153847Q760.7738461538462 566.7584615384616 763.4492307692308 567.2646153846154Q764.6784615384615 567.4815384615384 765.2569230769232 567.7707692307692Q765.8353846153847 568.06 765.8353846153847 568.5661538461538Q765.8353846153847 569.0 765.2569230769232 569.1807692307692Q764.6784615384615 569.3615384615384 763.7384615384616 569.3615384615384Q761.7861538461539 569.3615384615384 760.81 569.2530769230768Q759.8338461538461 569.1446153846153 759.0746153846154 569.0723076923077Q758.3153846153847 569.0 756.9415384615385 569.0Q755.64 569.0 754.916923076923 569.0723076923077Q754.1938461538462 569.1446153846153 753.2538461538461 569.2530769230768Q752.3138461538462 569.3615384615384 750.3615384615385 569.3615384615384Q749.4215384615385 569.3615384615384 748.843076923077 569.1807692307692Q748.2646153846155 569.0 748.2646153846155 568.5661538461538Q748.2646153846155 568.06 748.843076923077 567.7707692307692Q749.4215384615385 567.4815384615384 750.6507692307692 567.1923076923077Q752.7476923076923 566.6138461538461 753.6876923076923 565.0592307692307Q754.6276923076923 563.5046153846154 754.8446153846154 561.2630769230769Q755.1338461538462 558.5153846153846 755.4230769230769 553.9961538461539Q755.7123076923077 549.4769230769231 755.9292307692308 543.873076923077Q756.1461538461539 538.2692307692307 756.1461538461539 532.34Q756.1461538461539 528.5076923076923 754.1576923076923 526.8446153846154Q752.1692307692308 525.1815384615385 748.9876923076923 524.1692307692308Q748.6984615384616 524.0246153846153 747.7223076923078 523.5546153846153Q746.7461538461539 523.0846153846154 746.7461538461539 522.4338461538462Q746.7461538461539 521.7830769230769 747.3969230769231 521.6023076923077Q748.0476923076924 521.4215384615385 748.4092307692308 521.4215384615385Q750.5061538461539 521.4938461538461 751.8076923076924 521.53Q753.1092307692309 521.5661538461538 754.1215384615385 521.6384615384616Q755.1338461538462 521.7107692307692 756.363076923077 521.746923076923Q757.5923076923077 521.7830769230769 759.5446153846154 521.7830769230769Q760.1953846153847 521.7830769230769 760.5569230769231 522.1446153846155Q760.9184615384615 522.5061538461539 761.2800000000001 523.0123076923077Q761.5692307692308 523.4461538461538 763.196153846154 525.4346153846154Q764.823076923077 527.4230769230769 767.2453846153846 530.4238461538462Q769.6676923076924 533.4246153846154 772.5600000000001 536.9315384615385Q775.4523076923077 540.4384615384615 778.3446153846155 543.9453846153847Q781.2369230769232 547.4523076923077 783.6953846153847 550.4530769230769Q786.1538461538462 553.4538461538461 787.7807692307692 555.4061538461538Q789.4076923076924 557.3584615384615 789.6969230769231 557.72Q789.9861538461539 558.0092307692307 790.5284615384617 558.5876923076924Q791.0707692307693 559.1661538461539 791.5046153846155 559.1661538461539Q792.1553846153846 559.1661538461539 792.2276923076923 557.6476923076923Q792.2276923076923 556.6353846153846 792.2638461538462 553.7792307692307Q792.3000000000001 550.9230769230769 792.3361538461538 546.8376923076924Q792.3723076923077 542.7523076923077 792.3723076923077 537.98Q792.3723076923077 533.2076923076924 792.3723076923077 528.2184615384615Q792.3000000000001 526.7723076923077 790.8538461538462 525.6153846153845Q789.4076923076924 524.4584615384615 788.1784615384615 524.2415384615384Q786.9492307692308 524.0246153846153 785.9369230769231 523.6630769230769Q784.9246153846154 523.3015384615385 784.9246153846154 522.7953846153846Q784.9246153846154 522.3615384615384 785.9369230769231 522.1807692307692Q786.9492307692308 522.0 787.8892307692308 522.0Q788.6123076923077 522.0 789.2992307692308 522.0Q789.9861538461539 522.0 790.6730769230769 522.0Q791.36 522.0 792.0107692307693 522.0Q793.7461538461539 522.0 794.7584615384616 521.9638461538461Q795.7707692307692 521.9276923076923 796.9638461538461 521.8553846153845Q798.1569230769231 521.7830769230769 800.3261538461538 521.7830769230769Q801.2661538461539 521.7830769230769 801.8446153846154 521.9638461538461Q802.4230769230769 522.1446153846153 802.4230769230769 522.5784615384615Q802.4230769230769 523.5907692307692 800.0369230769231 524.0246153846153Q797.3615384615385 524.5307692307692 796.4938461538462 525.3261538461538Q795.6261538461539 526.1215384615384 795.4815384615385 527.9292307692308Q795.4815384615385 528.2907692307692 795.4453846153847 530.7492307692307Q795.4092307692308 533.2076923076924 795.4092307692308 536.9676923076923Q795.4092307692308 540.7276923076923 795.373076923077 545.0661538461538Q795.3369230769231 549.4046153846153 795.3369230769231 553.706923076923Q795.3369230769231 558.0092307692307 795.3369230769231 561.4076923076923Q795.3369230769231 563.1430769230769 795.4453846153847 564.5530769230769Q795.5538461538462 565.9630769230769 795.6261538461539 566.9392307692308Q795.6984615384616 567.9153846153846 795.6984615384616 568.4215384615385Q795.6984615384616 569.5784615384615 795.2284615384616 569.9038461538462Q794.7584615384616 570.2292307692308 794.1800000000001 570.2292307692308Z"/><path d="M860.4907692307693 570.0123076923077Q855.5015384615385 570.0123076923077 850.9823076923078 568.2407692307693Q846.463076923077 566.4692307692308 842.9561538461539 563.2876923076923Q839.4492307692308 560.1061538461538 837.4246153846154 555.803846153846Q835.4 551.5015384615384 835.4 546.5123076923077Q835.4 541.1615384615385 837.4969230769232 536.5338461538462Q839.5938461538462 531.9061538461539 843.2815384615385 528.4353846153847Q846.9692307692308 524.9646153846154 851.7776923076924 523.0123076923077Q856.5861538461539 521.06 862.0092307692308 521.06Q863.2384615384616 521.06 865.3715384615384 521.3130769230769Q867.5046153846154 521.5661538461538 869.7823076923078 521.9276923076923Q872.0600000000001 522.2892307692308 873.9038461538462 522.6869230769231Q875.7476923076923 523.0846153846154 876.4707692307693 523.4461538461538Q876.8323076923077 523.5907692307692 876.9407692307693 523.7715384615385Q877.0492307692308 523.9523076923077 877.1215384615385 524.3138461538462Q877.4107692307692 526.4107692307692 877.6276923076923 528.4715384615384Q877.8446153846154 530.5323076923077 877.8446153846154 531.9784615384615Q877.8446153846154 532.4846153846154 877.5192307692307 532.9546153846154Q877.1938461538462 533.4246153846154 876.76 533.4246153846154Q876.0369230769231 533.4246153846154 875.6753846153847 532.7738461538462Q875.3138461538462 532.123076923077 875.0969230769231 531.4723076923077Q874.6630769230769 530.3153846153846 874.1930769230769 529.4838461538461Q873.723076923077 528.6523076923077 872.8553846153847 527.64Q872.4215384615385 527.0615384615385 871.0115384615385 526.1576923076923Q869.6015384615384 525.2538461538461 867.2153846153847 524.5307692307692Q864.8292307692308 523.8076923076923 861.3584615384616 523.8076923076923Q857.1646153846154 523.8076923076923 853.6938461538462 525.5792307692307Q850.223076923077 527.3507692307692 847.7284615384616 530.4238461538462Q845.2338461538462 533.496923076923 843.8961538461539 537.4015384615384Q842.5584615384615 541.3061538461538 842.5584615384615 545.5723076923077Q842.5584615384615 550.7061538461538 844.1492307692308 554.7553846153846Q845.74 558.8046153846154 848.4153846153847 561.6246153846155Q851.0907692307693 564.4446153846154 854.4892307692307 565.8907692307693Q857.8876923076923 567.3369230769231 861.503076923077 567.3369230769231Q865.6969230769231 567.3369230769231 867.6853846153847 566.3246153846154Q869.6738461538462 565.3123076923077 870.3246153846154 564.6615384615385Q871.12 563.8661538461538 871.8069230769231 562.42Q872.4938461538462 560.9738461538461 872.4938461538462 559.0938461538461Q872.4938461538462 558.4430769230769 872.53 557.72Q872.5661538461538 556.996923076923 872.6023076923077 556.2738461538461Q872.6384615384616 555.5507692307692 872.6384615384616 554.9Q872.6384615384616 554.1046153846154 872.5661538461538 553.5623076923077Q872.4938461538462 553.02 872.2769230769231 552.7307692307693Q871.6984615384615 551.9353846153846 870.2523076923077 551.4292307692308Q868.8061538461538 550.9230769230769 867.36 550.7061538461538Q865.9138461538462 550.4892307692307 865.1907692307693 550.4892307692307Q864.9015384615385 550.4892307692307 864.323076923077 550.1276923076923Q863.7446153846154 549.7661538461539 863.7446153846154 549.26Q863.7446153846154 548.6815384615385 864.323076923077 548.3561538461538Q864.9015384615385 548.0307692307692 865.1907692307693 548.0307692307692Q866.9984615384616 548.0307692307692 868.3 548.103076923077Q869.6015384615384 548.1753846153846 870.9753846153847 548.2476923076923Q872.3492307692308 548.32 874.3015384615385 548.32Q876.1815384615385 548.32 877.483076923077 548.1753846153847Q878.7846153846154 548.0307692307692 880.7369230769231 548.0307692307692Q881.0261538461539 548.0307692307692 881.6407692307693 548.2476923076923Q882.2553846153846 548.4646153846154 882.2553846153846 549.1876923076923Q882.2553846153846 549.6938461538462 881.6407692307693 550.0553846153846Q881.0261538461539 550.4169230769231 880.7369230769231 550.4892307692307Q879.1461538461539 550.9230769230769 878.5315384615385 551.7546153846154Q877.9169230769231 552.5861538461538 877.7 554.0323076923077Q877.483076923077 555.623076923077 877.4107692307693 556.8523076923077Q877.3384615384616 558.0815384615385 877.3384615384616 559.4553846153846V561.4076923076923Q877.3384615384616 561.7692307692307 877.483076923077 561.9861538461538Q877.6276923076923 562.2030769230769 877.7723076923078 562.5646153846154Q877.9892307692307 562.9261538461539 878.3507692307692 563.2153846153847Q878.7123076923077 563.5046153846154 878.7123076923077 563.7938461538462Q878.7123076923077 564.0830769230769 878.6038461538462 564.5530769230769Q878.4953846153846 565.0230769230769 877.7 565.1676923076923Q877.1938461538462 565.24 875.7115384615385 565.9992307692307Q874.2292307692308 566.7584615384616 871.9876923076923 567.6984615384615Q869.7461538461539 568.6384615384616 866.8538461538462 569.3253846153846Q863.9615384615385 570.0123076923077 860.4907692307693 570.0123076923077Z"/></symbol></svg>
+<script type="application/json" id="pricing">
+{"is_demo":true,"услуги":{
+ "ковры":{"единица":"м2","цена_клиенту_руб_за_ед":325,"типовой_объём_ед_в_заказе":6},
+ "шторы":{"единица":"комплект","цена_клиенту_руб_за_ед":1000,"типовой_объём_ед_в_заказе":2},
+ "одеяла":{"единица":"шт","цена_клиенту_руб_за_ед":700,"типовой_объём_ед_в_заказе":1},
+ "фасады":{"единица":"м2","цена_клиенту_руб_за_ед":null,"типовой_объём_ед_в_заказе":80}}}
+</script>
+<!-- Копия цен из data/pricing_inputs.json (is_demo=true); фасады без цены намеренно. -->
+<div class="stage"><div class="phone" id="phone">
+  <div class="proto" id="proto"></div>
+  <div id="ahead"></div>
+  <main class="screen" id="screen" tabindex="-1"></main>
+  <div class="cta-bar" id="ctabar" hidden></div>
+  <nav class="tabbar" id="tabbar" aria-label="Разделы"></nav>
+</div></div>
+
+<script>
+'use strict';
+/* ---------- утилиты ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fill=s=>esc(s).replace(/\s*\(ДЕМО\)/g,'');
+const nf=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2});
+const rub=n=>Math.round(n).toLocaleString('ru-RU').replace(/\s/g,'\u202F');
+const money=n=>rub(n)+'\u00A0₽';
+const reduce=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const addDays=(n)=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+const fmtDate=s=>{if(!s)return '';const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('ru-RU',{day:'numeric',month:'short'})};
+const fmtTime=t=>new Date(t).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+const fmtStamp=t=>new Date(t).toLocaleDateString('ru-RU',{day:'numeric',month:'short'})+', '+fmtTime(t);
+
+const P=JSON.parse($('#pricing').textContent).услуги;
+const IC={
+ b2:'<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/>',
+ gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
+ carpet:'<rect x="4" y="5" width="16" height="14" rx="1"/><path d="M12 8l3.5 4-3.5 4-3.5-4z"/><path d="M4 3v2M8 3v2M12 3v2M16 3v2M20 3v2M4 19v2M8 19v2M12 19v2M16 19v2M20 19v2"/>',
+ bed:'<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>',
+ blinds:'<path d="M3 3h18"/><path d="M20 7H8"/><path d="M20 11H8"/><path d="M10 19h10"/><path d="M8 15h12"/><path d="M4 3v14"/><circle cx="4" cy="19" r="2"/>',
+ inbox:'<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+ truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+ waves:'<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>',
+ pkg:'<path d="m16 16 2 2 4-4"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="M7.5 4.27l9 5.15"/><path d="M3.29 7 12 12l8.71-5"/><path d="M12 22V12"/>',
+ home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ xc:'<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/>',
+ check:'<path d="M20 6 9 17l-5-5"/>',
+ back:'<path d="m15 18-6-6 6-6"/>',
+ plus:'<path d="M5 12h14M12 5v14"/>',
+ minus:'<path d="M5 12h14"/>',
+ img:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ list:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h6"/>',
+ grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+ cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+ sl:'<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
+ x:'<path d="M18 6 6 18M6 6l12 12"/>',
+ search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+ chev:'<path d="m9 18 6-6-6-6"/>'
+};
+const ic=(n,l)=>'<svg class="ic" viewBox="0 0 24 24" '+(l?'role="img" aria-label="'+esc(l)+'"':'aria-hidden="true"')+'>'+IC[n]+'</svg>';
+const demoChip=()=>'';
+const priceLine=(txt,cls)=>'<div class="price-line'+(cls?' '+cls:'')+'"><b>'+txt+'</b>'+demoChip()+'</div>';
+
+/* ---------- данные ---------- */
+const SERV={
+ carpet:{k:'ковры',icon:'carpet',title:'Стирка ковров',short:'Чистка и стирка ковров. Цена за квадратный метр.',unit:'м²',cardPrice:'от '+P['ковры'].цена_клиенту_руб_за_ед+' ₽ за м²',listPrice:'от '+rub(P['ковры'].цена_клиенту_руб_за_ед)+'\u00A0₽/м²',chipLabel:'Ковры',
+  incl:['стирка ковра: машинная стирка и сушка','забор и доставка по городу входят в цену'],
+  how:'Площадь ковра в м² умножается на цену за м². Площадь = длина × ширина.',
+  prep:['Измерьте длину и ширину ковра или назовите размер из документов.','Сфотографируйте ковёр целиком и пятна крупным планом.','Скажите, если ковёр из шёлка, шерсти или с ручной работой.'],
+  cta:'Заказать стирку ковров',qtyLabel:'Площадь ковров, м²',qtyPh:'Например, 6',help:''},
+ curtain:{k:'шторы',icon:'blinds',title:'Стирка штор',short:'Стирка штор и тюля. Цена за комплект.',unit:'компл.',cardPrice:'от '+P['шторы'].цена_клиенту_руб_за_ед.toLocaleString('ru-RU')+' ₽ за комплект',listPrice:'от '+rub(P['шторы'].цена_клиенту_руб_за_ед)+'\u00A0₽/компл.',chipLabel:'Шторы',
+  incl:['стирка комплекта: тюль и портьеры на одно окно','снятие и навеска — по договорённости'],
+  how:'Количество комплектов умножается на цену за комплект. Один комплект — тюль и портьеры на одно окно.',
+  prep:['Посчитайте, сколько окон со шторами.','Сфотографируйте шторы целиком и ткань крупным планом.','Напишите, из какой ткани шторы, если знаете.'],
+  cta:'Заказать стирку штор',qtyLabel:'Количество комплектов',qtyPh:'Например, 2',help:''},
+ blanket:{k:'одеяла',icon:'bed',title:'Стирка одеял',short:'Стирка одеял. Цена за штуку.',unit:'шт.',cardPrice:'от '+P['одеяла'].цена_клиенту_руб_за_ед+' ₽ за штуку',listPrice:'от '+rub(P['одеяла'].цена_клиенту_руб_за_ед)+'\u00A0₽/шт.',chipLabel:'Одеяла',
+  incl:['стирка одного одеяла: сушка включена, любой наполнитель, до 3 кг','забор и доставка по городу входят в цену'],
+  how:'Количество одеял умножается на цену за штуку.',
+  prep:['Посчитайте одеяла.','Сфотографируйте одеяло и бирку с составом, если она есть.','Напишите размер и наполнитель: пух, синтепон, шерсть и т. д.'],
+  cta:'Заказать стирку одеял',qtyLabel:'Количество одеял',qtyPh:'Например, 1',help:''},
+ facade:{k:'фасады',icon:'b2',title:'Мойка фасадов',short:'Мойка фасадов зданий. Стоимость считаем после выезда и осмотра.',unit:'м²',cardPrice:null,listPrice:null,chipLabel:'Фасады',
+  incl:['мойка фасада под давлением, здания до 3 этажей','выезд на осмотр бесплатный'],
+  how:'Точную стоимость называем после выезда специалиста и осмотра объекта. Заявка с фото нужна, чтобы мы заранее поняли, что предстоит.',
+  prep:['Сфотографируйте фасад целиком и самые загрязнённые места.','Укажите адрес и примерную площадь, если знаете.','Напишите, где можно подъехать и есть ли доступ к воде и электричеству.'],
+  cta:'Оставить заявку на осмотр',qtyLabel:'Примерная площадь фасада, м²',qtyPh:'Например, 80',help:'Необязательно. Если не знаете, оставьте пустым.'}
+};
+const unitPrice=k=>P[SERV[k].k].цена_клиенту_руб_за_ед;
+const typical=k=>P[SERV[k].k].типовой_объём_ед_в_заказе;
+const SKEYS=['facade','carpet','blanket','curtain'];
+const ST=[
+ {c:'accepted',n:'Принят',h:'Мы получили заявку и скоро свяжемся с вами.',i:'inbox'},
+ {c:'picked_up',n:'Забрали',h:'Мы забрали вещи. Для фасадов: специалист выезжал на объект.',i:'truck'},
+ {c:'in_progress',n:'Чистка',h:'Вещи проходят чистку. Мы сообщим, когда заказ будет готов.',i:'waves'},
+ {c:'ready',n:'Готов',h:'Заказ готов. Скоро договоримся о доставке.',i:'pkg'},
+ {c:'delivered',n:'Доставлен',h:'Заказ у вас. Спасибо, что обратились.',i:'home'},
+ {c:'cancelled',n:'Отменён',h:'Заказ отменён. Если это ошибка, свяжитесь с нами.',i:'xc'}
+];
+const FLOW=ST.slice(0,5);
+const stOf=c=>ST.find(s=>s.c===c);
+const SLOTS=['09:00–12:00','12:00–15:00','15:00–18:00','18:00–21:00'];
+const STAFF=['Сотрудник 1','Сотрудник 2'];
+const volTxt=o=>o.service==='pickup'?groupsOf(o.items||[]).map(([k,its])=>grpSummary(k,its)).join('; '):o.service==='facade'?(o.qty?o.qty+' м²':'площадь не указана'):(o.qty+' '+SERV[o.service].unit);
+const priceOf=(k,q)=>unitPrice(k)==null?null:q*unitPrice(k);
+/* ---------- Пикап (корзина) ---------- */
+SERV.pickup={title:'Вывоз по пикапу',chipLabel:'Пикап',unit:'',icon:'truck'};
+const ITEMK=['carpet','curtain','blanket'];
+const plural=(n,f)=>{const a=n%10,b=n%100;return f[(a===1&&b!==11)?0:(a>=2&&a<=4&&(b<12||b>14))?1:2]};
+const NOUN={carpet:['ковёр','ковра','ковров'],curtain:['окно','окна','окон'],blanket:['одеяло','одеяла','одеял']};
+const POSN={carpet:'Ковёр',curtain:'Окно',blanket:'Одеяло'};
+const BLS=[['1,5-спальное','1,5-сп.'],['2-спальное','2-сп.'],['Евро','Евро']];
+const num=v=>{const x=parseFloat(String(v==null?'':v).replace(',','.'));return isNaN(x)?NaN:x};
+const areaOf=it=>{const l=num(it.l),w=num(it.w);return l>0&&w>0?Math.round(l*w*100)/100:0};
+const itemPrice=(k,it)=>k==='carpet'?areaOf(it)*unitPrice('carpet'):k==='curtain'?(it.n||1)*unitPrice('curtain'):unitPrice('blanket');
+const grpTotal=(k,its)=>its.reduce((s,i)=>s+itemPrice(k,i),0);
+function grpSummary(k,its){const n=its.length;
+ if(k==='carpet')return n+' '+plural(n,NOUN.carpet)+', '+nf.format(Math.round(its.reduce((s,i)=>s+areaOf(i),0)*100)/100)+' м²';
+ if(k==='curtain'){const c=its.reduce((s,i)=>s+(i.n||1),0);return n+' '+plural(n,NOUN.curtain)+', '+c+' компл.'}
+ return n+' '+plural(n,NOUN.blanket)}
+function itemLine(k,it,i){
+ if(k==='carpet')return 'Ковёр '+(i+1)+': '+nf.format(num(it.l))+' × '+nf.format(num(it.w))+' м = '+nf.format(areaOf(it))+' м²';
+ if(k==='curtain')return 'Окно '+(i+1)+': '+(it.n||1)+' компл.';
+ return 'Одеяло '+(i+1)+': '+(it.s||'2-спальное')}
+const itemsTotal=items=>items.reduce((s,x)=>s+itemPrice(x.k,x),0);
+const groupsOf=items=>ITEMK.map(k=>[k,items.filter(x=>x.k===k)]).filter(g=>g[1].length);
+const titleOf=o=>o.service==='pickup'?'Вывоз: '+groupsOf(o.items||[]).map(g=>SERV[g[0]].chipLabel.toLowerCase()).join(', '):SERV[o.service].title;
+const hasSvc=(o,k)=>o.service===k||(o.service==='pickup'&&(o.items||[]).some(x=>x.k===k));
+function svcRows(o){
+ if(o.service!=='pickup')return '<div><dt>Услуга</dt><dd>'+SERV[o.service].title+'</dd></div><div><dt>Объём</dt><dd>'+volTxt(o)+'</dd></div>';
+ return '<div class="wide"><dt>Состав</dt><dd class="brief">'+groupsOf(o.items||[]).map(([k,its])=>'<span><b>'+SERV[k].chipLabel+'</b>: '+grpSummary(k,its)+'</span><span class="small muted">'+its.map((it,i)=>itemLine(k,it,i)).join('<br>')+'</span>').join('')+'</dd></div>'}
+
+function photoPh(i,label){const c=['#9FC9C3','#E9C98B','#C9B7E0'][i%3];return 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><rect width="240" height="240" fill="'+c+'"/><path d="M0 170 80 110l60 50 40-30 60 50v50H0z" fill="rgba(22,28,61,.25)"/><text x="120" y="60" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#161C3D">'+label+'</text></svg>')}
+
+function seed(){
+ const now=Date.now(),H=3600e3,t=addDays(0),tm=addDays(1),yd=addDays(-1);
+ const mk=(id,mine,n,svc,qty,date,time,status,staff,extra)=>{
+  const created=now-(1046-id)*H*2; // номера растут со временем: чем больше №, тем новее заявка
+  const hist=[{s:'accepted',t:created}];
+  const idx=FLOW.findIndex(f=>f.c===status);
+  for(let i=1;i<=idx;i++)hist.push({s:FLOW[i].c,t:now-(idx-i+1)*H*3});
+  const r=Object.assign({id,mine,name:n,phone:'+7 900 000-00-'+String(id%100).padStart(2,'0'),service:svc,qty,
+   address:'г. Грозный, '+['ул. Мира','ул. Садовая','ул. Победы','ул. Лермонтова'][id%4]+', '+(id%30+1),date,time,comment:'',photos:[],
+   price:svc==='facade'||svc==='pickup'?null:priceOf(svc,qty),status,history:hist,staff:staff||'',note:'',created},extra||{});
+  if(r.items)r.price=itemsTotal(r.items);
+  return r;
+ };
+ const ago=(r,days)=>{const sh=days*864e5;r.created-=sh;r.history.forEach(h=>h.t-=sh);return r};
+ const o=[
+  mk(1035,true,'Аминат Р.','pickup',null,t,SLOTS[1],'in_progress','Сотрудник 1',{items:[{k:'curtain',n:2},{k:'blanket',s:'2-спальное'}]}),
+  mk(1033,true,'Аминат Р.','blanket',3,yd,SLOTS[0],'delivered','Сотрудник 2'),
+  mk(1040,false,'Марьям С.','pickup',null,t,SLOTS[0],'accepted','',{items:[{k:'carpet',l:'2',w:'3'},{k:'carpet',l:'1,5',w:'2'},{k:'blanket',s:'Евро'},{k:'blanket',s:'1,5-спальное'}]}),
+  mk(1043,false,'Ислам К.','curtain',3,t,SLOTS[0],'accepted',''),
+  mk(1044,false,'Хеда М.','blanket',2,t,SLOTS[0],'accepted',''),
+  mk(1039,false,'Руслан А.','facade',80,t,SLOTS[1],'accepted','',{comment:'Частный дом, 2 этажа.',photos:[photoPh(0,'Фото 1'),photoPh(1,'Фото 2')]}),
+  mk(1037,false,'Зарема Т.','curtain',3,t,SLOTS[2],'picked_up','Сотрудник 1'),
+  mk(1036,false,'Магомед Б.','carpet',20,t,SLOTS[2],'ready','Сотрудник 2'),
+  mk(1034,false,'Седа И.','blanket',2,tm,SLOTS[3],'accepted',''),
+  mk(1041,false,'Аслан Х.','carpet',12,tm,SLOTS[0],'accepted','',{comment:'Ковёр с длинным ворсом.'}),
+  mk(1032,false,'Луиза Р.','facade',null,yd,SLOTS[1],'cancelled','',{cancelReason:'Клиент передумал'}),
+  mk(1031,false,'Тимур Ш.','carpet',5,yd,SLOTS[0],'delivered','Сотрудник 1'),
+  ago(mk(1021,true,'Аминат Р.','curtain',1,addDays(-45),SLOTS[2],'delivered','Сотрудник 2'),45),
+  ago(mk(1012,true,'Аминат Р.','carpet',12,addDays(-120),SLOTS[1],'delivered','Сотрудник 1'),120),
+  ago(mk(1015,false,'Руслан А.','facade',260,addDays(-150),SLOTS[0],'delivered','Сотрудник 1',{price:24000}),150)
+ ];
+ o[10].history.push({s:'cancelled',t:now-H,note:o[10].cancelReason});
+ return {orders:o,user:null,limit:{},cart:{}};
+}
+let S=(function(){try{const r=localStorage.getItem('wim_proto_v5');if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.orders))return o}}catch(e){}return seed()})();
+if(!S.cart)S.cart={};
+const cartCount=()=>ITEMK.reduce((s,k)=>s+(S.cart[k]||[]).length,0);
+const cartTotal=()=>ITEMK.reduce((s,k)=>s+grpTotal(k,S.cart[k]||[]),0);
+const cartItems=()=>ITEMK.flatMap(k=>(S.cart[k]||[]).map(x=>Object.assign({k},x)));
+/* бонусы: вариант A (кешбэк 5% всем) входит в вариант C (уровни по сумме доставленных заказов за 12 месяцев) */
+const LV=[{n:'Свежий',p:5,from:0},{n:'Чистый',p:7,from:8000},{n:'Безупречный',p:10,from:20000}];
+const YEAR=365*864e5;
+const dlvAt=o=>{const h=o.history.find(x=>x.s==='delivered');return h?h.t:0};
+const lvOf=sum=>LV.reduce((a,l)=>sum>=l.from?l:a,LV[0]);
+function loyal(pred){
+ const done=S.orders.filter(o=>pred(o)&&o.status==='delivered'&&o.price>0).sort((a,b)=>dlvAt(a)-dlvAt(b));
+ const before=t=>done.filter(x=>dlvAt(x)<t&&dlvAt(x)>t-YEAR).reduce((s,x)=>s+x.price,0);
+ const acc=done.map(o=>{const l=lvOf(before(dlvAt(o)));return {o,l,b:Math.round((o.price-(o.bonusUse||0))*l.p/100)}});
+ const used=S.orders.filter(o=>pred(o)&&o.status!=='cancelled'&&o.bonusUse).map(o=>({o,u:o.bonusUse}));
+ const year=before(Date.now()+1),lv=lvOf(year),nx=LV[LV.indexOf(lv)+1]||null;
+ return {acc,used,bal:acc.reduce((s,a)=>s+a.b,0)-used.reduce((s,x)=>s+x.u,0),year,lv,nx,left:nx?nx.from-year:0};
+}
+const myL=()=>loyal(o=>o.mine);
+const clientL=o=>loyal(o.mine?x=>x.mine:x=>x.name===o.name);
+const bonusFor=o=>{const a=clientL(o).acc.find(x=>x.o===o);return a?a.b:0};
+const BMAX=30; /* бонусами можно оплатить до 30% заказа */
+const bonusCan=price=>S.user?Math.max(0,Math.min(myL().bal,Math.floor(price*BMAX/100))):0;
+const payLines=o=>o.bonusUse?'<div class="row sb small"><span>Бонусами</span><b>−'+money(o.bonusUse)+'</b></div><div class="row sb small"><span>К оплате при получении</span><b>≈ '+money(o.price-o.bonusUse)+'</b></div>':'';
+const bns=n=>rub(n)+'\u00A0'+plural(n,['бонус','бонуса','бонусов']);
+const earnLine=price=>price>0?'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Начислим '+bns(Math.round(price*myL().lv.p/100))+' после доставки ('+myL().lv.p+'%)':'Вернём от 5% бонусами после доставки')+'</span></div>':'';
+function save(){try{localStorage.setItem('wim_proto_v5',JSON.stringify(S))}catch(e){}}
+const limitOf=s=>(S.limit&&S.limit[s]!=null)?S.limit[s]:5;
+const byId=id=>S.orders.find(o=>o.id===id);
+
+/* ---------- навигация ---------- */
+let mode=location.hash==='#admin'?'admin':'client';
+let view={name:mode==='admin'?'alist':'home'};
+let stack=[];
+let draft=newDraft();
+let errs={};
+let ordersFilter='active';
+let ordersLoaded=false;
+let af={q:'',status:'all',service:'all',date:'all',from:'',to:''};
+let dayDate=addDays(0);
+function newDraft(){return {useBonus:false,service:'',qty:'',desc:'',address:'',date:'',time:'',phone:'',name:'',comment:'',photos:[]}}
+function go(name,p){stack.push(view);view=Object.assign({name},p||{});render()}
+function back(){view=stack.pop()||{name:mode==='admin'?'alist':'home'};render()}
+function tab(name){stack=[];view={name};render()}
+function setMode(m){mode=m;stack=[];view={name:m==='admin'?'alist':'home'};try{if(m==='admin')history.replaceState(null,'','#admin');else history.replaceState(null,'',location.pathname+location.search)}catch(e){location.hash=m==='admin'?'admin':''}render()}
+addEventListener('hashchange',()=>{const m=location.hash==='#admin'?'admin':'client';if(m!==mode)setMode(m)});
+addEventListener('storage',e=>{if(e.key==='wim_proto_v5'){try{S=JSON.parse(e.newValue)||S}catch(x){}if(!['form','service'].includes(view.name))render()}});
+
+/* ---------- каркас ---------- */
+function chrome(){
+ $('#proto').dataset.tone=mode==='admin'?'admin':'hero';
+ /* цвет системной полосы iPhone (время, батарея) — в цвет верхнего блока экрана */
+ const tone=mode==='admin'?'#161C3D':(view.name==='home'?'#2A45D4':'#F2F5FA');
+ $('#themeColor').setAttribute('content',tone);
+ const small=matchMedia('(max-width:599px)').matches;
+ document.documentElement.style.background=document.body.style.background=small?tone:'';
+ $('#ahead').innerHTML=mode==='admin'?'<div class="ahead">'+logo()+'<b>Режим владельца</b><button class="exit" data-act="mode" data-v="client">Клиент</button></div>':'';
+ const tabs=mode==='admin'?[['alist','Заявки','inbox',['alist','acard']],['aday','План на день','cal',['aday']],['aslots','Окна приёма','sl',['aslots']]]
+  :[['home','Главная','grid',['home','service','done','login'].concat(draft.service==='facade'?['form']:[])],['pikap','Забор и доставка','truck',['pikap'].concat(draft.service==='pickup'?['form']:[])],['orders','Заказы','list',['orders','order']],['profile','Профиль','user',['profile','bonus']]];
+ $('#tabbar').innerHTML=tabs.map(t=>'<button data-act="tab" data-v="'+t[0]+'" '+(t[3].includes(view.name)?'aria-current="page"':'')+'>'+ic(t[2])+'<span>'+t[1]+'</span>'+(t[0]==='pikap'&&cartCount()?'<span class="badge" aria-label="позиций: '+cartCount()+'">'+cartCount()+'</span>':'')+'</button>').join('');
+}
+function render(){
+ if(calc.raf){cancelAnimationFrame(calc.raf);calc.raf=0}
+ lotStop();
+ chrome();
+ const V=VIEWS[view.name]||VIEWS.home;
+ const sc=$('#screen');
+ sc.innerHTML='<div class="in">'+V()+'</div>';
+ const C=CTA[view.name],cb=$('#ctabar'),ch=C?C():'';cb.innerHTML=ch;cb.hidden=!ch;$('#phone').classList.toggle('has-cta',!!ch);
+ sc.scrollTop=0;
+ const A=AFTER[view.name];if(A)A();
+}
+const backBtn=()=>'<button class="back" data-act="back">'+ic('back')+'Назад</button>';
+const logo=()=>'<svg class="logo" role="img" aria-label="Wim cleaning"><use href="#wim-logo"/></svg>';
+const empty=(t,x,cta,act)=>'<div class="card empty"><div class="ico">'+ic('inbox')+'</div><h2 class="h2">'+t+'</h2><p class="muted">'+x+'</p>'+(cta?'<button class="btn pri" data-act="'+act+'">'+cta+'</button>':'')+'</div>';
+const chipS=c=>'<span class="chip s-'+c+'">'+stOf(c).n+'</span>';
+
+/* ---------- клиентские экраны ---------- */
+const VIEWS={};
+const AFTER={};
+const CTA={};
+/* ---------- призовая карусель GRASS (версия 2; ТЗ: Материалы/GRASS/ТЗ_карусель.md, вид: design.md «Версия 2») ---------- */
+/* Товары: фото от владельца, сверка — assets/prizes/PRIZES.md. scale (k) — высота фото в долях базовой высоты Hc;
+   dx — сдвиг по X в % ширины файла, drop — вниз в % высоты файла, sw — ширина контактной тени в долях Hc (design.md §3). */
+const PRIZE_SRC='Фото от владельца, Telegram 2026-11-10, ';
+const PRIZES=[
+ {id:'velly-lemon',      name:'GRASS Velly «Лимон», 500 мл — средство для посуды',                 short:'Velly «Лимон», 500 мл',      img:'assets/prizes/01-velly-lemon.webp',      source:PRIZE_SRC+'IMG_4557',scale:.96, dx:2.7, drop:4.5,sw:.30},
+ {id:'clean-glass-pro',  name:'GRASS Clean Glass Professional, 600 мл — очиститель стёкол',        short:'Clean Glass Professional',   img:'assets/prizes/02-clean-glass-pro.webp',  source:PRIZE_SRC+'IMG_4559',scale:1.03,dx:0,   drop:2.2,sw:.32},
+ {id:'universal-cleaner',name:'GRASS Universal Cleaner, 600 мл — универсальное чистящее средство', short:'Universal Cleaner, 600 мл',  img:'assets/prizes/03-universal-cleaner.webp',source:PRIZE_SRC+'IMG_4558',scale:1.04,dx:-1.6,drop:3.3,sw:.30},
+ {id:'arena-lily',       name:'GRASS Arena «Водная лилия», 1 л — средство для пола',               short:'Arena «Водная лилия», 1 л',  img:'assets/prizes/04-arena-lily.webp',       source:PRIZE_SRC+'IMG_4560',scale:1.01,dx:-2.2,drop:1.9,sw:.34},
+ {id:'gloss',            name:'GRASS Gloss, 600 мл — средство для ванной',                         short:'Gloss, 600 мл',              img:'assets/prizes/05-gloss.webp',            source:PRIZE_SRC+'IMG_4563',scale:1.01,dx:0,   drop:.8, sw:.30},
+ {id:'azelit',           name:'GRASS Azelit, 600 мл — средство для удаления жира',                 short:'Azelit, 600 мл',             img:'assets/prizes/06-azelit.webp',           source:PRIZE_SRC+'IMG_4561',scale:1.03,dx:-1.7,drop:.5, sw:.30},
+ {id:'milana-blueberry', name:'GRASS Milana «Черника в йогурте», 500 мл — жидкое крем-мыло',       short:'Milana «Черника в йогурте»', img:'assets/prizes/07-milana-blueberry.webp', source:PRIZE_SRC+'IMG_4562',scale:.93, dx:-1.1,drop:1.6,sw:.30},
+ {id:'wiper-soft',       name:'GRASS Wiper Soft, 40 × 40 см — салфетка из микрофибры',   short:'Wiper Soft, 40 × 40 см',img:'assets/prizes/08-wiper-soft.webp',   source:PRIZE_SRC+'IMG_4566',scale:.74, dx:-4.1,drop:.6, sw:.62},
+ // 09: на фото белая коробка без надписей — ждём решения владельца, фото не меняем
+ {id:'magic-glass',      name:'GRASS Magic Glass, 40 × 50 см, 10 шт. — набор салфеток', short:'Magic Glass, 10 шт.',        img:'assets/prizes/09-magic-glass.webp',      source:PRIZE_SRC+'IMG_4565',scale:.68, dx:-1.1,drop:8,  sw:.56},
+ {id:'maxi-sponges',     name:'GRASS MAXI, 5 шт. — набор губок',                                   short:'Губки MAXI, 5 шт.',          img:'assets/prizes/10-maxi-sponges.webp',     source:PRIZE_SRC+'IMG_4564',scale:.40, dx:-2,  drop:7.7,sw:.76},
+];
+/* Движение: разгон → постоянная скорость, пока ждём ответ pickPrize → плавное замедление до приза.
+   При мгновенном ответе всё вращение ≈ LOT_ACC_MS + LOT_DEC_MS ≈ 5,5 с (ТЗ: 5–6 с). */
+const LOT_ACC_MS=700;        // разгон, мс
+const LOT_DEC_MS=4800;       // замедление до приза, мс — ДЛИТЕЛЬНОСТЬ ВРАЩЕНИЯ меняется здесь
+const LOT_SPEED=.75;         // крейсерская скорость, градусов в мс (≈2 оборота в секунду)
+const LOT_STEP=360/PRIZES.length; // 36° между товарами
+const LOT_OFF=6;             // запас сверху сцены, px: зазор между указателем и самым высоким флаконом ≥ 7 px
+/* Выбор приза — ЗДЕСЬ подключать сервер: вернуть индекс в PRIZES (можно Promise, например по ответу fetch).
+   Пока ответа нет, барабан крутится с постоянной скоростью. Демо: равные вероятности, ничего не сохраняется. */
+async function pickPrize(){return Math.floor(Math.random()*PRIZES.length)}
+/* onResult: вызывается ровно один раз на каждый розыгрыш, когда товар встал под указатель; получает объект товара из PRIZES.
+   Демо: заказы, бонусы и S не меняет. */
+function onPrizeResult(prize){}
+const LOT={A:0,state:'loading',idx:0,raf:0,timers:[],spin:null,tok:0,msg:'',load:null,ok:false,sec:null,els:null,W:343,
+ pick:pickPrize,onResult:onPrizeResult,accMs:LOT_ACC_MS,decMs:LOT_DEC_MS,speed:LOT_SPEED};
+window.wimLot=LOT; // для проверок: wimLot.pick=()=>3; wimLot.decMs=300
+/* предзагрузка всех фото; без неё розыгрыш недоступен */
+function lotPreload(){
+ if(!LOT.load)LOT.load=Promise.all(PRIZES.map(p=>new Promise((ok,bad)=>{const im=new Image();im.onload=()=>ok();im.onerror=()=>bad(p.img);im.src=p.img})))
+  .then(()=>{LOT.ok=true},e=>{LOT.load=null;throw e});
+ return LOT.load;
+}
+const LOT_PTR='<svg viewBox="0 0 16 11"><path d="M1.6 0h12.8a1.4 1.4 0 0 1 1.1 2.3L9.1 10.3a1.4 1.4 0 0 1-2.2 0L.5 2.3A1.4 1.4 0 0 1 1.6 0z" fill="#fff"/></svg>';
+function lotHTML(){return '<section class="lot" id="lot" data-state="loading" aria-labelledby="lotH"><h2 class="lot-h" id="lotH">Испытайте удачу</h2>'+
+ '<p class="lot-sub muted small">Крутите барабан и выигрывайте подарки для уборки</p>'+
+ '<div class="lot-scene" id="lotScene" aria-hidden="true"><div class="lot-halo"></div><div class="lot-glow"></div><div class="lot-side"></div><div class="lot-top"></div><div class="lot-beam"></div><div class="lot-spot"></div><div class="lot-ring" id="lotRing"></div><div class="lot-pointer">'+LOT_PTR+'</div></div>'+
+ '<div class="lot-cap" aria-live="polite" aria-atomic="true"><p class="lot-kick">Ваш подарок</p><p class="lot-name" id="lotName">'+esc(PRIZES[0].short)+'</p></div>'+
+ '<button class="lot-btn" id="lotBtn" type="button" data-act="lot" aria-disabled="true">Испытать удачу</button></section>'}
+function lotMeasure(){const sc=$('#lotScene');if(!sc)return;LOT.W=sc.clientWidth||343;sc.style.setProperty('--W',LOT.W+'px')}
+/* раскладка по одному общему углу A: только transform/opacity, без render() */
+function lotLayout(){
+ if(!LOT.els)return;
+ const W=LOT.W,R=.32*W,yc=.48*W+LOT_OFF,dy=.077*W,RAD=Math.PI/180;
+ LOT.els.forEach((el,i)=>{
+  const th=(LOT.A+i*LOT_STEP)*RAD,s=Math.sin(th),c=Math.cos(th);
+  const op=Math.min(1,Math.max(0,c/.30));
+  if(op<=0){el.style.visibility='hidden';return}
+  const sc=Math.max(.45,1/(1+.9*(1-c)));
+  el.style.visibility='visible';
+  el.style.transform='translate3d('+(R*s).toFixed(2)+'px,'+(yc+dy*c).toFixed(2)+'px,0) scale('+sc.toFixed(4)+')';
+  el.style.opacity=op.toFixed(3);el.style.zIndex=Math.round(100+c*100);
+ });
+}
+const lotMod=a=>((a%360)+360)%360;
+function lotCenter(){return Math.round(lotMod(-LOT.A)/LOT_STEP)%PRIZES.length}
+function lotState(st,idx){
+ LOT.state=st;if(idx!=null)LOT.idx=idx;if(st!=='idle')LOT.msg='';
+ const sec=LOT.sec;if(!sec||!sec.isConnected)return;
+ const name=sec.querySelector('#lotName'),btn=sec.querySelector('#lotBtn');
+ sec.dataset.state=st;
+ if(LOT.els)LOT.els.forEach((el,i)=>el.classList.toggle('win',st==='result'&&i===LOT.idx));
+ const busy=st==='spinning'||st==='loading';
+ name.textContent=st==='spinning'?'Выбираем подарок…':st==='error'?'Не удалось загрузить подарки':st==='result'?PRIZES[LOT.idx].short:(LOT.msg||PRIZES[lotCenter()].short);
+ btn.textContent=st==='spinning'?'Вращаем…':st==='error'?'Повторить':'Испытать удачу';
+ if(busy)btn.setAttribute('aria-disabled','true');else btn.removeAttribute('aria-disabled');
+}
+const lotLive=()=>!!(LOT.sec&&LOT.sec.isConnected&&LOT.els&&!document.hidden);
+function lotMount(){
+ LOT.sec=$('#lot');if(!LOT.sec)return;
+ LOT.els=null;lotMeasure();
+ if(!LOT.ok){
+  lotState('loading');
+  lotPreload().then(()=>{if(LOT.sec&&LOT.sec.isConnected)lotMount()},()=>{if(LOT.sec&&LOT.sec.isConnected)lotState('error')});
+  return;
+ }
+ const ring=$('#lotRing');
+ ring.innerHTML=PRIZES.map(p=>'<div class="lot-item" style="--k:'+p.scale+';--dx:'+p.dx+';--drop:'+p.drop+';--sw:'+p.sw+'"><i></i><img src="'+p.img+'" alt="'+esc(p.name)+'" draggable="false"></div>').join('');
+ LOT.els=[...ring.children];
+ lotLayout();
+ if(LOT.spin){ // вернулись на главную, пока ждём ответ pickPrize: продолжаем вращение
+  lotState('spinning');
+  if(LOT.spin.rm)ring.style.opacity='0';else lotRun();
+  return;
+ }
+ lotState(LOT.state==='result'?'result':'idle');
+}
+/* Угол во время вращения. Фаза run: разгон с линейным ростом скорости, затем постоянная скорость (угол уменьшается,
+   товары едут справа налево). Фаза dec: кубическая кривая h(u)=m·u+(3−2m)u²+(m−2)u³ — начальная скорость равна
+   текущей (без рывка), в конце скорость 0, без отскока и обратного хода (m ≤ 3). */
+function lotPlan(sp,now,fail){
+ const t=now-sp.t0,acc=LOT.accMs,v=LOT.speed*Math.min(1,t/acc);
+ const D=fail?Math.min(1200,LOT.decMs):LOT.decMs,want=v*D/3;
+ // сначала результат, потом конечный угол: от текущего A, A ≡ −idx·36° (при отказе — ближайшая позиция товара)
+ let dist;
+ if(fail){dist=lotMod(LOT.A)%LOT_STEP;while(dist<want)dist+=LOT_STEP}
+ else{dist=lotMod(LOT.A+sp.idx*LOT_STEP);while(dist<want)dist+=360}
+ sp.dec={a0:LOT.A,dist,D,t0:now,m:v*D/dist,fail};
+}
+function lotFrame(now){
+ LOT.raf=0;const sp=LOT.spin;if(!sp||!lotLive())return;
+ if(sp.t0==null){sp.t0=now;sp.base=LOT.A}
+ if(!sp.dec){
+  const t=now-sp.t0,acc=LOT.accMs,V=LOT.speed;
+  LOT.A=sp.base-(t<acc?V*t*t/(2*acc):V*(t-acc/2));
+  if(t>=acc&&(sp.idx!=null||sp.fail))lotPlan(sp,now,sp.fail);
+ }
+ if(sp.dec){
+  const d=sp.dec,u=Math.min(1,(now-d.t0)/d.D),m=d.m;
+  LOT.A=d.a0-d.dist*(m*u+(3-2*m)*u*u+(m-2)*u*u*u);
+  if(u>=1){LOT.A=d.a0-d.dist;lotLayout();lotFinish();return}
+ }
+ lotLayout();
+ LOT.raf=requestAnimationFrame(lotFrame);
+}
+/* запускает кадры, только если главная на экране и вкладка видима; один rAF-цикл одновременно */
+function lotRun(){if(!LOT.raf&&LOT.spin&&!LOT.spin.rm&&lotLive())LOT.raf=requestAnimationFrame(lotFrame)}
+async function lotSpin(){
+ if(LOT.spin||(LOT.state!=='idle'&&LOT.state!=='result'))return; // одновременно не больше одного розыгрыша и одного запроса pick
+ if(!LOT.ok||!LOT.els)return;
+ const tok=++LOT.tok,sp={tok,idx:null,fail:false,t0:null,base:LOT.A,dec:null,rm:reduce(),done:false};
+ LOT.spin=sp;lotState('spinning');
+ if(sp.rm){const ring=$('#lotRing');ring.style.transition='opacity .2s';ring.style.opacity='0'}
+ else lotRun();
+ let idx;try{idx=await LOT.pick()}catch(e){idx=-1}
+ if(LOT.spin!==sp||sp.tok!==LOT.tok)return; // ответ устарел
+ if(Number.isInteger(idx)&&idx>=0&&idx<PRIZES.length)sp.idx=idx;else sp.fail=true;
+ if(sp.rm){ // без вращения: товары гасли, ставим угол и проявляем
+  if(sp.idx!=null)LOT.A=LOT.A-lotMod(LOT.A+sp.idx*LOT_STEP);
+  const fin=()=>{if(LOT.spin===sp)lotFinish()};
+  if(!lotLive()){fin();return}
+  LOT.timers.push(setTimeout(()=>{lotLayout();const ring=$('#lotRing');if(ring){ring.style.transition='opacity .3s';ring.style.opacity='1'}LOT.timers.push(setTimeout(fin,300))},200));
+  return;
+ }
+ if(!lotLive())lotFinish(); // главная не на экране или вкладка в фоне — сразу итог
+}
+function lotFinish(){
+ const sp=LOT.spin;if(!sp||sp.done)return;
+ sp.done=true;LOT.spin=null;cancelAnimationFrame(LOT.raf);LOT.raf=0;LOT.timers.forEach(clearTimeout);LOT.timers=[];
+ if(sp.dec)LOT.A=sp.dec.a0-sp.dec.dist;
+ else if(sp.idx!=null)LOT.A=LOT.A-lotMod(LOT.A+sp.idx*LOT_STEP)-360;
+ else LOT.A=LOT.A-lotMod(LOT.A)%LOT_STEP;
+ lotLayout();
+ const ring=$('#lotRing');if(ring){ring.style.transition='';ring.style.opacity=''}
+ if(sp.idx==null){LOT.msg='Не получилось, попробуйте ещё раз';lotState('idle');LOT.msg='';return}
+ lotState('result',sp.idx);
+ try{LOT.onResult(PRIZES[sp.idx])}catch(e){}
+}
+/* уход с главной (render) или вкладка в фоне: rAF отменяем. Если приз уже известен — сразу итог;
+   если ждём pickPrize — розыгрыш остаётся, при возврате вращение продолжится с текущего угла. */
+function lotPause(){
+ cancelAnimationFrame(LOT.raf);LOT.raf=0;
+ const sp=LOT.spin;if(!sp)return;
+ if(sp.dec||sp.idx!=null||sp.fail)lotFinish();
+ else{sp.t0=null;LOT.timers.forEach(clearTimeout);LOT.timers=[]}
+}
+function lotStop(){lotPause();LOT.sec=null;LOT.els=null}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)lotPause();else lotRun()});
+addEventListener('resize',()=>{if(LOT.sec&&LOT.sec.isConnected&&LOT.els){lotMeasure();lotLayout()}});
+AFTER.home=()=>{lotMount();a2hs()};
+function a2hs(){
+ const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),inApp=navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+ let closed=false;try{closed=localStorage.getItem('wim_a2hs')==='1'}catch(e){}
+ if(!ios||inApp||closed||$('#a2hs'))return;
+ const d=document.createElement('div');d.className='a2hs';d.id='a2hs';d.setAttribute('role','note');
+ d.innerHTML='<span class="ai"><img src="icon-180.png" alt=""></span><p>Установите Wimcleaning на телефон: нажмите <svg class="sh" viewBox="0 0 24 24" aria-label="Поделиться"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v9h14v-9"/></svg> «Поделиться», затем «На экран „Домой“».</p><button class="cl" data-act="a2hsClose" aria-label="Закрыть">'+ic('x')+'</button>';
+ $('#phone').appendChild(d)}
+VIEWS.home=()=>{
+ const mine=S.orders.filter(o=>o.mine&&!['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created)[0];
+ const recent=S.orders.filter(o=>o.mine&&o.status==='delivered').sort((a,b)=>b.created-a.created)[0];
+ const recentItems=recent?(recent.service==='pickup'?(recent.items||[]).map(x=>SERV[x.k].chipLabel.toLowerCase()).join(', '):SERV[recent.service].chipLabel.toLowerCase()):'Закажите чистку — мы сохраним её для следующего раза';
+ const tracker=mine?FLOW.findIndex(f=>f.c===mine.status):-1;
+ return '<header class="hero"><div class="brand">'+logo()+'<p class="muted small">Чистота дома начинается здесь</p></div><div class="lead"><h1 class="h1">Профессиональная чистка с заботой о вещах</h1><p class="muted">Заберём, почистим и вернём в удобное время.</p></div></header>'+
+ (mine?'<button class="card tap active-order" data-act="open" data-id="'+mine.id+'"><span class="row sb"><span class="xs muted">Активный заказ №'+mine.id+'</span>'+chipS(mine.status)+'</span><b>'+titleOf(mine)+'</b><span class="small muted">'+FLOW[Math.max(0,tracker)].n+' · '+(mine.status==='in_progress'?'Ожидаемая готовность — уточним после обработки':stOf(mine.status).h)+'</span><span class="home-progress" aria-label="Этап '+(tracker+1)+' из 5"><i style="width:'+Math.max(20,(tracker+1)*20)+'%"></i></span><span class="xs muted">Этап '+(tracker+1)+' из 5 · Смотреть заказ</span></button>':'')+
+ '<button class="promo compact-promo" data-act="bonus"><span class="pp">'+(S.user?rub(myL().bal):'5%')+'</span><span class="grow"><b>'+(S.user?'Ваши бонусы':'Бонусы на следующие заказы')+'</b><span class="small muted">'+(S.user?'Можно оплатить до 30% заказа':'Начислим от 5% после доставки')+'</span></span>'+chevI+'</button>'+
+ (recent?'<section class="quick-repeat"><div class="row sb"><div><h2 class="h2">Повторить заказ</h2><p class="small muted">'+recentItems+' · данные уже заполнены</p></div><button class="btn sec" data-act="reorder" data-id="'+recent.id+'">Повторить</button></div></section>':'')+
+ '<div class="sect"><h2 class="h2">Что нужно почистить?</h2><p class="muted small">Выберите услугу, чтобы рассчитать цену или прислать фото</p></div>'+
+ '<div class="stack"><div class="svc-list">'+SKEYS.map(k=>{const s=SERV[k];return '<button class="svc" data-act="svc" data-k="'+k+'"><span class="ico">'+ic(s.icon)+'</span><span><h3>'+s.title+'</h3>'+(s.listPrice?'<span class="price-line"><span>'+s.listPrice+'</span>'+demoChip()+'</span>':'<span class="note">Рассчитать по фото</span>')+'</span><svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true">'+IC.chev+'</svg></button>'}).join('')+'</div></div>'+
+ '<button class="btn out" data-act="tab" data-v="orders">Все заказы</button>';
+};
+
+let calc={k:'carpet',val:6,shown:6,raf:0};
+function calcHTML(k){
+ if(k==='facade')return '<div class="card calc"><h2 class="h2">Предварительная цена</h2><p>Рассчитаем после выезда и оценки по фото.</p><p class="small muted">Для фасадов цена зависит от площади, высоты и загрязнения. Её называем после осмотра.</p>'+
+  '<ol class="list small"><li>Фото и адрес</li><li>Выезд специалиста</li><li>Индивидуальное предложение</li></ol></div>';
+ const s=SERV[k];
+ const body=k==='carpet'?
+  '<div class="rug-wrap">'+rugSVG()+'</div>'+
+   '<div class="slider"><div class="row sb"><div class="area-read"><span id="areaTxt">6</span> м²</div><span class="xs muted">1–40 м²</span></div>'+
+  '<input type="range" id="rng" min="1" max="40" step="0.5" value="6" aria-label="Площадь ковров, м²">'+
+   '<div class="scale" aria-hidden="true"><span>1</span><span>10</span><span>20</span><span>30</span><span>40</span></div></div>'+
+  '<div class="stepper"><button class="iconbtn" data-act="cdec" aria-label="Уменьшить площадь">'+ic('minus')+'</button><input class="inp" id="qtyIn" inputmode="decimal" value="6" aria-label="Точная площадь, м²"><button class="iconbtn" data-act="cinc" aria-label="Увеличить площадь">'+ic('plus')+'</button></div>'+
+   '<p class="small muted hint" id="hintTxt" role="status"></p>'
+  :'<div class="stack"><span class="small muted">'+s.qtyLabel+'</span><div class="stepper"><button class="iconbtn" data-act="cdec" aria-label="Уменьшить">'+ic('minus')+'</button><input class="inp" id="qtyIn" inputmode="numeric" value="'+typical(k)+'" aria-label="'+s.qtyLabel+'"><button class="iconbtn" data-act="cinc" aria-label="Увеличить">'+ic('plus')+'</button></div></div><p class="small muted hint" id="hintTxt" role="status"></p>';
+ return '<div class="card calc"><h2 class="h2">Предварительная цена</h2>'+body+
+   '<div class="total"><div class="price-line"><span class="big" id="bigPrice">0\u00A0₽</span>'+demoChip()+'</div><p class="small muted" id="calcLine"></p><span class="sr" id="calcSr" aria-live="polite"></span></div>'+
+   '<p class="xs muted">Предварительно. Итог уточним после осмотра.</p></div>';
+}
+function rugSVG(){
+ const pat=(c)=>'<rect x="14" y="14" width="292" height="172" fill="'+c[0]+'"/><rect x="26" y="26" width="268" height="148" fill="none" stroke="'+c[1]+'" stroke-width="4"/><rect x="40" y="40" width="240" height="120" fill="'+c[2]+'"/><path d="M160 48 232 100 160 152 88 100Z" fill="'+c[3]+'"/><path d="M160 70 200 100 160 130 120 100Z" fill="'+c[1]+'"/><circle cx="160" cy="100" r="10" fill="'+c[0]+'"/>'+
+  [60,100,140].map(y=>'<path d="M52 '+y+'l10-10 10 10-10 10zM248 '+y+'l10-10 10 10-10 10z" fill="'+c[3]+'"/>').join('');
+ let fr='';for(let x=18;x<310;x+=12)fr+='M'+x+' 14v-10M'+x+' 186v10';
+ return '<svg class="rug" id="rug" viewBox="0 0 320 200" role="img" aria-label="Ковёр: чистая часть показывает долю площади от 40 м²">'+
+  '<defs><clipPath id="wash"><rect id="washRect" x="0" y="0" width="48" height="200"/></clipPath><linearGradient id="sheen" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".6" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>'+
+  '<path d="'+fr+'" stroke="#A89F8E" stroke-width="2" stroke-linecap="round" fill="none"/>'+
+  '<g>'+pat(['#9B927F','#7D7464','#B2A998','#8A8170'])+'<ellipse cx="90" cy="140" rx="20" ry="9" fill="#6E6556" opacity=".5"/><ellipse cx="236" cy="62" rx="14" ry="8" fill="#6E6556" opacity=".5"/><ellipse cx="200" cy="150" rx="10" ry="6" fill="#6E6556" opacity=".4"/></g>'+
+  '<g clip-path="url(#wash)">'+pat(['#2A45D4','#C99A2E','#F7F3E8','#1B2B8C'])+'<path d="'+fr+'" stroke="#F7F3E8" stroke-width="2" stroke-linecap="round" fill="none"/><rect id="sheenRect" x="0" y="0" width="40" height="200" fill="url(#sheen)" transform="translate(0 0)"/></g></svg>';
+}
+function calcUpdate(v){
+ const k=calc.k;if(k==='facade')return;
+ const s=SERV[k];
+  const line=k==='carpet'?(String(v).replace('.',',')+' м² × '+unitPrice(k)+' ₽'):(v+' '+s.unit+' × '+rub(unitPrice(k))+' ₽');
+  $('#calcLine').textContent=line;$('#calcSr').textContent='Примерно: '+money(v*unitPrice(k))+'';
+ const target=v*unitPrice(k);
+ cancelAnimationFrame(calc.raf);
+ const from=calc.shown,t0=performance.now(),dur=reduce()?0:380;
+ const f0=calc.fracShown==null?0:calc.fracShown;
+ const tf=k==='carpet'?v/40:0;
+ const step=now=>{
+  const p=dur?Math.min(1,(now-t0)/dur):1,e=1-Math.pow(1-p,3);
+  const val=from+(target-from)*e;calc.shown=val;
+  const bp=$('#bigPrice');if(!bp||!bp.firstChild){calc.raf=0;return}
+   bp.firstChild.nodeValue=money(val);
+  if(k==='carpet'){const fr=f0+(tf-f0)*e;calc.fracShown=fr;const w=Math.max(0,fr*292+14);const r=$('#washRect');if(r){r.setAttribute('width',w);const sh=$('#sheenRect');sh.setAttribute('transform','translate('+Math.max(0,w-40)+' 0)')}}
+  if(p<1)calc.raf=requestAnimationFrame(step);
+ };
+ calc.raf=requestAnimationFrame(step);
+ calc.val=v;
+}
+function calcSet(raw,from){
+ const k=calc.k;let v=parseFloat(String(raw).replace(',','.'));
+ const lo=1,hi=k==='carpet'?40:20,stp=k==='carpet'?0.5:1;
+ let hint='';
+ if(isNaN(v)){v=lo}
+ if(v>hi){hint=k==='carpet'?'Для заказа больше 40 м² оставьте заявку, посчитаем вручную.':'Для большего количества оставьте заявку, посчитаем вручную.';v=hi}
+ if(v<lo)v=lo;
+ v=Math.round(v/stp)*stp;
+ if(k==='carpet'){const r=$('#rng');r.value=v;r.style.setProperty('--p',((v-1)/39*100)+'%');$('#areaTxt').textContent=String(v).replace('.',',')}
+ if(from!=='in')$('#qtyIn').value=String(v).replace('.',',');
+ $('#hintTxt').textContent=hint;
+ if(v!==calc.val||from==='init'){try{if(k==='carpet'&&from!=='init')navigator.vibrate&&navigator.vibrate(6)}catch(e){}calcUpdate(v)}
+}
+let ed={k:null,items:[]};
+const blankItem=k=>k==='carpet'?{l:'',w:''}:k==='curtain'?{n:1}:{s:'2-спальное'};
+function edInit(k){ed={k,items:(S.cart[k]&&S.cart[k].length)?JSON.parse(JSON.stringify(S.cart[k])):[blankItem(k)]}}
+const EDH={carpet:'Ваши ковры',curtain:'Ваши шторы',blanket:'Ваши одеяла'};
+function edPos(it,i){
+ const k=ed.k,rm=ed.items.length>1?'<button class="iconbtn sm" data-act="edRm" data-i="'+i+'" aria-label="Убрать: '+POSN[k].toLowerCase()+' '+(i+1)+'">'+ic('x')+'</button>':'';
+ let body='';
+ if(k==='carpet'){const a=areaOf(it);
+  body='<div class="dims"><div class="dim"><label for="l'+i+'">Длина, м</label><input class="inp" id="l'+i+'" inputmode="decimal" data-ed="l" data-i="'+i+'" placeholder="0,0" value="'+esc(it.l)+'"></div><span class="x" aria-hidden="true">×</span>'+
+   '<div class="dim"><label for="w'+i+'">Ширина, м</label><input class="inp" id="w'+i+'" inputmode="decimal" data-ed="w" data-i="'+i+'" placeholder="0,0" value="'+esc(it.w)+'"></div>'+
+   '<div class="area"><span>Площадь</span><b id="ar'+i+'">'+(a?nf.format(a)+' м²':'— м²')+'</b></div></div>'}
+ else if(k==='curtain')body='<div class="row sb"><span class="small">Комплектов на окне</span><div class="stepper mini"><button class="iconbtn" data-act="edN" data-i="'+i+'" data-d="-1" aria-label="Меньше комплектов">'+ic('minus')+'</button><span class="num" id="n'+i+'">'+(it.n||1)+'</span><button class="iconbtn" data-act="edN" data-i="'+i+'" data-d="1" aria-label="Больше комплектов">'+ic('plus')+'</button></div></div>';
+ else body='<div class="seg3" role="group" aria-label="Размер одеяла '+(i+1)+'">'+BLS.map(b=>'<button class="pick" data-act="edS" data-i="'+i+'" data-v="'+b[0]+'" aria-pressed="'+(it.s===b[0])+'">'+b[1]+'</button>').join('')+'</div>';
+ const pr=itemPrice(k,it);
+ return '<div class="pos" id="pos'+i+'"><div class="pos-h"><b>'+POSN[k]+' '+(i+1)+'</b>'+rm+'</div>'+body+'<div class="pos-f"><span class="err" id="pe'+i+'"></span><b id="pp'+i+'">'+(pr?money(pr):'')+'</b></div></div>'}
+function edHTML(){const k=ed.k;
+ return ed.items.map(edPos).join('')+'<button class="addpos" data-act="edAdd">'+ic('plus')+'Добавить '+NOUN[k][0]+'</button>'+
+  '<div class="ed-total"><span class="small muted" id="edSum">'+grpSummary(k,ed.items)+'</span><b id="edTot">≈ '+money(grpTotal(k,ed.items))+'</b></div>'}
+function edRefresh(i){const k=ed.k,it=ed.items[i];
+ if(k==='carpet'){const a=areaOf(it),e=$('#ar'+i);if(e)e.textContent=a?nf.format(a)+' м²':'— м²'}
+ const p=$('#pp'+i);if(p){const v=itemPrice(k,it);p.textContent=v?money(v):''}
+ $('#edSum').textContent=grpSummary(k,ed.items);$('#edTot').textContent='≈ '+money(grpTotal(k,ed.items))}
+function edRedraw(focus){$('#ed').innerHTML=edHTML();if(focus!=null){const f=$('#l'+focus);if(f)f.focus()}}
+function edCheck(){
+ if(ed.k!=='carpet')return true;let first=null;
+ ed.items.forEach((it,i)=>{const l=num(it.l),w=num(it.w),bad=!(l>0&&l<=15&&w>0&&w<=15);
+  ['l','w'].forEach(f=>{const x=$('#'+f+i);if(x)x.classList.toggle('bad',bad&&!(num(it[f])>0&&num(it[f])<=15))});
+  $('#pe'+i).textContent=bad?'Укажите длину и ширину до 15 м':'';if(bad&&first==null)first=i});
+ if(first!=null){const e=$('#pos'+first);e.scrollIntoView({block:'center',behavior:reduce()?'auto':'smooth'});return false}
+ return true}
+function truckBump(){const b=document.querySelector('.tabbar [data-v=pikap]');if(!b||!window.gsap||reduce())return;
+ const t=b.querySelector('svg'),g=b.querySelector('.badge');
+ gsap.timeline().to(t,{y:-8,rotation:-10,duration:.18,ease:'power2.out'}).to(t,{y:0,rotation:0,duration:.6,ease:'bounce.out'});
+ if(g)gsap.fromTo(g,{scale:1.7},{scale:1,duration:.45,ease:'back.out(3)'})}
+function lvlCard(L,link){
+ const pr=L.nx?Math.min(100,Math.round(L.year/L.nx.from*100)):100;
+ return '<div class="lvl"><div class="top"><div><div class="eyebrow">Ваш уровень</div><div class="name">«'+L.lv.n+'»</div></div><div class="pct">'+L.lv.p+'%</div></div>'+
+ '<div class="stack tight"><div class="bar" role="progressbar" aria-label="До следующего уровня" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pr+'"><i style="width:'+pr+'%"></i></div>'+
+ '<p class="sub">'+(L.nx?'За год: '+money(L.year)+'. Ещё '+money(L.left)+' до «'+L.nx.n+'», будет '+L.nx.p+'%.':'Высший уровень: '+L.lv.p+'% бонусами и личный менеджер.')+'</p></div>'+
+ '<div class="bal"><span>Бонусов на счёте</span><b>'+rub(L.bal)+'</b></div>'+
+ (link?'<button class="btn" data-act="bonus">Как работают уровни</button>':'')+'</div>';
+}
+const chevI='<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true">'+IC.chev+'</svg>';
+function promo(){
+ if(S.user){const L=myL();return '<button class="promo" data-act="bonus"><span class="pp">'+L.lv.p+'%</span><span class="grow"><b>Уровень «'+L.lv.n+'» · '+bns(L.bal)+'</b><span class="small muted">'+(L.nx?'До '+L.nx.p+'% осталось '+money(L.left):'Личный менеджер и 10% бонусами')+'</span></span>'+chevI+'</button>'}
+ return '<button class="promo" data-act="bonus"><span class="pp"><small>до</small>10%</span><span class="grow"><b>Возвращаем бонусами до 10%</b><span class="small muted">Чем больше заказываете за год, тем выше процент</span></span>'+chevI+'</button>';
+}
+const barIn=()=>{const b=document.querySelector('.bar i');if(b&&window.gsap&&!reduce())gsap.from(b,{scaleX:0,duration:.9,ease:'power2.out',delay:.1})};
+VIEWS.bonus=()=>{
+ const L=S.user?myL():null;
+ return backBtn()+'<h1 class="h1">Бонусы и уровни</h1><p class="muted">Возвращаем часть стоимости бонусами. Чем больше вы заказали за год, тем выше процент.</p>'+
+ (L?lvlCard(L):'<div class="card stack"><p class="muted">Войдите, чтобы видеть свой уровень и бонусы.</p><button class="btn pri" data-act="goLogin">Вход</button></div>')+
+ '<div class="sect"><h2 class="h2">Уровни</h2></div><ul class="tiers">'+LV.map(l=>'<li class="tier'+(L&&L.lv===l?' cur':'')+'"><span class="tp">'+l.p+'%</span><div><div class="row sb"><h3>«'+l.n+'»</h3>'+(L&&L.lv===l?'<span class="chip lv">Вы здесь</span>':'')+'</div><p class="small muted">'+(l.from?'От '+money(l.from)+' за год':'С первого заказа')+(l.p===10?'. Плюс личный менеджер':'')+'</p></div></li>').join('')+'</ul>'+
+ '<div class="card stack"><h3>Как это работает</h3><ul class="list small"><li>Бонусы начисляем, когда заказ доставлен: процент от суммы заказа.</li><li>Уровень считаем по сумме заказов за последние 12 месяцев.</li><li>1 бонус = 1 ₽. Бонусами можно оплатить до '+BMAX+'% заказа, списываем при получении.</li></ul><p class="small muted">Пример: семья заказала на 8 300 ₽ за год и получает уже 7%.</p></div>'+
+ (L&&(L.acc.length||L.used.length)?'<div class="card stack"><h3>Начисления и списания</h3><ul class="hist">'+[...L.acc.map(a=>({t:dlvAt(a.o),h:'<li><span>Заказ №'+a.o.id+' · '+a.l.p+'%</span><b>+'+rub(a.b)+'</b></li>'})),...L.used.map(x=>({t:x.o.created,h:'<li><span>Оплата заказа №'+x.o.id+'</span><b>−'+rub(x.u)+'</b></li>'}))].sort((a,b)=>b.t-a.t).map(x=>x.h).join('')+'</ul></div>':'');
+};
+AFTER.bonus=barIn;
+VIEWS.pikap=()=>{
+ const n=cartCount();
+ let h='<h1 class="h1">Пикап</h1><p class="muted">Заберём всё за один приезд и привезём обратно чистым.</p>';
+ if(!n)return h+'<div class="card empty"><div class="ico">'+ic('truck')+'</div><h2 class="h2">Пикап пока пустой</h2><p class="muted">Добавьте ковры, шторы или одеяла. Заберём всё за один приезд.</p><button class="btn pri" data-act="tab" data-v="home">Выбрать услугу</button></div>';
+ return h+'<div class="cards">'+ITEMK.filter(k=>(S.cart[k]||[]).length).map(k=>{const its=S.cart[k];
+  return '<div class="card stack"><div class="grp-h"><span class="ico">'+ic(SERV[k].icon)+'</span><div class="grow"><h3>'+SERV[k].chipLabel+'</h3><span class="small muted">'+grpSummary(k,its)+'</span></div><b class="nowrap">'+money(grpTotal(k,its))+'</b></div>'+
+  '<ul class="lines">'+its.map((it,i)=>'<li>'+itemLine(k,it,i)+'</li>').join('')+'</ul>'+
+  '<div class="grid2"><button class="btn out" data-act="svc" data-k="'+k+'">Изменить</button><button class="btn dng" data-act="cartRm" data-k="'+k+'">Убрать</button></div></div>'}).join('')+'</div>'+
+ '<button class="addpos" data-act="tab" data-v="home">'+ic('plus')+'Добавить другую услугу</button>'+
+ '<div class="card stack"><div class="row sb"><h3>Итого</h3><b class="sumbig">≈ '+money(cartTotal())+'</b></div><p class="xs muted">Предварительно. Точную сумму назовём после осмотра вещей.</p>'+earnLine(cartTotal())+'</div>';
+};
+CTA.pikap=()=>cartCount()?'<button class="btn pri" data-act="checkout">'+ic('truck')+'Оформить вывоз</button>':'';
+function cartBrief(){return '<div class="card stack"><div class="row sb"><h3>В пикапе</h3><button class="textbtn" style="width:auto" data-act="tab" data-v="pikap">Изменить</button></div>'+
+ ITEMK.filter(k=>(S.cart[k]||[]).length).map(k=>'<div class="row sb"><span class="small">'+SERV[k].chipLabel+': '+grpSummary(k,S.cart[k])+'</span><b class="small nowrap">'+money(grpTotal(k,S.cart[k]))+'</b></div>').join('')+'</div>'}
+VIEWS.service=()=>{
+ const k=view.k,s=SERV[k];
+ if(k!=='facade'&&ed.k!==k)edInit(k);
+ return backBtn()+'<div class="head-ico"><span class="ico">'+ic(s.icon)+'</span><h1 class="h1">'+s.title+'</h1></div>'+
+ '<div class="stack"><p class="muted">'+s.short+'</p>'+
+ (s.cardPrice?priceLine(s.cardPrice):'<p class="small muted">Рассчитаем после выезда</p>')+'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Вернём '+myL().lv.p+'% бонусами после доставки':'Вернём от 5% бонусами после доставки')+'</span></div></div>'+
+ (k==='facade'?calcHTML(k):'<div class="card"><h2 class="h2">'+EDH[k]+'</h2><div id="ed">'+edHTML()+'</div></div>')+
+
+
+ '<div class="sect"><h2 class="h2">Что входит</h2><ul class="list small">'+s.incl.map(x=>'<li>'+fill(x)+'</li>').join('')+'</ul></div>'+
+ '<div class="sect"><h2 class="h2">Как считается</h2><p class="small">'+fill(s.how)+'</p></div>'+
+ '<div class="sect"><h2 class="h2">Что подготовить</h2><ul class="list small">'+s.prep.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>'+
+ (k==='facade'?'<p class="xs muted">Предварительной цены не будет. Мы свяжемся с вами и договоримся о выезде.</p>':'');
+};
+CTA.service=()=>view.k==='facade'?'<button class="btn pri" data-act="order">'+SERV.facade.cta+'</button>':'<button class="btn pri" data-act="toPikap">'+ic('truck')+((S.cart[view.k]||[]).length?'Обновить в пикапе':'Добавить в пикап')+'</button>';
+AFTER.service=()=>{
+ const k=view.k;calc={k,val:null,shown:0,raf:0,fracShown:0};
+ if(k!=='facade'){$('#ed').addEventListener('input',e=>{const t=e.target,f=t.dataset.ed;if(!f)return;const i=+t.dataset.i;ed.items[i][f]=t.value;t.classList.remove('bad');const pe=$('#pe'+i);if(pe)pe.textContent='';edRefresh(i)});return}
+ if(k==='facade')return;
+ const v=k==='carpet'?6:typical(k);
+ calcSet(v,'init');
+ const rng=$('#rng');
+ if(rng)rng.addEventListener('input',e=>calcSet(e.target.value));
+ $('#qtyIn').addEventListener('change',e=>calcSet(e.target.value));
+ $('#qtyIn').addEventListener('input',e=>{const x=parseFloat(String(e.target.value).replace(',','.'));if(!isNaN(x)&&x>=1&&x<=(k==='carpet'?40:20))calcSet(x,'in')});
+};
+
+/* форма */
+function formTotal(){
+ const k=draft.service;if(!k)return '';
+ if(k==='pickup'){const t=cartTotal(),u=draft.useBonus?bonusCan(t):0;
+  const sw=S.user?(myL().bal>0?'<button class="bswitch" data-act="useB" role="switch" aria-checked="'+!!draft.useBonus+'"><span class="grow"><b>Оплатить бонусами</b><span class="small muted">'+(u?'Спишем '+bns(u)+' при получении заказа':'Есть '+bns(myL().bal)+', можно оплатить до '+BMAX+'% заказа')+'</span></span><span class="knob" aria-hidden="true"></span></button>':''):'<p class="xs muted">Бонусами можно оплатить до '+BMAX+'% заказа. Войдите, чтобы ими воспользоваться.</p>';
+  return '<div class="stack tight">'+priceLine('Примерно: '+money(t),'md')+'<p class="xs muted">Итог можем уточнить после осмотра вещей.</p></div>'+sw+(u?'<div class="row sb"><span>К оплате при получении</span><b>≈ '+money(t-u)+'</b></div>':'')+earnLine(t-u)}
+ if(k==='facade')return '<p>Рассчитаем после выезда и оценки по фото.</p>';
+ const q=parseFloat(String(draft.qty).replace(',','.'));
+ if(!(q>0))return '<span class="muted">Укажите количество, и мы покажем примерную цену.</span>';
+ return '<div class="stack tight">'+priceLine('Примерно: '+money(q*unitPrice(k)),'md')+'<p class="xs muted">'+nf.format(q)+' '+SERV[k].unit+' × '+rub(unitPrice(k))+' ₽. Итог можем уточнить после осмотра вещей.</p>'+earnLine(q*unitPrice(k))+'</div>';
+}
+const fieldErr=n=>errs[n]?'<span class="error" id="e_'+n+'" role="alert">'+esc(errs[n])+'</span>':'';
+VIEWS.form=()=>{
+ const k=draft.service,s=k?SERV[k]:null;
+ const inp=(n,l,ph,help,extra)=>'<div class="field"><label for="f_'+n+'">'+l+'</label><input class="inp'+(errs[n]?' bad':'')+'" id="f_'+n+'" data-bind="'+n+'" placeholder="'+esc(ph)+'" value="'+esc(draft[n])+'" '+(extra||'')+(errs[n]?' aria-invalid="true" aria-describedby="e_'+n+'"':'')+'>'+(help?'<span class="help">'+help+'</span>':'')+fieldErr(n)+'</div>';
+ return backBtn()+'<h1 class="h1">'+(k==='pickup'?'Оформление вывоза':'Осмотр фасада')+'</h1><div class="form">'+
+ (k==='pickup'?cartBrief()+fieldErr('service'):'')+
+ (k==='facade'?inp('qty',s.qtyLabel,s.qtyPh,s.help,'inputmode="decimal"')+inp('desc','Что за здание','Например, частный дом, 2 этажа',''):'')+
+ inp('address','Адрес','Город, улица, дом',k==='facade'?'Адрес объекта.':'Откуда забрать и куда вернуть.','autocomplete="street-address"')+
+ '<div class="field"><label for="f_date">Желаемая дата</label><input class="inp'+(errs.date?' bad':'')+'" type="date" id="f_date" data-bind="date" min="'+addDays(0)+'" value="'+esc(draft.date)+'">'+fieldErr('date')+'</div>'+
+ '<div class="field"><span class="lbl" id="lbltime">Удобное время</span><div class="grid2" role="group" aria-labelledby="lbltime">'+SLOTS.map(x=>'<button class="pick" data-act="pickTime" data-v="'+x+'" aria-pressed="'+(draft.time===x)+'">'+x+'</button>').join('')+'</div>'+fieldErr('time')+'</div>'+
+ inp('name','Как к вам обращаться','Имя','','autocomplete="name"')+
+ inp('phone','Телефон','+7 ___ ___-__-__','','type="tel" inputmode="tel" autocomplete="tel"')+
+ '<div class="field"><label for="f_comment">Комментарий (необязательно)</label><textarea class="inp" id="f_comment" data-bind="comment" placeholder="Пятна, ткань, как проехать">'+esc(draft.comment)+'</textarea></div>'+
+ '<div class="field"><span class="lbl row"><span>Фото, до 5</span><span class="cnt-ph" id="phCount"></span></span><div id="photoBox"></div>'+(k==='facade'?'<span class="help">Для фасадов нужно хотя бы одно фото.</span>':'')+fieldErr('photos')+'</div></div>'+
+ '<div class="card stack" id="totalBox" aria-live="polite"><h3>Предварительная цена</h3><div id="totalIn">'+formTotal()+'</div></div>'+
+ '<div class="stack"><p class="xs muted">Адрес, телефон и фото нужны только для выполнения заказа.</p><button class="textbtn" data-act="back">Отмена</button></div>';
+};
+CTA.form=()=>'<button class="btn pri" id="sendBtn" data-act="send">Отправить заявку</button>';
+function photoBox(){
+ const n=draft.photos.length;
+ const b=$('#photoBox');if(!b)return;
+ b.innerHTML=(n===0?'<button class="drop-hint" data-act="addPhoto" type="button">'+ic('img')+'Добавить фото</button>':
+  '<div class="photos">'+draft.photos.map((p,i)=>'<div class="ph"><img src="'+p.url+'" alt="Фото '+(i+1)+'"><button class="rm" data-act="rmPhoto" data-i="'+i+'" aria-label="Удалить фото '+(i+1)+'" type="button">'+ic('x')+'</button></div>').join('')+(n<5?'<button class="addph" data-act="addPhoto" type="button">'+ic('plus')+'Добавить фото</button>':'')+'</div>')+
+  '<input type="file" id="fileIn" accept="image/*" multiple hidden>';
+ const pc=$('#phCount');if(pc)pc.textContent=n?n+' из 5':'';
+ const fi=$('#fileIn');fi.addEventListener('change',e=>addFiles([...e.target.files]));
+}
+function addFiles(files){
+ const left=5-draft.photos.length;
+ if(files.length>left){errs.photos='Можно добавить не больше 5 фото.';setErr('photos')}
+ files.slice(0,Math.max(0,left)).forEach(f=>{
+  if(!/^image\//.test(f.type))return;
+  const url=URL.createObjectURL(f);const rec={name:f.name,url,thumb:''};draft.photos.push(rec);
+  const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas');const sc=Math.min(1,360/Math.max(im.width,im.height));c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);rec.thumb=c.toDataURL('image/jpeg',.7)}catch(e){}};
+  im.onerror=()=>{};im.src=url;
+ });
+ photoBox();
+}
+function setErr(n){const f=document.querySelector('#photoBox');if(n==='photos'&&f){let e=f.parentElement.querySelector('.error');if(!e){e=document.createElement('span');e.className='error';e.setAttribute('role','alert');f.parentElement.appendChild(e)}e.textContent=errs.photos}}
+AFTER.form=()=>{photoBox()};
+function validate(){
+ errs={};const d=draft;
+ if(!d.service)errs.service='Выберите услугу.';
+ if(d.service==='pickup'&&!cartCount())errs.service='Пикап пустой. Добавьте вещи.';
+ if(d.service&&d.service!=='facade'&&d.service!=='pickup'){const q=String(d.qty).trim();if(q===''||isNaN(parseFloat(q.replace(',','.')))||!/^[0-9]+([.,][0-9]+)?$/.test(q))errs.qty=q===''?'Укажите количество больше нуля.':'Введите число.';else if(parseFloat(q.replace(',','.'))<=0)errs.qty='Укажите количество больше нуля.'}
+ if(d.service==='facade'&&String(d.qty).trim()!==''&&!/^[0-9]+([.,][0-9]+)?$/.test(String(d.qty).trim()))errs.qty='Введите число.';
+ if(!d.address.trim())errs.address='Укажите адрес.';
+ if(d.date&&d.date<addDays(0))errs.date='Выберите дату не раньше сегодняшней.';
+ if(!d.name.trim())errs.name='Напишите, как к вам обращаться.';
+ let dg=d.phone.replace(/\D/g,'');if(dg.length===11&&/^[78]/.test(dg))dg=dg.slice(1);
+ if(dg.length!==10)errs.phone='Проверьте номер телефона.';
+ if(d.service==='facade'&&d.photos.length<1)errs.photos='Добавьте хотя бы одно фото фасада.';
+ return Object.keys(errs).length===0;
+}
+function send(){
+ if(!validate()){render();const first=document.querySelector('.error');if(first){first.scrollIntoView({block:'center'});const inp=first.parentElement.querySelector('input,textarea');if(inp)inp.focus({preventScroll:true})}return}
+ if(!S.user){go('login');return}
+ const b=$('#sendBtn');b.disabled=true;b.innerHTML='<span class="spin"></span> Отправляем…';
+ setTimeout(()=>{
+  const id=Math.max(1040,...S.orders.map(o=>o.id))+1;
+  const d=draft,q=parseFloat(String(d.qty).replace(',','.'));
+  const o={id,mine:true,name:d.name.trim(),phone:d.phone.trim(),service:d.service,qty:isNaN(q)?null:q,address:d.address.trim(),date:d.date||addDays(1),time:d.time||SLOTS[0],comment:[d.desc&&('Здание: '+d.desc),d.comment].filter(Boolean).join('. '),
+   photos:d.photos.map((p,i)=>p.thumb||photoPh(i,'Фото '+(i+1))),price:d.service==='facade'||isNaN(q)?null:priceOf(d.service,q),status:'accepted',history:[{s:'accepted',t:Date.now()}],staff:'',note:'',created:Date.now()};
+  if(d.service==='pickup'){o.items=cartItems();o.price=itemsTotal(o.items);o.qty=null;S.cart={};if(d.useBonus){const u=bonusCan(o.price);if(u)o.bonusUse=u}}
+  S.orders.unshift(o);save();
+  b.disabled=false;b.className='btn ok';b.innerHTML=ic('check')+' Заявка отправлена';
+  setTimeout(()=>{draft=newDraft();errs={};stack=[];view={name:'done',id};render()},reduce()?50:600);
+ },reduce()?50:700);
+}
+VIEWS.done=()=>{const o=byId(view.id);return '<div class="stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="stack center"><h1 class="h1">Заявка принята</h1><p class="muted">Мы получили вашу заявку №'+o.id+'. Свяжемся с вами, чтобы уточнить детали. Статус можно смотреть в разделе «Мои заказы».</p>'+earnLine(o.price-(o.bonusUse||0))+'</div><div class="stack"><button class="btn pri" data-act="open" data-id="'+o.id+'">Смотреть заказ</button><button class="btn out" data-act="tab" data-v="home">На главную</button></div>'};
+
+/* вход */
+let loginStep=0,loginMail='';
+VIEWS.login=()=>backBtn()+'<h1 class="h1">Вход</h1><p class="muted">Войдите, чтобы оставлять заявки и следить за заказами.</p>'+
+ (loginStep===0?'<div class="field"><label for="f_mail">Электронная почта</label><input class="inp'+(errs.mail?' bad':'')+'" id="f_mail" type="email" inputmode="email" placeholder="Ваша почта" value="'+esc(loginMail)+'">'+(errs.mail?'<span class="error" role="alert">'+errs.mail+'</span>':'')+'</div><button class="btn pri" data-act="mail">Получить ссылку для входа</button><button class="btn out" data-act="cont">Войти через Apple</button><button class="btn out" data-act="cont">Войти через Google</button>'
+ :'<div class="notice">Мы отправили письмо на '+esc(loginMail)+'. Откройте ссылку из письма.</div><button class="btn pri" data-act="cont">Продолжить</button>');
+function afterLogin(){S.user={email:loginMail||'Вход через Apple / Google'};save();loginStep=0;const next=stack.length&&stack[stack.length-1].name==='form';back();if(next)send()}
+
+/* заказы */
+VIEWS.orders=()=>{
+ let h='<h1 class="h1">Мои заказы</h1><div class="segm" role="group" aria-label="Фильтр"><button data-act="ofilter" data-v="active" aria-pressed="'+(ordersFilter==='active')+'">Активные</button><button data-act="ofilter" data-v="done" aria-pressed="'+(ordersFilter==='done')+'">Завершённые</button></div>';
+ if(!ordersLoaded)return h+'<div class="cards"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>';
+ const mine=S.orders.filter(o=>o.mine);
+ if(!mine.length)return h+empty('Заказов пока нет','Когда вы оставите заявку, она появится здесь.','Выбрать услугу','home');
+ const list=mine.filter(o=>ordersFilter==='active'?!['delivered','cancelled'].includes(o.status):['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created);
+ if(!list.length)return h+empty(ordersFilter==='active'?'Активных заказов нет':'Завершённых заказов нет','Здесь пока пусто.');
+ return h+'<div class="cards">'+list.map(o=>'<button class="card tap ocard" data-act="open" data-id="'+o.id+'"><span class="row sb"><b>Заказ №'+o.id+'</b>'+chipS(o.status)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">Создан '+fmtDate(iso(o.created))+(o.price!=null?', '+money(o.price):'')+(o.status==='delivered'&&bonusFor(o)?' · +'+bns(bonusFor(o)):'')+'</span></button>').join('')+'</div>';
+};
+AFTER.orders=()=>{if(!ordersLoaded){setTimeout(()=>{ordersLoaded=true;if(view.name==='orders')render()},reduce()?0:450)}};
+function tracker(o){
+ const cancelled=o.status==='cancelled';
+ const reached=cancelled?Math.max(...o.history.filter(h=>h.s!=='cancelled').map(h=>FLOW.findIndex(f=>f.c===h.s))):FLOW.findIndex(f=>f.c===o.status);
+ const when=c=>{const h=[...o.history].reverse().find(x=>x.s===c);return h?fmtStamp(h.t):''};
+ let h='<ol class="track" aria-label="Статус заказа">'+FLOW.map((f,i)=>{
+  const done=i<=reached,now=!cancelled&&i===reached;
+  const cls=(done?'done ':'future ')+(now?'now ':'')+(i===reached?'last ':'');
+  return '<li class="step '+cls+'"'+(now?' aria-current="step"':'')+'><span class="dot">'+(done&&!now?ic('check'):'')+'</span><div><h4>'+f.n+'</h4>'+(done?'<time>'+when(f.c)+'</time>':'')+(now?'<p>'+f.h+'</p>':'')+'</div></li>'}).join('');
+ if(cancelled)h+='<li class="step bad done"><span class="dot">'+ic('x')+'</span><div><h4 style="color:var(--danger)">Отменён</h4><time>'+when('cancelled')+'</time><p>'+esc(o.cancelReason||'Причина не указана')+'</p></div></li>';
+ return h+'</ol>';
+}
+VIEWS.order=()=>{
+ const o=byId(view.id);
+ if(!o||!o.mine&&mode==='client')return backBtn()+empty('Заказ не найден','Такого заказа нет.','К заказам','orders');
+ const s=SERV[o.service];
+ return backBtn()+'<div class="head"><h1 class="h1">Заказ №'+o.id+'</h1>'+chipS(o.status)+'</div>'+
+ '<div class="card">'+tracker(o)+'</div>'+
+ (o.status==='cancelled'?'<button class="btn pri" data-act="reorder" data-id="'+o.id+'">Оформить заново</button>':'')+
+ '<div class="card"><dl class="kv">'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Ваш комментарий</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'</dl></div>'+
+ '<div class="card stack"><h3>Предварительная цена</h3>'+(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">Рассчитаем после выезда</p>')+(o.status!=='cancelled'?payLines(o):'')+(o.status==='delivered'&&bonusFor(o)?'<div class="bonus-line">'+ic('gift')+'<span>Начислено '+bns(bonusFor(o))+'</span></div>':o.status!=='cancelled'?earnLine(o.price-(o.bonusUse||0)):(o.bonusUse?'<p class="xs muted">Бонусы вернулись на счёт.</p>':''))+'</div>'+
+ '<div class="card stack"><h3>Фото</h3>'+(o.photos.length?'<div class="photos">'+o.photos.map((p,i)=>'<button class="ph view" data-act="lightbox" data-src="'+i+'" data-id="'+o.id+'" aria-label="Открыть фото '+(i+1)+'"><img src="'+p+'" alt="Фото '+(i+1)+'"></button>').join('')+'</div>':'<p class="muted small">Фото не добавлены</p>')+'</div>'+
+ '<p class="xs muted">Статус меняет оператор.'+(['accepted','cancelled'].includes(o.status)?'':' Отменить заказ в этом статусе нельзя.')+' Вопросы по заказу: +7 900 000-00-00</p>'+
+ (o.status==='accepted'?'<button class="btn dng" data-act="cancelAsk" data-id="'+o.id+'">Отменить заказ</button>':'');
+
+};
+AFTER.profile=barIn;
+VIEWS.profile=()=>'<h1 class="h1">Профиль</h1>'+
+ (S.user?'<div class="card stack"><div class="row"><span class="ico">'+ic('user')+'</span><div><b>Аминат Р.</b><div class="small muted">'+esc(S.user.email)+'</div></div></div><button class="btn out" data-act="logout">Выйти</button></div>'+lvlCard(myL(),true):'<div class="card stack"><p class="muted">Вы не вошли. Каталог можно смотреть без входа, вход нужен при отправке заявки.</p><button class="btn pri" data-act="goLogin">Вход</button></div>'+promo())+
+ '<div class="card stack"><h3>Связаться с нами</h3><p class="small">Телефон и WhatsApp: +7 900 000-00-00</p></div>'+
+ '<div class="card stack"><h3>Политика конфиденциальности</h3><p class="small">Адрес, телефон и фото используются только для выполнения заказа.</p></div>'+
+ '<div class="stack"><button class="btn out" data-act="mode" data-v="admin">Режим владельца</button><button class="btn sec" data-act="reset">Сбросить данные</button></div>';
+
+/* ---------- админка ---------- */
+function filtered(){
+ const q=af.q.replace(/\D/g,'');
+ return S.orders.filter(o=>{
+  if(q&&!o.phone.replace(/\D/g,'').includes(q))return false;
+  if(af.status!=='all'&&o.status!==af.status)return false;
+  if(af.service!=='all'&&!hasSvc(o,af.service))return false;
+  if(af.date==='today'&&o.date!==addDays(0))return false;
+  if(af.date==='week'&&!(o.date>=addDays(0)&&o.date<=addDays(7)))return false;
+  if(af.date==='period'){if(af.from&&o.date<af.from)return false;if(af.to&&o.date>af.to)return false}
+  return true}).sort((a,b)=>b.created-a.created);
+}
+function alistBody(){
+ const l=filtered();
+ const cards=l.map(o=>'<button class="card tap ocard" data-act="aopen" data-id="'+o.id+'"><span class="row sb"><b>№'+o.id+'</b>'+chipS(o.status)+'</span><span class="small wrap">'+esc(o.name)+'</span><span class="small">'+titleOf(o)+', '+volTxt(o)+'</span><span class="xs muted">'+fmtDate(o.date)+', '+o.time+'. Исполнитель: '+(o.staff||'не назначен')+'</span></button>').join('');
+ return '<p class="xs muted" role="status">Найдено: '+l.length+'</p>'+(l.length?'<div class="cards">'+cards+'</div>':'<div class="card empty"><p class="muted">Заявок по этим условиям нет.</p><button class="btn sec" data-act="areset">Сбросить фильтры</button></div>');
+}
+VIEWS.alist=()=>{
+ const cnt=c=>S.orders.filter(o=>o.status===c).length;
+ return '<h1 class="h1">Заявки</h1><div class="filters">'+
+ '<label for="aq" class="sr">Поиск по телефону</label><input class="inp" id="aq" type="search" inputmode="tel" placeholder="Поиск по телефону" value="'+esc(af.q)+'">'+
+ '<div class="ribbon" role="group" aria-label="Статус"><button data-act="afs" data-v="all" aria-pressed="'+(af.status==='all')+'">Все <b>'+S.orders.length+'</b></button>'+ST.map(s=>'<button data-act="afs" data-v="'+s.c+'" aria-pressed="'+(af.status===s.c)+'">'+s.n+' <b>'+cnt(s.c)+'</b></button>').join('')+'</div>'+
+ '<div class="ribbon" role="group" aria-label="Услуга">'+[['all','Все услуги']].concat(SKEYS.map(k=>[k,SERV[k].chipLabel])).map(x=>'<button data-act="afv" data-v="'+x[0]+'" aria-pressed="'+(af.service===x[0])+'">'+x[1]+'</button>').join('')+'</div>'+
+ '<div class="segm" role="group" aria-label="Дата">'+[['all','Все даты'],['today','Сегодня'],['week','Неделя'],['period','Период']].map(x=>'<button data-act="afd" data-v="'+x[0]+'" aria-pressed="'+(af.date===x[0])+'">'+x[1]+'</button>').join('')+'</div>'+
+ (af.date==='period'?'<div class="stack"><input class="inp" type="date" id="afrom" aria-label="С даты" value="'+af.from+'"><input class="inp" type="date" id="ato" aria-label="По дату" value="'+af.to+'"></div>':'')+'</div>'+
+ '<div id="alistBody" class="listhead">'+alistBody()+'</div>';
+};
+AFTER.alist=()=>{
+ $('#aq').addEventListener('input',e=>{af.q=e.target.value;$('#alistBody').innerHTML=alistBody()});
+ const f=$('#afrom'),t=$('#ato');
+ if(f){f.addEventListener('change',e=>{af.from=e.target.value;$('#alistBody').innerHTML=alistBody()});t.addEventListener('change',e=>{af.to=e.target.value;$('#alistBody').innerHTML=alistBody()})}
+};
+VIEWS.acard=()=>{
+ const o=byId(view.id);if(!o)return backBtn()+empty('Заказ не найден','Такого заказа нет.');
+ const idx=FLOW.findIndex(f=>f.c===o.status),next=o.status==='cancelled'||idx>=4?null:FLOW[idx+1];
+ return backBtn()+'<div class="head"><h1 class="h1">Заявка №'+o.id+'</h1>'+chipS(o.status)+'</div>'+
+ '<div class="card"><dl class="kv"><div><dt>Клиент</dt><dd>'+esc(o.name)+'</dd></div><div><dt>Уровень</dt><dd>'+(L=>'«'+L.lv.n+'» · '+L.lv.p+'%'+(L.lv.p===10?'<br><span class="small muted">Личный менеджер</span>':''))(clientL(o))+'</dd></div><div><dt>Телефон</dt><dd><a href="tel:'+esc(o.phone.replace(/[^+\d]/g,''))+'" class="tel">'+esc(o.phone)+'</a></dd></div>'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Комментарий клиента</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'<div class="wide"><dt>Исполнитель</dt><dd>'+(o.staff?esc(o.staff):'Не назначен')+'</dd></div></dl></div>'+
+ '<div class="card stack"><h3>Фото клиента</h3>'+(o.photos.length?'<div class="photos">'+o.photos.map((p,i)=>'<button class="ph view" data-act="lightbox" data-src="'+i+'" data-id="'+o.id+'" aria-label="Открыть фото '+(i+1)+'"><img src="'+p+'" alt="Фото '+(i+1)+'"></button>').join('')+'</div>':'<p class="muted small">Клиент не приложил фото.</p>')+'</div>'+
+ '<div class="card stack"><h3>Предварительная цена</h3>'+(o.service==='facade'?'<p class="small muted">Цена после выезда. Введите итог вручную.</p><div class="sum-in"><div class="inp-wrap"><input class="inp" id="aprice" inputmode="numeric" placeholder="Сумма" aria-label="Итоговая цена, ₽" value="'+(o.price!=null?o.price:'')+'"><span aria-hidden="true">₽</span></div>'+demoChip()+'</div>':(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">—</p>'))+(o.status!=='cancelled'&&o.bonusUse?payLines(o)+'<p class="xs muted">Клиент оплачивает бонусами. Возьмите при получении только сумму «к оплате».</p>':'')+'</div>'+
+ '<div class="card stack"><h3>Сменить статус</h3>'+
+ (o.status==='cancelled'?'<p class="small muted">Заказ отменён'+(o.cancelReason?': '+esc(o.cancelReason):'')+'.</p>':
+   (next?'<button class="btn pri" id="nextBtn" data-act="astatus" data-id="'+o.id+'" data-v="'+next.c+'">'+ic(next.i)+' '+next.n+'</button>':'<p class="small muted">Заказ доставлен. Следующих шагов нет.</p>')+
+   '<div class="grid2">'+(alt=>alt.map((s,i)=>s.c==='cancelled'?'<button class="btn dng full" data-act="astatus" data-id="'+o.id+'" data-v="'+s.c+'">'+s.n+'</button>':'<button class="pick s44'+(i===alt.filter(x=>x.c!=='cancelled').length-1&&alt.filter(x=>x.c!=='cancelled').length%2?' full':'')+'" data-act="astatus" data-id="'+o.id+'" data-v="'+s.c+'">'+s.n+'</button>').join(''))(ST.filter(s=>s.c!==o.status&&(!next||s.c!==next.c)&&!(s.c==='accepted'&&idx<0)))+'</div>')+
+ '<p class="xs muted after-btns">Клиенту ничего не отправится.</p></div>'+
+ '<div class="card stack roomy"><div class="field"><label for="astaff">Назначить сотрудника или курьера</label><select class="inp" id="astaff"><option value="">Выберите сотрудника</option>'+STAFF.map(s=>'<option'+(o.staff===s?' selected':'')+'>'+s+'</option>').join('')+'</select></div>'+
+ '<div class="field"><label for="anote">Заметка (видна только вам)</label><textarea class="inp" id="anote" placeholder="Например: клиент просил позвонить после 18:00">'+esc(o.note)+'</textarea></div><button class="btn sec" data-act="asave" data-id="'+o.id+'">Сохранить</button></div>'+
+ '<div class="card stack"><h3>История статусов</h3><ul class="hist">'+[...o.history].reverse().map(h=>'<li><span>'+stOf(h.s).n+(h.note?' ('+esc(h.note)+')':'')+'</span><span class="muted">'+fmtStamp(h.t)+'</span></li>').join('')+'</ul></div>';
+};
+function applyStatus(id,c,reason,btn){
+ const o=byId(id);
+ if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span>'}
+ setTimeout(()=>{
+  const L0=clientL(o).lv;o.status=c;const h={s:c,t:Date.now()};if(c==='cancelled'){o.cancelReason=reason;h.note=reason}
+  o.history.push(h);save();closeSheet();render();
+  let t='Статус изменён: '+stOf(c).n;if(c==='delivered'){const b=bonusFor(o),L1=clientL(o).lv;if(b)t+='. Клиенту начислено '+bns(b);if(L1!==L0)t+='. Новый уровень «'+L1.n+'»'}toast(t);
+ },reduce()?0:350);
+}
+VIEWS.aday=()=>{
+ const l=S.orders.filter(o=>o.date===dayDate&&o.status!=='cancelled');
+ const grp=(t,arr)=>'<div class="sect"><h2 class="h2">'+t+'</h2>'+(arr.length?'<div class="cards">'+arr.map(o=>'<button class="card tap ocard" data-act="aopen" data-id="'+o.id+'"><span class="row sb"><b>№'+o.id+'</b>'+chipS(o.status)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">'+o.time+'. '+esc(o.address)+'</span></button>').join('')+'</div>':'<p class="small muted">Нет</p>')+'</div>';
+ const pick=l.filter(o=>o.service!=='facade'&&['accepted'].includes(o.status)),vis=l.filter(o=>o.service==='facade'&&o.status==='accepted'),del=l.filter(o=>o.status==='ready');
+ return '<h1 class="h1">План на день</h1><div class="field"><label for="dd">Выберите день</label><input class="inp" type="date" id="dd" value="'+dayDate+'"></div>'+
+ (l.length?'':'<p class="muted">На этот день ничего не запланировано.</p>')+grp('Забрать',pick)+grp('Выезды на осмотр (фасады)',vis)+grp('Доставить',del)+
+ '<div class="sect"><h2 class="h2">Окна приёма</h2><div class="cards">'+SLOTS.map(s=>slotRow(s)).join('')+'</div></div>';
+};
+function slotRow(s){const n=S.orders.filter(o=>o.date===dayDate&&o.time===s&&o.status!=='cancelled').length,lim=limitOf(s);return '<div class="card slot"><div class="row sb"><b>'+s+'</b><span class="xs '+(n>=lim?'':'muted')+'">'+(n>=lim?'Окно заполнено':'Занято: '+n+' из '+lim)+'</span></div><div class="bar"><i class="'+(n>=lim?'full':'')+'" style="width:'+Math.min(100,n/lim*100)+'%"></i></div></div>'}
+AFTER.aday=()=>{$('#dd').addEventListener('change',e=>{dayDate=e.target.value||addDays(0);render()})};
+VIEWS.aslots=()=>'<h1 class="h1">Окна приёма</h1><p class="muted">Укажите, сколько заказов можно принять в каждое окно.</p>'+
+ '<div class="cards">'+SLOTS.map(s=>'<div class="card row sb"><b>'+s+'</b><div class="stepper mini"><button class="iconbtn" data-act="lim" data-s="'+s+'" data-d="-1" aria-label="Уменьшить лимит '+s+'">'+ic('minus')+'</button><span class="num" id="lim_'+s.slice(0,2)+'">'+limitOf(s)+'</span><button class="iconbtn" data-act="lim" data-s="'+s+'" data-d="1" aria-label="Увеличить лимит '+s+'">'+ic('plus')+'</button></div></div>').join('')+'</div><p class="small muted">Лимит заказов на окно. Лимиты сохраняются сразу.</p>';
+
+/* ---------- оверлеи ---------- */
+function sheet(html){closeSheet();const d=document.createElement('div');d.className='overlay';d.id='ov';d.innerHTML='<div class="sheet" role="dialog" aria-modal="true">'+html+'</div>';d.addEventListener('click',e=>{if(e.target===d)closeSheet()});$('#phone').appendChild(d);const f=d.querySelector('button,textarea');if(f)f.focus()}
+function closeSheet(){const d=$('#ov');if(d)d.remove()}
+function toast(t){const o=$('#toast');if(o)o.remove();const d=document.createElement('div');d.className='toast';d.id='toast';d.setAttribute('role','status');d.textContent=t;$('#phone').appendChild(d);setTimeout(()=>d.remove(),2200)}
+
+/* ---------- действия ---------- */
+const ACT={
+ mode:b=>setMode(b.dataset.v),
+ lot:()=>{if(LOT.state==='error')lotMount();else lotSpin()},
+ tab:b=>{if(b.dataset.v==='orders')ordersLoaded=ordersLoaded;tab(b.dataset.v)},
+ back:()=>back(),
+ svc:b=>{ed.k=null;stack=stack.filter(v=>v.name==='home');if(!stack.length&&view.name!=='home'){stack=[{name:'home'}]}go('service',{k:b.dataset.k})},
+ order:()=>{if(draft.service!=='facade'){draft.service='facade';draft.qty=''}errs={};go('form')},
+ home:()=>tab('home'),
+ a2hsClose:()=>{try{localStorage.setItem('wim_a2hs','1')}catch(e){}const d=$('#a2hs');if(d)d.remove()},
+ toPikap:()=>{if(!edCheck())return;const k=ed.k;S.cart[k]=JSON.parse(JSON.stringify(ed.items));save();chrome();truckBump();toast('В пикапе: '+SERV[k].chipLabel.toLowerCase()+', '+grpSummary(k,ed.items));$('#ctabar').innerHTML=CTA.service()},
+ edAdd:()=>{ed.items.push(blankItem(ed.k));edRedraw(ed.k==='carpet'?ed.items.length-1:null)},
+ edRm:b=>{ed.items.splice(+b.dataset.i,1);edRedraw()},
+ edN:b=>{const i=+b.dataset.i,it=ed.items[i];it.n=Math.max(1,Math.min(5,(it.n||1)+ +b.dataset.d));$('#n'+i).textContent=it.n;edRefresh(i)},
+ edS:b=>{const i=+b.dataset.i;ed.items[i].s=b.dataset.v;b.parentElement.querySelectorAll('.pick').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))},
+ cartRm:b=>{delete S.cart[b.dataset.k];save();render()},
+ checkout:()=>{if(!cartCount())return;if(draft.service!=='pickup'){draft.service='pickup';draft.qty=''}errs={};go('form')},
+ reorder:b=>{const o=byId(+b.dataset.id);if(!o)return;draft=newDraft();draft.address=o.address||'';draft.phone=o.phone||'';draft.name=o.name||'';draft.service=o.service;draft.date=addDays(1);draft.time=o.time||SLOTS[0];if(o.service==='pickup'){S.cart={};(o.items||[]).forEach(x=>{const r=Object.assign({},x);delete r.k;(S.cart[x.k]=S.cart[x.k]||[]).push(r)});save();draft.service='pickup'}else if(o.service!=='facade'){draft.qty=String(o.qty||typical(o.service));draft.service=o.service}go('form')},
+ pickSvc:b=>{const k=b.dataset.k;if(draft.service!==k){draft.service=k;draft.qty=k==='facade'?'':String(typical(k));delete errs.qty}render()},
+ pickTime:b=>{draft.time=b.dataset.v;document.querySelectorAll('[data-act=pickTime]').forEach(x=>x.setAttribute('aria-pressed',x===b))},
+ addPhoto:()=>{if(draft.photos.length>=5){errs.photos='Можно добавить до 5 фото.';setErr('photos');return}$('#fileIn').click()},
+ rmPhoto:b=>{const [r]=draft.photos.splice(+b.dataset.i,1);try{URL.revokeObjectURL(r.url)}catch(e){}photoBox()},
+ send:()=>send(),
+ mail:()=>{const v=($('#f_mail').value||'').trim();if(!/^\S+@\S+\.\S+$/.test(v)){errs.mail='Проверьте адрес почты.';loginMail=v;render();return}errs={};loginMail=v;loginStep=1;render()},
+ cont:()=>afterLogin(),
+ goLogin:()=>go('login'),
+ bonus:()=>go('bonus'),
+ useB:()=>{draft.useBonus=!draft.useBonus;$('#totalIn').innerHTML=formTotal()},
+ logout:()=>{S.user=null;save();render()},
+ open:b=>{if(view.name==='done'||view.name==='home'){stack=[{name:view.name==='done'?'orders':'home'}]}go('order',{id:+b.dataset.id})},
+ ofilter:b=>{ordersFilter=b.dataset.v;render()},
+ cancelAsk:b=>{const id=+b.dataset.id;sheet('<h2 class="h2">Отменить заказ?</h2><p class="muted">Заказ №'+id+' будет отменён.</p><button class="btn dng" data-act="cancelYes" data-id="'+id+'">Да, отменить</button><button class="btn out" data-act="closeSheet">Нет, оставить</button>')},
+ cancelYes:b=>{const o=byId(+b.dataset.id);o.status='cancelled';o.cancelReason='Отменён клиентом';o.history.push({s:'cancelled',t:Date.now(),note:o.cancelReason});save();closeSheet();render()},
+ closeSheet:()=>closeSheet(),
+ lightbox:b=>{const o=byId(+b.dataset.id);const d=document.createElement('div');d.className='overlay lightbox';d.id='ov';d.innerHTML='<img src="'+o.photos[+b.dataset.src]+'" alt="Фото клиента"><button class="btn sec" data-act="closeSheet">Закрыть</button>';d.addEventListener('click',e=>{if(e.target===d)closeSheet()});closeSheet();$('#phone').appendChild(d)},
+ reset:()=>{S=seed();save();ordersLoaded=false;draft=newDraft();toast('Данные сброшены');render()},
+ cdec:()=>{const k=calc.k;calcSet((calc.val||1)-(k==='carpet'?0.5:1))},
+ cinc:()=>{const k=calc.k;calcSet((calc.val||1)+(k==='carpet'?0.5:1))},
+ aopen:b=>go('acard',{id:+b.dataset.id}),
+ afs:b=>{const v=b.dataset.v;af.status=v==='all'?'all':(af.status===v?'all':v);render()},
+ afv:b=>{af.service=b.dataset.v;render()},
+ afd:b=>{af.date=b.dataset.v;render()},
+ areset:()=>{af={q:'',status:'all',service:'all',date:'all',from:'',to:''};render()},
+ astatus:b=>{
+  const id=+b.dataset.id,c=b.dataset.v,n=stOf(c).n;
+  if(c==='cancelled'){sheet('<h2 class="h2">Отменить заказ №'+id+'?</h2><p class="muted">Клиент увидит статус «Отменён». Клиенту ничего не отправится.</p><div class="field"><label for="creason">Причина отмены</label><textarea class="inp" id="creason" placeholder="Например, клиент передумал"></textarea><span class="error" id="creasonE" hidden role="alert">Укажите причину отмены.</span></div><button class="btn dng" data-act="cancelConfirm" data-id="'+id+'">Отменить заказ</button><button class="btn out" data-act="closeSheet">Отмена</button>');return}
+  sheet('<h2 class="h2">Сменить статус?</h2><p class="muted">Сменить статус заказа №'+id+' на «'+n+'»? Клиенту ничего не отправится.</p><button class="btn pri" id="doStatus" data-act="doStatus" data-id="'+id+'" data-v="'+c+'">Сменить</button><button class="btn out" data-act="closeSheet">Отмена</button>');
+ },
+ doStatus:b=>applyStatus(+b.dataset.id,b.dataset.v,'',b),
+ cancelConfirm:b=>{const r=$('#creason').value.trim();if(!r){$('#creasonE').hidden=false;$('#creason').classList.add('bad');return}applyStatus(+b.dataset.id,'cancelled',r,b)},
+ asave:b=>{const o=byId(+b.dataset.id);o.staff=$('#astaff').value;o.note=$('#anote').value;const p=$('#aprice');if(p){const v=parseFloat(p.value.replace(',','.'));o.price=isNaN(v)?null:v}save();toast('Сохранено')},
+ lim:b=>{const s=b.dataset.s;S.limit=S.limit||{};S.limit[s]=Math.max(1,Math.min(20,limitOf(s)+ +b.dataset.d));save();$('#lim_'+s.slice(0,2)).textContent=S.limit[s]}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const f=ACT[b.dataset.act];if(f)f(b)});
+document.addEventListener('input',e=>{const n=e.target.dataset&&e.target.dataset.bind;if(!n)return;draft[n]=e.target.value;if(errs[n]){delete errs[n];e.target.classList.remove('bad');const er=document.getElementById('e_'+n);if(er)er.remove()}if(n==='qty'){const t=$('#totalIn');if(t)t.innerHTML=formTotal()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+render();
+</script>
+</body>
+</html>
