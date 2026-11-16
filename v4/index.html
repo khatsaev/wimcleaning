@@ -458,7 +458,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;background:var(--prim
 <link rel="stylesheet" href="client-features.css?v=20261116-account-a2">
 <link rel="stylesheet" href="booking.css?v=20261116-account-a2">
 <link rel="stylesheet" href="service-experience.css?v=20261116-account-a2">
-<link rel="stylesheet" href="account-design.css?v=20261116-account-a3">
+<link rel="stylesheet" href="account-design.css?v=20261116-bottom-inset">
 </head>
 <body>
 <!-- Логотип Wimcleaning (Материалы/Логотип/wim cleaning.svg, обрезан без белого фона), цвет через currentColor -->
@@ -704,8 +704,8 @@ function chrome(){
  /* цвет системной полосы iPhone (время, батарея) — в цвет верхнего блока экрана */
  const tone=mode==='admin'?'#161C3D':(view.name==='home'?'#2A45D4':'#F2F5FA');
  $('#themeColor').setAttribute('content',tone);
- const small=matchMedia('(max-width:599px)').matches;
- document.documentElement.style.background=document.body.style.background=small?tone:'';
+ document.documentElement.style.setProperty('--chrome-tone',tone);
+ document.documentElement.classList.toggle('is-standalone',navigator.standalone===true||matchMedia('(display-mode: standalone)').matches);
  $('#ahead').innerHTML=mode==='admin'?'<div class="ahead">'+logo()+'<b>Режим владельца</b><button class="exit" data-act="mode" data-v="client">Клиент</button></div>':'';
  const tabs=mode==='admin'?[['alist','Заявки','inbox',['alist','acard','support','supportInbox','workPhotos']],['aday','План на день','cal',['aday']],['aslots','Окна приёма','sl',['aslots']]]
   :[['home','Главная','grid',['home','service','done','login'].concat(draft.service==='facade'?['form']:[])],['pikap','Сбор услуг','truck',['pikap','bundle'].concat(draft.service==='pickup'?['form']:[])],['orders','Заказы','list',['orders','order']],['bonus','Бонусы','gift',['bonus']],['profile','Профиль','user',['profile','addresses','addressEdit','addressDelete','notifications','support','rating','reminderSettings']]];
