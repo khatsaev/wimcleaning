@@ -4,10 +4,10 @@ const bookingItems = () => draft.repeatItems || cartItems();
 const bookingTotal = () => itemsTotal(bookingItems());
 function bookingBrief() {
  if (!draft.repeatItems) return cartBrief();
- return '<div class="card stack"><h3>Те же вещи</h3>'+groupsOf(draft.repeatItems).map(([k,items])=>'<div><b>'+SERV[k].chipLabel+'</b><ul class="lines">'+items.map((it,i)=>'<li>'+esc(itemLine(k,it,i))+'</li>').join('')+'</ul></div>').join('')+'<p class="help">Состав скопирован из заказа №'+draft.repeatOf+'. Ваш текущий пикап сохранён.</p></div>';
+ return '<div class="card stack"><h3>Те же вещи</h3>'+groupsOf(draft.repeatItems).map(([k,items])=>'<div><b>'+SERV[k].chipLabel+'</b><ul class="lines">'+items.map((it,i)=>'<li>'+esc(itemLine(k,it,i))+'</li>').join('')+'</ul></div>').join('')+'<p class="help">Состав скопирован из заказа №'+draft.repeatOf+'. Ваш текущий сбор услуг сохранён.</p></div>';
 }
 function bookingIntro() {
- return (draft.repeatOf?'<p class="notice">Повтор заказа №'+draft.repeatOf+'. Проверьте предложенную дату, время и адрес.</p>':'')+
+ return (draft.repeatOf?'<p class="notice">Повтор заказа №'+draft.repeatOf+'. Адрес, телефон и параметры заполнены.'+(draft.date?' Предлагаем '+fmtDate(draft.date)+', '+draft.time+'.':' Выберите дату и время.')+' Проверьте и подтвердите заявку.</p>':'')+
  (Object.keys(errs).length?'<div class="notice booking-errors" role="alert" tabindex="-1"><b>Проверьте заявку</b><ul>'+Object.values(errs).map(e=>'<li>'+esc(e)+'</li>').join('')+'</ul></div>':'');
 }
 function validBookingDate(value) {
@@ -45,7 +45,8 @@ function validateSchedule(d,errors) {
 function startBooking(service) {
  if(draft.repeatOf || draft.service!==service){
   const previous=draft;releasePhotos(previous);
-  draft=Object.assign(newDraft(),{service,address:previous.address,name:previous.name,phone:previous.phone});
+  const latest=S.user&&S.orders.filter(o=>o.mine).sort((a,b)=>b.created-a.created)[0];
+  draft=Object.assign(newDraft(),{service,address:previous.address||(latest&&latest.address)||'',name:previous.name||(latest&&latest.name)||'',phone:previous.phone||(latest&&latest.phone)||''});
  }
  errs={};go('form');
 }
@@ -122,13 +123,17 @@ function send() {
 }
 function saveAdminOrder(id) {
  const o=byId(id);if(!o||mode!=='admin')return;
- const before=JSON.parse(JSON.stringify(S)),price=$('#aprice');
+ const before=JSON.parse(JSON.stringify(S)),price=$('#aprice'),ready=$('#aready');
+ const readyDate=ready?ready.value.trim():o.readyDate||'';
+ if(!validCompletionDate(readyDate,o)){toast('Укажите корректную дату готовности не раньше даты заказа.');if(ready)ready.focus();return}
  const previous=o.price;
+ const previousReady=o.readyDate||'';
  if(price){const raw=price.value.trim(),amount=Number(raw.replace(',','.'));
   if(raw&&(!Number.isFinite(amount)||amount<=0)){toast('Укажите цену больше нуля.');price.focus();return}
   o.price=raw?amount:null;
  }
- o.staff=$('#astaff').value;o.note=$('#anote').value;
+ o.staff=$('#astaff').value;o.note=$('#anote').value;o.readyDate=readyDate;
  if(price&&o.price!=null&&o.price!==previous)notifyOrder(o,'estimate');
+ if(readyDate!==previousReady)notifyOrder(o,'schedule');
  if(!save()){S=before;return}toast('Сохранено в прототипе');
 }

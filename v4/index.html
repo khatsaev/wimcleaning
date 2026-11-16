@@ -84,7 +84,7 @@ button{cursor:pointer;border:0;background:none;padding:0}
 .tabbar svg{width:24px;height:24px}
 .tabbar button{position:relative}
 .tabbar .badge{position:absolute;top:2px;left:calc(50% + 4px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--primary);color:#fff;font-size:11px;line-height:18px;font-weight:700;font-variant-numeric:tabular-nums}
-/* Пикап: позиции на странице услуги */
+/* Сбор услуг: позиции на странице услуги */
 .pos{display:grid;gap:var(--s3);padding:var(--s4) 0;border-top:1px solid var(--line)}
 .pos:first-child{border-top:0;padding-top:var(--s2)}
 .pos-h{display:flex;align-items:center;justify-content:space-between;min-height:40px}
@@ -431,12 +431,13 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;background:var(--prim
 .lvl .btn{background:rgba(255,255,255,.14);color:#fff;min-height:44px}
 .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--ochre);border-radius:99px;transform-origin:left center}
-.promo{display:flex;align-items:center;gap:var(--s3);width:100%;text-align:left;background:var(--ochre-bg);color:var(--ink);border-radius:20px;padding:var(--s3) var(--s4);box-shadow:0 0 0 1px rgba(201,154,46,.5) inset}
-.promo .pp{flex:none;min-width:60px;display:grid;justify-items:center;font-family:var(--display);font-weight:700;font-size:20px;line-height:24px;color:var(--ochre-ink)}
-.promo .pp small{font-size:11px;line-height:12px;font-weight:600}
-.promo .grow{display:grid;gap:2px}
-.promo b{font-size:15px;line-height:20px}
-.promo .chev{flex:none;color:var(--ochre-ink)}
+.bonus-card{display:grid;grid-template-columns:minmax(0,1fr) 20px;align-items:center;gap:var(--s3);width:100%;min-height:44px;text-align:left;background:var(--surface);color:var(--ink);border-radius:16px;padding:var(--s2) var(--s4);box-shadow:0 0 0 1px var(--line) inset;transition:background .15s}
+.bonus-card:active{background:var(--mist)}
+.bonus-card .bonus-copy{display:grid;gap:var(--s1);min-width:0}
+.bonus-card b{font-size:16px;line-height:22px;font-weight:600}
+.bonus-card .bonus-amount{white-space:nowrap}
+.bonus-card .bonus-help{font-size:13px;line-height:18px;color:var(--muted)}
+.bonus-card .chev{width:20px;height:20px;color:var(--muted)}
 .bonus-line{display:flex;align-items:center;gap:var(--s2);font-size:14px;line-height:20px;color:var(--ochre-ink);background:var(--ochre-bg);border-radius:12px;padding:var(--s2) var(--s3)}
 .bonus-line .ic{width:18px;height:18px;flex:none}
 .tiers{display:grid;gap:var(--s2);list-style:none;padding:0;margin:0}
@@ -454,8 +455,10 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;background:var(--prim
 #totalIn{display:grid;gap:var(--s3)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<link rel="stylesheet" href="client-features.css">
-<link rel="stylesheet" href="booking.css">
+<link rel="stylesheet" href="client-features.css?v=20261116-account-a2">
+<link rel="stylesheet" href="booking.css?v=20261116-account-a2">
+<link rel="stylesheet" href="service-experience.css?v=20261116-account-a2">
+<link rel="stylesheet" href="account-design.css?v=20261116-account-a3">
 </head>
 <body>
 <!-- Логотип Wimcleaning (Материалы/Логотип/wim cleaning.svg, обрезан без белого фона), цвет через currentColor -->
@@ -469,6 +472,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;background:var(--prim
 </script>
 <!-- Копия цен из data/pricing_inputs.json (is_demo=true); фасады без цены намеренно. -->
 <div class="stage"><div class="phone" id="phone">
+  <a class="skip-link" href="#screen" data-act="skipContent">Перейти к содержимому</a>
   <div class="proto" id="proto"></div>
   <div id="ahead"></div>
   <main class="screen" id="screen" tabindex="-1"></main>
@@ -540,19 +544,19 @@ const SERV={
   how:'Количество одеял умножается на цену за штуку.',
   prep:['Посчитайте одеяла.','Сфотографируйте одеяло и бирку с составом, если она есть.','Напишите размер и наполнитель: пух, синтепон, шерсть и т. д.'],
   cta:'Заказать стирку одеял',qtyLabel:'Количество одеял',qtyPh:'Например, 1',help:''},
- facade:{k:'фасады',icon:'b2',title:'Мойка фасадов',short:'Мойка фасадов зданий. Стоимость считаем после выезда и осмотра.',unit:'м²',cardPrice:null,listPrice:null,chipLabel:'Фасады',
+ facade:{k:'фасады',icon:'b2',title:'Мойка фасадов',short:'Отправьте 2–3 фотографии фасада и получите предварительную оценку от оператора.',unit:'м²',cardPrice:null,listPrice:null,chipLabel:'Фасады',
   incl:['мойка фасада под давлением, здания до 3 этажей','выезд на осмотр бесплатный'],
-  how:'Точную стоимость называем после выезда специалиста и осмотра объекта. Заявка с фото нужна, чтобы мы заранее поняли, что предстоит.',
+  how:'Оператор оценит площадь, высоту и загрязнения по фотографиям и укажет предварительную стоимость в заказе. Итог согласуем после осмотра.',
   prep:['Сфотографируйте фасад целиком и самые загрязнённые места.','Укажите адрес и примерную площадь, если знаете.','Напишите, где можно подъехать и есть ли доступ к воде и электричеству.'],
-  cta:'Оставить заявку на осмотр',qtyLabel:'Примерная площадь фасада, м²',qtyPh:'Например, 80',help:'Необязательно. Если не знаете, оставьте пустым.'}
+  cta:'Рассчитать стоимость',qtyLabel:'Примерная площадь фасада, м²',qtyPh:'Например, 80',help:'Необязательно. Если не знаете, оставьте пустым.'}
 };
 const unitPrice=k=>P[SERV[k].k].цена_клиенту_руб_за_ед;
 const typical=k=>P[SERV[k].k].типовой_объём_ед_в_заказе;
-const SKEYS=['facade','carpet','blanket','curtain'];
+const SKEYS=['carpet','blanket','curtain','facade'];
 const ST=[
  {c:'accepted',n:'Принят',h:'Мы получили заявку и скоро свяжемся с вами.',i:'inbox'},
  {c:'picked_up',n:'Забрали',h:'Мы забрали вещи. Для фасадов: специалист выезжал на объект.',i:'truck'},
- {c:'in_progress',n:'В работе',h:'Вещи стираем, работы по заказу идут.',i:'waves'},
+ {c:'in_progress',n:'В чистке',h:'Вещи проходят чистку.',i:'waves'},
  {c:'ready',n:'Готов',h:'Заказ готов. Скоро договоримся о доставке.',i:'pkg'},
  {c:'delivered',n:'Доставлен',h:'Заказ у вас. Спасибо, что обратились.',i:'home'},
  {c:'cancelled',n:'Отменён',h:'Заказ отменён. Если это ошибка, свяжитесь с нами.',i:'xc'}
@@ -563,8 +567,8 @@ const SLOTS=['09:00–12:00','12:00–15:00','15:00–18:00','18:00–21:00'];
 const STAFF=['Сотрудник 1','Сотрудник 2'];
 const volTxt=o=>o.service==='pickup'?groupsOf(o.items||[]).map(([k,its])=>grpSummary(k,its)).join('; '):o.service==='facade'?(o.qty?o.qty+' м²':'площадь не указана'):(o.qty+' '+SERV[o.service].unit);
 const priceOf=(k,q)=>unitPrice(k)==null?null:q*unitPrice(k);
-/* ---------- Пикап (корзина) ---------- */
-SERV.pickup={title:'Вывоз по пикапу',chipLabel:'Пикап',unit:'',icon:'truck'};
+/* ---------- Сбор услуг (корзина) ---------- */
+SERV.pickup={title:'Вывоз вещей',chipLabel:'Сбор услуг',unit:'',icon:'truck'};
 const ITEMK=['carpet','curtain','blanket'];
 const plural=(n,f)=>{const a=n%10,b=n%100;return f[(a===1&&b!==11)?0:(a>=2&&a<=4&&(b<12||b>14))?1:2]};
 const NOUN={carpet:['ковёр','ковра','ковров'],curtain:['окно','окна','окон'],blanket:['одеяло','одеяла','одеял']};
@@ -624,7 +628,8 @@ function seed(){
   ago(mk(1015,false,'Руслан А.','facade',260,addDays(-150),SLOTS[0],'delivered','Сотрудник 1',{price:24000}),150)
  ];
  o[10].history.push({s:'cancelled',t:now-H,note:o[10].cancelReason});
- return {orders:o,user:null,limit:{},cart:{}};
+ // В истории заказов начислено 350 бонусов; стартовая корректировка даёт 789 ₽.
+ return {orders:o,user:{email:'aminat@example.test'},limit:{},cart:{},demoAccountVersion:1,bonusAdjustment:{amount:439,created:now}};
 }
 let S=(function(){try{const r=localStorage.getItem('wim_proto_v4');if(r){const o=JSON.parse(r);if(o&&Array.isArray(o.orders))return o}}catch(e){}return seed()})();
 if(!S.cart)S.cart={};
@@ -644,15 +649,34 @@ function loyal(pred){
  const year=before(Date.now()+1),lv=lvOf(year),nx=LV[LV.indexOf(lv)+1]||null;
  return {acc,used,bal:acc.reduce((s,a)=>s+a.b,0)-used.reduce((s,x)=>s+x.u,0),year,lv,nx,left:nx?nx.from-year:0};
 }
-const myL=()=>loyal(o=>o.mine);
-const clientL=o=>loyal(o.mine?x=>x.mine:x=>x.name===o.name);
+const myL=()=>{
+ const L=loyal(o=>o.mine),a=S.bonusAdjustment;
+ L.adjustment=a&&Number.isFinite(a.amount)?a:null;
+ L.bal+=L.adjustment?L.adjustment.amount:0;
+ return L;
+};
+const clientL=o=>o.mine?myL():loyal(x=>x.name===o.name);
+function prepareDemoAccount(){
+ if(S.demoAccountVersion===1)return false;
+ const L=myL();
+ S.bonusAdjustment={amount:(L.adjustment?L.adjustment.amount:0)+789-L.bal,created:Date.now()};
+ S.user=S.user||{email:'aminat@example.test'};
+ S.demoAccountVersion=1;
+ return true;
+}
 const bonusFor=o=>{const a=clientL(o).acc.find(x=>x.o===o);return a?a.b:0};
 const BMAX=30; /* бонусами можно оплатить до 30% заказа */
 const bonusCan=price=>S.user?Math.max(0,Math.min(myL().bal,Math.floor(price*BMAX/100))):0;
 const payLines=o=>o.bonusUse?'<div class="row sb small"><span>Бонусами</span><b>−'+money(o.bonusUse)+'</b></div><div class="row sb small"><span>К оплате при получении</span><b>≈ '+money(o.price-o.bonusUse)+'</b></div>':'';
 const bns=n=>rub(n)+'\u00A0'+plural(n,['бонус','бонуса','бонусов']);
 const earnLine=price=>price>0?'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Начислим '+bns(Math.round(price*myL().lv.p/100))+' после доставки ('+myL().lv.p+'%)':'Вернём от 5% бонусами после доставки')+'</span></div>':'';
-function save(){try{localStorage.setItem('wim_proto_v4',JSON.stringify(S));return true}catch(e){toast('Не удалось сохранить данные. Освободите место в браузере и повторите.');return false}}
+function storageError(){
+ if($('#storageError'))return;
+ const notice=document.createElement('aside');notice.id='storageError';notice.className='notice err storage-error';notice.setAttribute('role','alert');
+ notice.innerHTML='<p>Изменения не сохранены. Освободите место в браузере и повторите действие.</p><button class="textbtn" data-act="closeStorageError" aria-label="Закрыть сообщение об ошибке">Понятно</button>';
+ const dialog=$('#ov .sheet');if(dialog)dialog.prepend(notice);else $('#ctabar').before(notice);
+}
+function save(){try{localStorage.setItem('wim_proto_v4',JSON.stringify(S));const notice=$('#storageError');if(notice)notice.remove();return true}catch(e){storageError();return false}}
 const limitOf=s=>(S.limit&&S.limit[s]!=null)?S.limit[s]:5;
 const byId=id=>S.orders.find(o=>o.id===id);
 
@@ -683,8 +707,8 @@ function chrome(){
  const small=matchMedia('(max-width:599px)').matches;
  document.documentElement.style.background=document.body.style.background=small?tone:'';
  $('#ahead').innerHTML=mode==='admin'?'<div class="ahead">'+logo()+'<b>Режим владельца</b><button class="exit" data-act="mode" data-v="client">Клиент</button></div>':'';
- const tabs=mode==='admin'?[['alist','Заявки','inbox',['alist','acard','support','supportInbox']],['aday','План на день','cal',['aday']],['aslots','Окна приёма','sl',['aslots']]]
-  :[['home','Услуги','grid',['home','service','done','login'].concat(draft.service==='facade'?['form']:[])],['pikap','Пикап','truck',['pikap'].concat(draft.service==='pickup'?['form']:[])],['orders','Мои заказы','list',['orders','order']],['profile','Профиль','user',['profile','bonus','addresses','addressEdit','addressDelete','notifications','support','rating']]];
+ const tabs=mode==='admin'?[['alist','Заявки','inbox',['alist','acard','support','supportInbox','workPhotos']],['aday','План на день','cal',['aday']],['aslots','Окна приёма','sl',['aslots']]]
+  :[['home','Главная','grid',['home','service','done','login'].concat(draft.service==='facade'?['form']:[])],['pikap','Сбор услуг','truck',['pikap','bundle'].concat(draft.service==='pickup'?['form']:[])],['orders','Заказы','list',['orders','order']],['bonus','Бонусы','gift',['bonus']],['profile','Профиль','user',['profile','addresses','addressEdit','addressDelete','notifications','support','rating','reminderSettings']]];
  $('#tabbar').innerHTML=tabs.map(t=>'<button data-act="tab" data-v="'+t[0]+'" '+(t[3].includes(view.name)?'aria-current="page"':'')+'>'+ic(t[2])+'<span>'+t[1]+'</span>'+(t[0]==='pikap'&&cartCount()?'<span class="badge" aria-label="позиций: '+cartCount()+'">'+cartCount()+'</span>':'')+'</button>').join('');
 }
 function render(){
@@ -701,7 +725,7 @@ function render(){
 const backBtn=()=>'<button class="back" data-act="back">'+ic('back')+'Назад</button>';
 const logo=()=>'<svg class="logo" role="img" aria-label="Wim cleaning"><use href="#wim-logo"/></svg>';
 const empty=(t,x,cta,act)=>'<div class="card empty"><div class="ico">'+ic('inbox')+'</div><h2 class="h2">'+t+'</h2><p class="muted">'+x+'</p>'+(cta?'<button class="btn pri" data-act="'+act+'">'+cta+'</button>':'')+'</div>';
-const chipS=c=>'<span class="chip s-'+c+'">'+stOf(c).n+'</span>';
+const chipS=(c,o)=>'<span class="chip s-'+c+'">'+(o?orderStatusName(o,c):stOf(c).n)+'</span>';
 
 /* ---------- клиентские экраны ---------- */
 const VIEWS={};
@@ -776,8 +800,9 @@ function lotState(st,idx){
  sec.dataset.state=st;
  if(LOT.els)LOT.els.forEach((el,i)=>el.classList.toggle('win',st==='result'&&i===LOT.idx));
  const busy=st==='spinning'||st==='loading';
- name.textContent=st==='spinning'?'Выбираем подарок…':st==='error'?'Не удалось загрузить подарки':st==='result'?PRIZES[LOT.idx].short:(LOT.msg||PRIZES[lotCenter()].short);
- btn.textContent=st==='spinning'?'Вращаем…':st==='error'?'Повторить':'Испытать удачу';
+ sec.setAttribute('aria-busy',String(busy));
+ name.textContent=st==='loading'?'Загружаем подарки…':st==='spinning'?'Выбираем подарок…':st==='error'?'Не удалось загрузить подарки':st==='result'?PRIZES[LOT.idx].short:(LOT.msg||PRIZES[lotCenter()].short);
+ btn.textContent=st==='loading'?'Загрузка…':st==='spinning'?'Вращаем…':st==='error'?'Повторить':'Испытать удачу';
  if(busy)btn.setAttribute('aria-disabled','true');else btn.removeAttribute('aria-disabled');
 }
 const lotLive=()=>!!(LOT.sec&&LOT.sec.isConnected&&LOT.els&&!document.hidden);
@@ -881,31 +906,25 @@ function a2hs(){
  d.innerHTML='<span class="ai"><img src="icon-180.png" alt=""></span><p>Установите Wimcleaning на телефон: нажмите <svg class="sh" viewBox="0 0 24 24" aria-label="Поделиться"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M5 11v9h14v-9"/></svg> «Поделиться», затем «На экран „Домой“».</p><button class="cl" data-act="a2hsClose" aria-label="Закрыть">'+ic('x')+'</button>';
  $('#phone').appendChild(d)}
 function activeProgress(o){
- const reached=FLOW.findIndex(f=>f.c===o.status),current=Math.max(0,reached);
- return '<div class="active-progress"><ol aria-hidden="true">'+FLOW.map((f,i)=>{
+ const stages=orderStages(o),current=Math.max(0,stages.findIndex(f=>f.c===o.status));
+ return '<div class="active-progress"><ol aria-hidden="true">'+stages.map((f,i)=>{
   const cls=i<current?'done':i===current?'current':'future';
   const check=i<current?'<svg viewBox="0 0 16 16"><path d="m3 8 3.2 3.2L13 4.5"/></svg>':'';
-  const label=i===FLOW.length-1?'У вас':f.n;
-  return '<li class="'+cls+'"><span class="node">'+check+'</span><span class="label">'+label+'</span></li>';
- }).join('')+'</ol><span class="sr">Этап '+(current+1)+' из '+FLOW.length+'. Сейчас: '+FLOW[current].n+'.</span></div>';
+  return '<li class="'+cls+'"><span class="node">'+check+'</span><span class="label">'+f.n+'</span></li>';
+ }).join('')+'</ol><span class="progress-caption">'+stages.slice(Math.max(0,current-2),current+1).map(stage=>stage.n).join(' → ')+'</span><span class="sr">Сейчас: '+orderStatusName(o)+'.</span></div>';
 }
 VIEWS.home=()=>{
- const mine=S.orders.filter(o=>o.mine&&!['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created)[0];
+ const mine=S.user&&S.orders.filter(o=>o.mine&&!['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created)[0];
  return '<header class="hero"><div class="brand">'+logo()+'<p class="muted small">Работаем по Чеченской Республике</p></div>'+lotHTML()+
- '<div class="lead"><h1 class="h1">Оставьте заявку в пару касаний</h1><p class="muted">Выберите услугу, опишите, что нужно почистить, и приложите фото. Мы свяжемся с вами и уточним детали.</p></div></header>'+
-
- '<button class="btn out" data-act="cfNotifications">'+ic('inbox')+'Уведомления'+(unReadCount()?' · '+unReadCount()+' новых':'')+'</button>'+
- (mine?'<button class="card tap active-order" data-act="open" data-id="'+mine.id+'"><span class="xs muted">Активный заказ</span><span class="row sb"><b>Заказ №'+mine.id+'</b>'+chipS(mine.status)+'</span><span class="small muted clamp">'+titleOf(mine)+'. '+stOf(mine.status).h+'</span>'+activeProgress(mine)+'</button>':'')+
- promo()+
- '<div class="sect"><h2 class="h2">Услуги</h2><p class="muted small">Выберите, что нужно почистить</p></div>'+
- '<div class="stack"><div class="svc-list">'+SKEYS.map(k=>{const s=SERV[k];return '<button class="svc" data-act="svc" data-k="'+k+'"><span class="ico">'+ic(s.icon)+'</span><span><h3>'+s.title+'</h3>'+(s.listPrice?'<span class="price-line"><span>'+s.listPrice+'</span>'+demoChip()+'</span>':'<span class="note">Цена после осмотра</span>')+'</span><svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true">'+IC.chev+'</svg></button>'}).join('')+'</div>'+
- '</div>';
+ '<div class="lead"><h1 class="h1">Сервис профессиональной чистки</h1></div></header>'+
+ '<section class="home-account" aria-label="Личный кабинет">'+homeGreetingHTML()+
+ (mine?activeOrderHTML(mine):homeEmptyOrderHTML())+bonusCard()+repeatShortcutHTML()+servicesHTML()+remindersHTML()+
+ '<button class="home-support" data-act="cfSupport">'+ic('list')+'<span>Есть вопрос? Оператор поможет</span></button></section>';
 };
 
 let calc={k:'carpet',val:6,shown:6,raf:0};
 function calcHTML(k){
- if(k==='facade')return '<div class="card calc"><h2 class="h2">Предварительная цена</h2><p>Рассчитаем после выезда и оценки по фото.</p><p class="small muted">Для фасадов цена зависит от площади, высоты и загрязнения. Её называем после осмотра.</p>'+
-  '<ol class="list small"><li>Фото и адрес</li><li>Выезд специалиста</li><li>Индивидуальное предложение</li></ol></div>';
+ if(k==='facade')return '<div class="card calc"><h2 class="h2">Узнайте стоимость по фото</h2><p>Прикрепите 2–3 фотографии: общий вид, загрязнения и детали поверхности.</p><ol class="list small"><li>Отправьте фото и адрес</li><li>Получите предварительную оценку оператора в заказе</li><li>Согласуйте итог и удобное время работ</li></ol><p class="small muted">На цену влияют площадь, высота и состояние фасада.</p></div>';
  const s=SERV[k];
  const body=k==='carpet'?
   '<div class="rug-wrap">'+rugSVG()+'</div>'+
@@ -1006,9 +1025,11 @@ function lvlCard(L,link){
  (link?'<button class="btn" data-act="bonus">Как работают уровни</button>':'')+'</div>';
 }
 const chevI='<svg class="ic chev" viewBox="0 0 24 24" aria-hidden="true">'+IC.chev+'</svg>';
-function promo(){
- if(S.user){const L=myL();return '<button class="promo" data-act="bonus"><span class="pp">'+L.lv.p+'%</span><span class="grow"><b>Уровень «'+L.lv.n+'» · '+bns(L.bal)+'</b><span class="small muted">'+(L.nx?'До '+L.nx.p+'% осталось '+money(L.left):'Личный менеджер и 10% бонусами')+'</span></span>'+chevI+'</button>'}
- return '<button class="promo" data-act="bonus"><span class="pp"><small>до</small>10%</span><span class="grow"><b>Возвращаем бонусами до 10%</b><span class="small muted">Чем больше заказываете за год, тем выше процент</span></span>'+chevI+'</button>';
+function bonusCard(){
+ const balance=S.user?myL().bal:null;
+ const title=balance===null?'Ваши бонусы':'Ваши бонусы: <span class="bonus-amount">'+money(balance)+'</span>';
+ const help=balance===null?'Войдите, чтобы узнать баланс. Оплата до '+BMAX+'% заказа.':balance>0?'До '+BMAX+'% заказа. Включите «Оплатить бонусами» при оформлении.':'Начислим после доставки. Ими можно оплатить до '+BMAX+'% заказа.';
+ return '<button type="button" class="bonus-card" data-act="'+(balance===null?'goLogin':'bonus')+'"><span class="bonus-copy"><b>'+title+'</b><span class="bonus-help">'+help+'</span></span>'+chevI+'</button>';
 }
 const barIn=()=>{const b=document.querySelector('.bar i');if(b&&window.gsap&&!reduce())gsap.from(b,{scaleX:0,duration:.9,ease:'power2.out',delay:.1})};
 VIEWS.bonus=()=>{
@@ -1017,13 +1038,16 @@ VIEWS.bonus=()=>{
  (L?lvlCard(L):'<div class="card stack"><p class="muted">Войдите, чтобы видеть свой уровень и бонусы.</p><button class="btn pri" data-act="goLogin">Вход</button></div>')+
  '<div class="sect"><h2 class="h2">Уровни</h2></div><ul class="tiers">'+LV.map(l=>'<li class="tier'+(L&&L.lv===l?' cur':'')+'"><span class="tp">'+l.p+'%</span><div><div class="row sb"><h3>«'+l.n+'»</h3>'+(L&&L.lv===l?'<span class="chip lv">Вы здесь</span>':'')+'</div><p class="small muted">'+(l.from?'От '+money(l.from)+' за год':'С первого заказа')+(l.p===10?'. Плюс личный менеджер':'')+'</p></div></li>').join('')+'</ul>'+
  '<div class="card stack"><h3>Как это работает</h3><ul class="list small"><li>Бонусы начисляем, когда заказ доставлен: процент от суммы заказа.</li><li>Уровень считаем по сумме заказов за последние 12 месяцев.</li><li>1 бонус = 1 ₽. Бонусами можно оплатить до '+BMAX+'% заказа, списываем при получении.</li></ul><p class="small muted">Пример: семья заказала на 8 300 ₽ за год и получает уже 7%.</p></div>'+
- (L&&(L.acc.length||L.used.length)?'<div class="card stack"><h3>Начисления и списания</h3><ul class="hist">'+[...L.acc.map(a=>({t:dlvAt(a.o),h:'<li><span>Заказ №'+a.o.id+' · '+a.l.p+'%</span><b>+'+rub(a.b)+'</b></li>'})),...L.used.map(x=>({t:x.o.created,h:'<li><span>Оплата заказа №'+x.o.id+'</span><b>−'+rub(x.u)+'</b></li>'}))].sort((a,b)=>b.t-a.t).map(x=>x.h).join('')+'</ul></div>':'');
+ (L&&(L.acc.length||L.used.length||L.adjustment)?'<div class="card stack"><h3>Начисления и списания</h3><ul class="hist">'+[
+  ...(L.adjustment?[{t:L.adjustment.created,h:'<li><span>Корректировка баланса</span><b>'+(L.adjustment.amount<0?'−':'+')+rub(Math.abs(L.adjustment.amount))+'</b></li>'}]:[]),
+  ...L.acc.map(a=>({t:dlvAt(a.o),h:'<li><span>Заказ №'+a.o.id+' · '+a.l.p+'%</span><b>+'+rub(a.b)+'</b></li>'})),...L.used.map(x=>({t:x.o.created,h:'<li><span>Оплата заказа №'+x.o.id+'</span><b>−'+rub(x.u)+'</b></li>'}))
+ ].sort((a,b)=>b.t-a.t).map(x=>x.h).join('')+'</ul></div>':'');
 };
 AFTER.bonus=barIn;
 VIEWS.pikap=()=>{
  const n=cartCount();
- let h='<h1 class="h1">Пикап</h1><p class="muted">Заберём всё за один приезд и привезём обратно чистым.</p>';
- if(!n)return h+'<div class="card empty"><div class="ico">'+ic('truck')+'</div><h2 class="h2">Пикап пока пустой</h2><p class="muted">Добавьте ковры, шторы или одеяла. Заберём всё за один приезд.</p><button class="btn pri" data-act="tab" data-v="home">Выбрать услугу</button></div>';
+ let h='<h1 class="h1">Сбор услуг</h1><p class="muted">Заберём всё за один приезд и привезём обратно чистым.</p>';
+ if(!n)return h+'<div class="card empty"><div class="ico">'+ic('truck')+'</div><h2 class="h2">Пока нет выбранных услуг</h2><p class="muted">Добавьте ковры, шторы или одеяла. Заберём всё за один приезд.</p><button class="btn pri" data-act="tab" data-v="home">Выбрать услугу</button></div>';
  return h+'<div class="cards">'+ITEMK.filter(k=>(S.cart[k]||[]).length).map(k=>{const its=S.cart[k];
   return '<div class="card stack"><div class="grp-h"><span class="ico">'+ic(SERV[k].icon)+'</span><div class="grow"><h3>'+SERV[k].chipLabel+'</h3><span class="small muted">'+grpSummary(k,its)+'</span></div><b class="nowrap">'+money(grpTotal(k,its))+'</b></div>'+
   '<ul class="lines">'+its.map((it,i)=>'<li>'+itemLine(k,it,i)+'</li>').join('')+'</ul>'+
@@ -1032,14 +1056,14 @@ VIEWS.pikap=()=>{
  '<div class="card stack"><div class="row sb"><h3>Итого</h3><b class="sumbig">≈ '+money(cartTotal())+'</b></div><p class="xs muted">Предварительно. Точную сумму назовём после осмотра вещей.</p>'+earnLine(cartTotal())+'</div>';
 };
 CTA.pikap=()=>cartCount()?'<button class="btn pri" data-act="checkout">'+ic('truck')+'Оформить вывоз</button>':'';
-function cartBrief(){return '<div class="card stack"><div class="row sb"><h3>В пикапе</h3><button class="textbtn" style="width:auto" data-act="tab" data-v="pikap">Изменить</button></div>'+
+function cartBrief(){return '<div class="card stack"><div class="row sb"><h3>Выбранные услуги</h3><button class="textbtn" style="width:auto" data-act="tab" data-v="pikap">Изменить</button></div>'+
  ITEMK.filter(k=>(S.cart[k]||[]).length).map(k=>'<div class="row sb"><span class="small">'+SERV[k].chipLabel+': '+grpSummary(k,S.cart[k])+'</span><b class="small nowrap">'+money(grpTotal(k,S.cart[k]))+'</b></div>').join('')+'</div>'}
 VIEWS.service=()=>{
  const k=view.k,s=SERV[k];
  if(k!=='facade'&&ed.k!==k)edInit(k);
  return backBtn()+'<div class="head-ico"><span class="ico">'+ic(s.icon)+'</span><h1 class="h1">'+s.title+'</h1></div>'+
  '<div class="stack"><p class="muted">'+s.short+'</p>'+
- (s.cardPrice?priceLine(s.cardPrice):'<p class="small muted">Рассчитаем после выезда</p>')+'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Вернём '+myL().lv.p+'% бонусами после доставки':'Вернём от 5% бонусами после доставки')+'</span></div></div>'+
+ (s.cardPrice?priceLine(s.cardPrice):'<p class="small muted">Рассчитаем по 2–3 фотографиям</p>')+'<div class="bonus-line">'+ic('gift')+'<span>'+(S.user?'Вернём '+myL().lv.p+'% бонусами после доставки':'Вернём от 5% бонусами после доставки')+'</span></div></div>'+
  (k==='facade'?calcHTML(k):'<div class="card"><h2 class="h2">'+EDH[k]+'</h2><div id="ed">'+edHTML()+'</div></div>')+
 
 
@@ -1048,7 +1072,7 @@ VIEWS.service=()=>{
  '<div class="sect"><h2 class="h2">Что подготовить</h2><ul class="list small">'+s.prep.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>'+
  (k==='facade'?'<p class="xs muted">Прикрепите фото для предварительной оценки оператором. Окончательная цена — после осмотра.</p>':'');
 };
-CTA.service=()=>view.k==='facade'?'<button class="btn pri" data-act="order">'+SERV.facade.cta+'</button>':'<button class="btn pri" data-act="toPikap">'+ic('truck')+((S.cart[view.k]||[]).length?'Обновить в пикапе':'Добавить в пикап')+'</button>';
+CTA.service=()=>view.k==='facade'?'<button class="btn pri" data-act="order">'+SERV.facade.cta+'</button>':'<button class="btn pri" data-act="toPikap">'+ic('truck')+((S.cart[view.k]||[]).length?'Обновить сбор услуг':'Добавить в сбор услуг')+'</button>';
 AFTER.service=()=>{
  const k=view.k;calc={k,val:null,shown:0,raf:0,fracShown:0};
  if(k!=='facade'){$('#ed').addEventListener('input',e=>{const t=e.target,f=t.dataset.ed;if(!f)return;const i=+t.dataset.i;ed.items[i][f]=t.value;t.classList.remove('bad');const pe=$('#pe'+i);if(pe)pe.textContent='';edRefresh(i)});return}
@@ -1067,7 +1091,7 @@ function formTotal(){
  if(k==='pickup'){const t=bookingTotal(),u=draft.useBonus?bonusCan(t):0;
   const sw=S.user?(myL().bal>0?'<button class="bswitch" data-act="useB" role="switch" aria-checked="'+!!draft.useBonus+'"><span class="grow"><b>Оплатить бонусами</b><span class="small muted">'+(u?'Спишем '+bns(u)+' при получении заказа':'Есть '+bns(myL().bal)+', можно оплатить до '+BMAX+'% заказа')+'</span></span><span class="knob" aria-hidden="true"></span></button>':''):'<p class="xs muted">Бонусами можно оплатить до '+BMAX+'% заказа. Войдите, чтобы ими воспользоваться.</p>';
   return '<div class="stack tight">'+priceLine('Примерно: '+money(t),'md')+'<p class="xs muted">Итог можем уточнить после осмотра вещей.</p></div>'+sw+(u?'<div class="row sb"><span>К оплате при получении</span><b>≈ '+money(t-u)+'</b></div>':'')+earnLine(t-u)}
- if(k==='facade')return '<p>Рассчитаем после выезда и оценки по фото.</p>';
+ if(k==='facade')return '<p>Оператор оценит фотографии и укажет предварительную стоимость в заказе.</p><p class="small muted">Итог согласуем после осмотра, до начала работ.</p>';
  const q=parseFloat(String(draft.qty).replace(',','.'));
  if(!(q>0))return '<span class="muted">Укажите количество, и мы покажем примерную цену.</span>';
  return '<div class="stack tight">'+priceLine('Примерно: '+money(q*unitPrice(k)),'md')+'<p class="xs muted">'+nf.format(q)+' '+SERV[k].unit+' × '+rub(unitPrice(k))+' ₽. Итог можем уточнить после осмотра вещей.</p>'+earnLine(q*unitPrice(k))+'</div>';
@@ -1075,8 +1099,8 @@ function formTotal(){
 const fieldErr=n=>errs[n]?'<span class="error" id="e_'+n+'" role="alert">'+esc(errs[n])+'</span>':'';
 VIEWS.form=()=>{
  const k=draft.service,s=k?SERV[k]:null;
- const inp=(n,l,ph,help,extra)=>'<div class="field"><label for="f_'+n+'">'+l+'</label><input class="inp'+(errs[n]?' bad':'')+'" id="f_'+n+'" data-bind="'+n+'" placeholder="'+esc(ph)+'" value="'+esc(draft[n])+'" '+(extra||'')+(errs[n]?' aria-invalid="true" aria-describedby="e_'+n+'"':'')+'>'+(help?'<span class="help">'+help+'</span>':'')+fieldErr(n)+'</div>';
- return backBtn()+'<h1 class="h1">'+(draft.repeatOf?'Повтор заказа':k==='facade'?'Осмотр фасада':'Оформление вывоза')+'</h1>'+bookingIntro()+'<div class="form">'+
+ const inp=(n,l,ph,help,extra)=>'<div class="field"><label for="f_'+n+'">'+l+'</label><input class="inp'+(errs[n]?' bad':'')+'" id="f_'+n+'" name="'+n+'" data-bind="'+n+'" placeholder="'+esc(ph)+'" value="'+esc(draft[n])+'" '+(extra||'')+(errs[n]?' aria-invalid="true" aria-describedby="e_'+n+'"':'')+'>'+(help?'<span class="help">'+help+'</span>':'')+fieldErr(n)+'</div>';
+ return backBtn()+'<h1 class="h1">'+(draft.repeatOf?'Повтор заказа':k==='facade'?'Расчёт стоимости фасада':'Оформление вывоза')+'</h1>'+bookingIntro()+'<div class="form">'+
  (k==='pickup'?bookingBrief()+fieldErr('service'):'')+
  (k&&k!=='facade'&&k!=='pickup'?inp('qty',s.qtyLabel,s.qtyPh,'','inputmode="decimal"'):'')+
  (k==='facade'?inp('qty',s.qtyLabel,s.qtyPh,s.help,'inputmode="decimal"')+inp('desc','Что за здание','Например, частный дом, 2 этажа',''):'')+
@@ -1084,8 +1108,8 @@ VIEWS.form=()=>{
  bookingScheduleHTML()+
  inp('name','Как к вам обращаться','Имя','','autocomplete="name"')+
  inp('phone','Телефон','+7 ___ ___-__-__','','type="tel" inputmode="tel" autocomplete="tel"')+
- '<div class="field"><label for="f_comment">Комментарий (необязательно)</label><textarea class="inp" id="f_comment" data-bind="comment" placeholder="Пятна, ткань, как проехать">'+esc(draft.comment)+'</textarea></div>'+
- '<div class="field"><span class="lbl row"><span>Фото, до 5</span><span class="cnt-ph" id="phCount"></span></span><div id="photoBox"></div>'+(k==='facade'?'<span class="help">Для фасадов нужно хотя бы одно фото.</span>':'')+fieldErr('photos')+'</div></div>'+
+ '<div class="field"><label for="f_comment">Комментарий (необязательно)</label><textarea class="inp" id="f_comment" name="comment" data-bind="comment" placeholder="Пятна, ткань, как проехать">'+esc(draft.comment)+'</textarea></div>'+
+ '<div class="field"><span class="lbl row"><span>Фото, до 5</span><span class="cnt-ph" id="phCount"></span></span><div id="photoBox"></div>'+(k==='facade'?'<span class="help">Для оценки нужны 2–3 фото: общий вид фасада и загрязнения крупным планом.</span>':'')+fieldErr('photos')+'</div></div>'+
  '<div class="card stack" id="totalBox" aria-live="polite"><h3>Предварительная цена</h3><div id="totalIn">'+formTotal()+'</div></div>'+
  '<div class="stack"><p class="xs muted">Адрес, телефон и фото нужны только для выполнения заказа.</p><button class="textbtn" data-act="back">Отмена</button></div>';
 };
@@ -1093,6 +1117,9 @@ CTA.form=()=>'<button class="btn pri" id="sendBtn" data-act="send">Отправ�
 function photoBox(){
  const n=draft.photos.length;
  const b=$('#photoBox');if(!b)return;
+ b.setAttribute('aria-busy',String(!!draft.processingPhotos));
+ const sendButton=$('#sendBtn');if(sendButton){sendButton.disabled=!!draft.processingPhotos;sendButton.textContent=draft.processingPhotos?'Обрабатываем фото…':'Отправить заявку';}
+
  b.innerHTML=(n===0?'<button class="drop-hint" data-act="addPhoto" type="button">'+ic('img')+'Добавить фото</button>':
   '<div class="photos">'+draft.photos.map((p,i)=>'<div class="ph"><img src="'+p.url+'" alt="Фото '+(i+1)+'"><button class="rm" data-act="rmPhoto" data-i="'+i+'" aria-label="Удалить фото '+(i+1)+'" type="button">'+ic('x')+'</button></div>').join('')+(n<5?'<button class="addph" data-act="addPhoto" type="button">'+ic('plus')+'Добавить фото</button>':'')+'</div>')+
   '<input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple hidden><p class="help">JPEG, PNG, WebP или HEIC, до 12 МБ каждый. Фото сохраняются только в этом браузере.</p><p id="photoProgress" class="small muted" role="status">'+(draft.processingPhotos?'Обрабатываем фотографии…':'')+'</p>';
@@ -1104,7 +1131,7 @@ AFTER.form=()=>{photoBox()};
 function validate(){
  errs={};const d=draft;
  if(!d.service)errs.service='Выберите услугу.';
- if(d.service==='pickup'&&!bookingItems().length)errs.service='Пикап пустой. Добавьте вещи.';
+ if(d.service==='pickup'&&!bookingItems().length)errs.service='Добавьте вещи в сбор услуг.';
  if(d.service&&d.service!=='facade'&&d.service!=='pickup'){const q=String(d.qty).trim();if(q===''||isNaN(parseFloat(q.replace(',','.')))||!/^[0-9]+([.,][0-9]+)?$/.test(q))errs.qty=q===''?'Укажите количество больше нуля.':'Введите число.';else if(parseFloat(q.replace(',','.'))<=0)errs.qty='Укажите количество больше нуля.'}
  if(d.service==='facade'&&String(d.qty).trim()!==''&&!/^[0-9]+([.,][0-9]+)?$/.test(String(d.qty).trim()))errs.qty='Введите число.';
  if(!d.address.trim())errs.address='Укажите адрес.';
@@ -1113,7 +1140,7 @@ function validate(){
  if(!d.name.trim())errs.name='Напишите, как к вам обращаться.';
  let dg=d.phone.replace(/\D/g,'');if(dg.length===11&&/^[78]/.test(dg))dg=dg.slice(1);
  if(dg.length!==10)errs.phone='Проверьте номер телефона.';
- if(d.service==='facade'&&d.photos.length<1)errs.photos='Добавьте хотя бы одно фото фасада.';
+ if(d.service==='facade'&&d.photos.length<2)errs.photos='Добавьте минимум 2 фото: общий вид фасада и загрязнения крупным планом.';
  return Object.keys(errs).length===0;
 }
 VIEWS.done=()=>{const o=byId(view.id);return '<div class="stamp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><div class="stack center"><h1 class="h1">Заявка принята</h1><p class="muted">Демо-заявка №'+o.id+' сохранена в этом браузере. Владелец может посмотреть фото и указать оценку в режиме владельца. Статус доступен в разделе «Мои заказы».</p>'+earnLine(o.price-(o.bonusUse||0))+'</div><div class="stack"><button class="btn pri" data-act="open" data-id="'+o.id+'">Смотреть заказ</button><button class="btn out" data-act="tab" data-v="home">На главную</button></div>'};
@@ -1121,26 +1148,26 @@ VIEWS.done=()=>{const o=byId(view.id);return '<div class="stamp"><svg viewBox="0
 /* вход */
 let loginStep=0,loginMail='';
 VIEWS.login=()=>backBtn()+'<h1 class="h1">Вход</h1><p class="muted">Войдите, чтобы оставлять заявки и следить за заказами.</p>'+
- (loginStep===0?'<div class="field"><label for="f_mail">Электронная почта</label><input class="inp'+(errs.mail?' bad':'')+'" id="f_mail" type="email" inputmode="email" placeholder="Ваша почта" value="'+esc(loginMail)+'">'+(errs.mail?'<span class="error" role="alert">'+errs.mail+'</span>':'')+'</div><button class="btn pri" data-act="mail">Получить ссылку для входа</button><button class="btn out" data-act="cont">Войти через Apple</button><button class="btn out" data-act="cont">Войти через Google</button>'
+ (loginStep===0?'<div class="field"><label for="f_mail">Электронная почта</label><input class="inp'+(errs.mail?' bad':'')+'" id="f_mail" name="email" autocomplete="email" spellcheck="false" type="email" inputmode="email" placeholder="Ваша почта" value="'+esc(loginMail)+'">'+(errs.mail?'<span class="error" role="alert">'+errs.mail+'</span>':'')+'</div><button class="btn pri" data-act="mail">Получить ссылку для входа</button><button class="btn out" data-act="cont">Войти через Apple</button><button class="btn out" data-act="cont">Войти через Google</button>'
  :'<div class="notice">Мы отправили письмо на '+esc(loginMail)+'. Откройте ссылку из письма.</div><button class="btn pri" data-act="cont">Продолжить</button>');
 function afterLogin(){S.user={email:loginMail||'Вход через Apple / Google'};save();loginStep=0;const next=stack.length&&stack[stack.length-1].name==='form';back();if(next)send()}
 
 /* заказы */
 VIEWS.orders=()=>{
  let h='<h1 class="h1">Мои заказы</h1><div class="segm" role="group" aria-label="Фильтр"><button data-act="ofilter" data-v="active" aria-pressed="'+(ordersFilter==='active')+'">Активные</button><button data-act="ofilter" data-v="done" aria-pressed="'+(ordersFilter==='done')+'">Завершённые</button></div>';
- if(!ordersLoaded)return h+'<div class="cards"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>';
+ if(!ordersLoaded)return h+'<div class="cards orders-loading" role="status" aria-live="polite" aria-busy="true"><span class="sr">Загружаем заказы…</span><div class="skel" aria-hidden="true"></div><div class="skel" aria-hidden="true"></div><div class="skel" aria-hidden="true"></div></div>';
  const mine=S.orders.filter(o=>o.mine);
  if(!mine.length)return h+empty('Заказов пока нет','Когда вы оставите заявку, она появится здесь.','Выбрать услугу','home');
  const list=mine.filter(o=>ordersFilter==='active'?!['delivered','cancelled'].includes(o.status):['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created);
  if(!list.length)return h+empty(ordersFilter==='active'?'Активных заказов нет':'Завершённых заказов нет','Здесь пока пусто.');
- return h+'<div class="cards">'+list.map(o=>'<button class="card tap ocard" data-act="open" data-id="'+o.id+'"><span class="row sb"><b>Заказ №'+o.id+'</b>'+chipS(o.status)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">Создан '+fmtDate(iso(o.created))+(o.price!=null?', '+money(o.price):'')+(o.status==='delivered'&&bonusFor(o)?' · +'+bns(bonusFor(o)):'')+'</span></button>').join('')+'</div>';
+ return h+'<div class="cards">'+list.map(o=>'<button class="card tap ocard" data-act="open" data-id="'+o.id+'"><span class="row sb"><b>Заказ №'+o.id+'</b>'+chipS(o.status,o)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">Создан '+fmtDate(iso(o.created))+(o.price!=null?', '+money(o.price):'')+(o.status==='delivered'&&bonusFor(o)?' · +'+bns(bonusFor(o)):'')+'</span></button>').join('')+'</div>';
 };
 AFTER.orders=()=>{if(!ordersLoaded){setTimeout(()=>{ordersLoaded=true;if(view.name==='orders')render()},reduce()?0:450)}};
 function tracker(o){
  const cancelled=o.status==='cancelled';
  const reached=cancelled?Math.max(...o.history.filter(h=>h.s!=='cancelled').map(h=>FLOW.findIndex(f=>f.c===h.s))):FLOW.findIndex(f=>f.c===o.status);
  const when=c=>{const h=[...o.history].reverse().find(x=>x.s===c);return h?fmtStamp(h.t):''};
- let h='<ol class="track" aria-label="Статус заказа">'+FLOW.map((f,i)=>{
+ let h='<ol class="track" aria-label="Статус заказа">'+orderStages(o).map((f,i)=>{
   const done=i<=reached,now=!cancelled&&i===reached;
   const cls=(done?'done ':'future ')+(now?'now ':'')+(i===reached?'last ':'');
   return '<li class="step '+cls+'"'+(now?' aria-current="step"':'')+'><span class="dot">'+(done&&!now?ic('check'):'')+'</span><div><h4>'+f.n+'</h4>'+(done?'<time>'+when(f.c)+'</time>':'')+(now?'<p>'+f.h+'</p>':'')+'</div></li>'}).join('');
@@ -1151,19 +1178,19 @@ VIEWS.order=()=>{
  const o=byId(view.id);
  if(!o||!o.mine&&mode==='client')return backBtn()+empty('Заказ не найден','Такого заказа нет.','К заказам','orders');
  const s=SERV[o.service];
- return backBtn()+'<div class="head"><h1 class="h1">Заказ №'+o.id+'</h1>'+chipS(o.status)+'</div>'+
- '<div class="card">'+tracker(o)+'</div>'+
+ return backBtn()+'<div class="head"><h1 class="h1">Заказ №'+o.id+'</h1>'+chipS(o.status,o)+'</div>'+
+ '<div class="card">'+tracker(o)+(completionText(o)?'<p class="completion-date completion-detail">'+ic('cal')+'<span>'+esc(completionText(o))+'</span></p>':'')+'</div>'+
  '<button class="btn pri" data-act="reorder" data-id="'+o.id+'">Повторить заказ</button>'+
  '<div class="card"><dl class="kv">'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Ваш комментарий</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'</dl></div>'+
- '<div class="card stack"><h3>Предварительная цена</h3>'+(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">Рассчитаем после выезда</p>')+(o.status!=='cancelled'?payLines(o):'')+(o.status==='delivered'&&bonusFor(o)?'<div class="bonus-line">'+ic('gift')+'<span>Начислено '+bns(bonusFor(o))+'</span></div>':o.status!=='cancelled'?earnLine(o.price-(o.bonusUse||0)):(o.bonusUse?'<p class="xs muted">Бонусы вернулись на счёт.</p>':''))+'</div>'+
+ '<div class="card stack"><h3>Предварительная цена</h3>'+(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">Ожидаем предварительную оценку по фото</p>')+(o.status!=='cancelled'?payLines(o):'')+(o.status==='delivered'&&bonusFor(o)?'<div class="bonus-line">'+ic('gift')+'<span>Начислено '+bns(bonusFor(o))+'</span></div>':o.status!=='cancelled'?earnLine(o.price-(o.bonusUse||0)):(o.bonusUse?'<p class="xs muted">Бонусы вернулись на счёт.</p>':''))+'</div>'+
  '<div class="card stack"><h3>Фото</h3>'+(o.photos.length?'<div class="photos">'+o.photos.map((p,i)=>'<button class="ph view" data-act="lightbox" data-src="'+i+'" data-id="'+o.id+'" aria-label="Открыть фото '+(i+1)+'"><img src="'+p+'" alt="Фото '+(i+1)+'"></button>').join('')+'</div>':'<p class="muted small">Фото не добавлены</p>')+'</div>'+
- clientOrderFeatures(o)+'<p class="xs muted">Статус меняет оператор.'+(['accepted','cancelled'].includes(o.status)?'':' Отменить заказ в этом статусе нельзя.')+' Вопросы можно задать в диалоге по заказу.</p>'+
+ resultPhotosHTML(o)+clientOrderFeatures(o)+'<p class="xs muted">Статус меняет оператор.'+(['accepted','cancelled'].includes(o.status)?'':' Отменить заказ в этом статусе нельзя.')+' Вопросы можно задать в диалоге по заказу.</p>'+
  (o.status==='accepted'?'<button class="btn dng" data-act="cancelAsk" data-id="'+o.id+'">Отменить заказ</button>':'');
 
 };
 AFTER.profile=barIn;
 VIEWS.profile=()=>'<h1 class="h1">Профиль</h1>'+
- (S.user?'<div class="card stack"><div class="row"><span class="ico">'+ic('user')+'</span><div><b>Аминат Р.</b><div class="small muted">'+esc(S.user.email)+'</div></div></div><button class="btn out" data-act="logout">Выйти</button></div>'+lvlCard(myL(),true):'<div class="card stack"><p class="muted">Вы не вошли. Каталог можно смотреть без входа, вход нужен при отправке заявки.</p><button class="btn pri" data-act="goLogin">Вход</button></div>'+promo())+
+ (S.user?'<div class="card stack"><div class="row"><span class="ico">'+ic('user')+'</span><div><b>Аминат Р.</b><div class="small muted">'+esc(S.user.email)+'</div></div></div><button class="btn out" data-act="logout">Выйти</button></div>'+lvlCard(myL(),true):'<div class="card stack"><p class="muted">Вы не вошли. Каталог можно смотреть без входа, вход нужен при отправке заявки.</p><button class="btn pri" data-act="goLogin">Вход</button></div>'+bonusCard())+
  clientProfileLinks()+
  '<div class="card stack"><h3>Политика конфиденциальности</h3><p class="small">Демо-режим: адреса, фото, сообщения и заказы хранятся в этом браузере. Отправка на сервер не подключена.</p></div>'+
  '<div class="stack"><button class="btn out" data-act="mode" data-v="admin">Режим владельца</button><button class="btn sec" data-act="reset">Сбросить данные</button></div>';
@@ -1182,7 +1209,7 @@ function filtered(){
 }
 function alistBody(){
  const l=filtered();
- const cards=l.map(o=>'<button class="card tap ocard" data-act="aopen" data-id="'+o.id+'"><span class="row sb"><b>№'+o.id+'</b>'+chipS(o.status)+'</span><span class="small wrap">'+esc(o.name)+'</span><span class="small">'+titleOf(o)+', '+volTxt(o)+'</span><span class="xs muted">'+fmtDate(o.date)+', '+o.time+'. Исполнитель: '+(o.staff||'не назначен')+'</span></button>').join('');
+ const cards=l.map(o=>'<button class="card tap ocard" data-act="aopen" data-id="'+o.id+'"><span class="row sb"><b>№'+o.id+'</b>'+chipS(o.status,o)+'</span><span class="small wrap">'+esc(o.name)+'</span><span class="small">'+titleOf(o)+', '+volTxt(o)+'</span><span class="xs muted">'+fmtDate(o.date)+', '+o.time+'. Исполнитель: '+(o.staff||'не назначен')+'</span></button>').join('');
  return '<p class="xs muted" role="status">Найдено: '+l.length+'</p>'+(l.length?'<div class="cards">'+cards+'</div>':'<div class="card empty"><p class="muted">Заявок по этим условиям нет.</p><button class="btn sec" data-act="areset">Сбросить фильтры</button></div>');
 }
 VIEWS.alist=()=>{
@@ -1202,19 +1229,21 @@ AFTER.alist=()=>{
 };
 VIEWS.acard=()=>{
  const o=byId(view.id);if(!o)return backBtn()+empty('Заказ не найден','Такого заказа нет.');
- const idx=FLOW.findIndex(f=>f.c===o.status),next=o.status==='cancelled'||idx>=4?null:FLOW[idx+1];
- return backBtn()+'<div class="head"><h1 class="h1">Заявка №'+o.id+'</h1>'+chipS(o.status)+'</div>'+
+ const stages=orderStages(o),idx=stages.findIndex(f=>f.c===o.status),next=o.status==='cancelled'||idx>=4?null:stages[idx+1];
+ return backBtn()+'<div class="head"><h1 class="h1">Заявка №'+o.id+'</h1>'+chipS(o.status,o)+'</div>'+
  '<div class="card"><dl class="kv"><div><dt>Клиент</dt><dd>'+esc(o.name)+'</dd></div><div><dt>Уровень</dt><dd>'+(L=>'«'+L.lv.n+'» · '+L.lv.p+'%'+(L.lv.p===10?'<br><span class="small muted">Личный менеджер</span>':''))(clientL(o))+'</dd></div><div><dt>Телефон</dt><dd><a href="tel:'+esc(o.phone.replace(/[^+\d]/g,''))+'" class="tel">'+esc(o.phone)+'</a></dd></div>'+svcRows(o)+'<div><dt>Дата</dt><dd>'+fmtDate(o.date)+'</dd></div><div><dt>Время</dt><dd>'+o.time+'</dd></div><div class="wide"><dt>Адрес</dt><dd>'+esc(o.address)+'</dd></div>'+(o.comment?'<div class="wide"><dt>Комментарий клиента</dt><dd>'+esc(o.comment)+'</dd></div>':'')+'<div class="wide"><dt>Исполнитель</dt><dd>'+(o.staff?esc(o.staff):'Не назначен')+'</dd></div></dl></div>'+
  '<div class="card stack"><h3>Фото клиента</h3>'+(o.photos.length?'<div class="photos">'+o.photos.map((p,i)=>'<button class="ph view" data-act="lightbox" data-src="'+i+'" data-id="'+o.id+'" aria-label="Открыть фото '+(i+1)+'"><img src="'+p+'" alt="Фото '+(i+1)+'"></button>').join('')+'</div>':'<p class="muted small">Клиент не приложил фото.</p>')+'</div>'+
- '<div class="card stack"><h3>Предварительная цена</h3>'+(o.service==='facade'?'<p class="small muted">Предварительная оценка по фото. Укажите сумму вручную; клиент увидит её в заказе. Итог подтвердите после осмотра.</p><div class="sum-in"><div class="inp-wrap"><input class="inp" id="aprice" inputmode="numeric" placeholder="Сумма" aria-label="Итоговая цена, ₽" value="'+(o.price!=null?o.price:'')+'"><span aria-hidden="true">₽</span></div>'+demoChip()+'</div>':(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">—</p>'))+(o.status!=='cancelled'&&o.bonusUse?payLines(o)+'<p class="xs muted">Клиент оплачивает бонусами. Возьмите при получении только сумму «к оплате».</p>':'')+'</div>'+
+ '<div class="card stack"><h3>Предварительная цена</h3>'+(o.service==='facade'?'<p class="small muted">Предварительная оценка по фото. Укажите сумму вручную; клиент увидит её в заказе. Итог подтвердите после осмотра.</p><div class="sum-in"><div class="inp-wrap"><input class="inp" id="aprice" inputmode="numeric" placeholder="Сумма" aria-label="Предварительная стоимость, ₽" value="'+(o.price!=null?o.price:'')+'"><span aria-hidden="true">₽</span></div>'+demoChip()+'</div>':(o.price!=null?priceLine(money(o.price),'md'):'<p class="muted">—</p>'))+(o.status!=='cancelled'&&o.bonusUse?payLines(o)+'<p class="xs muted">Клиент оплачивает бонусами. Возьмите при получении только сумму «к оплате».</p>':'')+'</div>'+
+ '<button class="btn out" data-act="workPhotos" data-id="'+o.id+'">'+ic('img')+'Фото до и после</button>'+
  adminOrderFeatures(o)+'<div class="card stack"><h3>Сменить статус</h3>'+
  (o.status==='cancelled'?'<p class="small muted">Заказ отменён'+(o.cancelReason?': '+esc(o.cancelReason):'')+'.</p>':
-   (next?'<button class="btn pri" id="nextBtn" data-act="astatus" data-id="'+o.id+'" data-v="'+next.c+'">'+ic(next.i)+' '+next.n+'</button>':'<p class="small muted">Заказ доставлен. Следующих шагов нет.</p>')+
-   '<div class="grid2">'+(alt=>alt.map((s,i)=>s.c==='cancelled'?'<button class="btn dng full" data-act="astatus" data-id="'+o.id+'" data-v="'+s.c+'">'+s.n+'</button>':'<button class="pick s44'+(i===alt.filter(x=>x.c!=='cancelled').length-1&&alt.filter(x=>x.c!=='cancelled').length%2?' full':'')+'" data-act="astatus" data-id="'+o.id+'" data-v="'+s.c+'">'+s.n+'</button>').join(''))(ST.filter(s=>s.c!==o.status&&(!next||s.c!==next.c)&&!(s.c==='accepted'&&idx<0)))+'</div>')+
+   (next?'<button class="btn pri" id="nextBtn" data-act="astatus" data-id="'+o.id+'" data-v="'+next.c+'">'+ic(next.i)+' '+next.n+'</button>':'<p class="small muted">Работы завершены. Следующих шагов нет.</p>')+
+   '<div class="grid2">'+(alt=>alt.map((s,i)=>s.c==='cancelled'?'<button class="btn dng full" data-act="astatus" data-id="'+o.id+'" data-v="'+s.c+'">'+s.n+'</button>':'<button class="pick s44'+(i===alt.filter(x=>x.c!=='cancelled').length-1&&alt.filter(x=>x.c!=='cancelled').length%2?' full':'')+'" data-act="astatus" data-id="'+o.id+'" data-v="'+s.c+'">'+s.n+'</button>').join(''))(ST.map(s=>({...s,n:orderStatusName(o,s.c)})).filter(s=>s.c!==o.status&&(!next||s.c!==next.c)&&!(s.c==='accepted'&&idx<0)))+'</div>')+
  '<p class="xs muted after-btns">Уведомление появится внутри прототипа. Push и SMS не подключены.</p></div>'+
  '<div class="card stack roomy"><div class="field"><label for="astaff">Назначить сотрудника или курьера</label><select class="inp" id="astaff"><option value="">Выберите сотрудника</option>'+STAFF.map(s=>'<option'+(o.staff===s?' selected':'')+'>'+s+'</option>').join('')+'</select></div>'+
+ '<div class="field"><label for="aready">Ожидаемая дата готовности</label><input class="inp" type="date" id="aready" min="'+esc(o.date||addDays(0))+'" value="'+esc(o.readyDate||'')+'"><span class="help">Клиент увидит срок в заказе. Оставьте пустым, если дата ещё не подтверждена.</span></div>'+
  '<div class="field"><label for="anote">Заметка (видна только вам)</label><textarea class="inp" id="anote" placeholder="Например: клиент просил позвонить после 18:00">'+esc(o.note)+'</textarea></div><button class="btn sec" data-act="asave" data-id="'+o.id+'">Сохранить</button></div>'+
- '<div class="card stack"><h3>История статусов</h3><ul class="hist">'+[...o.history].reverse().map(h=>'<li><span>'+stOf(h.s).n+(h.note?' ('+esc(h.note)+')':'')+'</span><span class="muted">'+fmtStamp(h.t)+'</span></li>').join('')+'</ul></div>';
+ '<div class="card stack"><h3>История статусов</h3><ul class="hist">'+[...o.history].reverse().map(h=>'<li><span>'+orderStatusName(o,h.s)+(h.note?' ('+esc(h.note)+')':'')+'</span><span class="muted">'+fmtStamp(h.t)+'</span></li>').join('')+'</ul></div>';
 };
 function applyStatus(id,c,reason,btn){
  const o=byId(id);const previous=JSON.parse(JSON.stringify(S));
@@ -1222,12 +1251,12 @@ function applyStatus(id,c,reason,btn){
  setTimeout(()=>{
   const L0=clientL(o).lv;o.status=c;const h={s:c,t:Date.now()};if(c==='cancelled'){o.cancelReason=reason;h.note=reason}
   o.history.push(h);notifyOrder(o,c);if(!save()){S=previous;closeSheet();render();return}closeSheet();render();
-  let t='Статус изменён: '+stOf(c).n;if(c==='delivered'){const b=bonusFor(o),L1=clientL(o).lv;if(b)t+='. Клиенту начислено '+bns(b);if(L1!==L0)t+='. Новый уровень «'+L1.n+'»'}toast(t);
+  let t='Статус изменён: '+orderStatusName(o,c);if(c==='delivered'){const b=bonusFor(o),L1=clientL(o).lv;if(b)t+='. Клиенту начислено '+bns(b);if(L1!==L0)t+='. Новый уровень «'+L1.n+'»'}toast(t);
  },reduce()?0:350);
 }
 VIEWS.aday=()=>{
  const l=S.orders.filter(o=>o.date===dayDate&&o.status!=='cancelled');
- const grp=(t,arr)=>'<div class="sect"><h2 class="h2">'+t+'</h2>'+(arr.length?'<div class="cards">'+arr.map(o=>'<button class="card tap ocard" data-act="aopen" data-id="'+o.id+'"><span class="row sb"><b>№'+o.id+'</b>'+chipS(o.status)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">'+o.time+'. '+esc(o.address)+'</span></button>').join('')+'</div>':'<p class="small muted">Нет</p>')+'</div>';
+ const grp=(t,arr)=>'<div class="sect"><h2 class="h2">'+t+'</h2>'+(arr.length?'<div class="cards">'+arr.map(o=>'<button class="card tap ocard" data-act="aopen" data-id="'+o.id+'"><span class="row sb"><b>№'+o.id+'</b>'+chipS(o.status,o)+'</span><span class="small">'+titleOf(o)+'</span><span class="xs muted">'+o.time+'. '+esc(o.address)+'</span></button>').join('')+'</div>':'<p class="small muted">Нет</p>')+'</div>';
  const pick=l.filter(o=>o.service!=='facade'&&['accepted'].includes(o.status)),vis=l.filter(o=>o.service==='facade'&&o.status==='accepted'),del=l.filter(o=>o.status==='ready');
  return '<h1 class="h1">План на день</h1><div class="field"><label for="dd">Выберите день</label><input class="inp" type="date" id="dd" value="'+dayDate+'"></div>'+
  (l.length?'':'<p class="muted">На этот день ничего не запланировано.</p>')+grp('Забрать',pick)+grp('Выезды на осмотр (фасады)',vis)+grp('Доставить',del)+
@@ -1239,8 +1268,26 @@ VIEWS.aslots=()=>'<h1 class="h1">Окна приёма</h1><p class="muted">Ук
  '<div class="cards">'+SLOTS.map(s=>'<div class="card row sb"><b>'+s+'</b><div class="stepper mini"><button class="iconbtn" data-act="lim" data-s="'+s+'" data-d="-1" aria-label="Уменьшить лимит '+s+'">'+ic('minus')+'</button><span class="num" id="lim_'+s.slice(0,2)+'">'+limitOf(s)+'</span><button class="iconbtn" data-act="lim" data-s="'+s+'" data-d="1" aria-label="Увеличить лимит '+s+'">'+ic('plus')+'</button></div></div>').join('')+'</div><p class="small muted">Лимит заказов на окно. Лимиты сохраняются сразу.</p>';
 
 /* ---------- оверлеи ---------- */
-function sheet(html){closeSheet();const d=document.createElement('div');d.className='overlay';d.id='ov';d.innerHTML='<div class="sheet" role="dialog" aria-modal="true">'+html+'</div>';d.addEventListener('click',e=>{if(e.target===d)closeSheet()});$('#phone').appendChild(d);const f=d.querySelector('button,textarea');if(f)f.focus()}
-function closeSheet(){const d=$('#ov');if(d)d.remove()}
+let dialogReturnFocus=null;
+function mountDialog(overlay,label){
+ closeSheet();dialogReturnFocus=document.activeElement;
+ const dialog=overlay.querySelector('.sheet')||overlay;
+ dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.tabIndex=-1;
+ dialog.setAttribute('aria-label',label||((dialog.querySelector('h2')||{}).textContent)||'Подтверждение');
+ overlay.addEventListener('click',event=>{if(event.target===overlay)closeSheet()});
+ overlay.addEventListener('keydown',event=>{
+  if(event.key!=='Tab')return;
+  const controls=[...dialog.querySelectorAll('button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),a[href]')].filter(element=>element.getClientRects().length);
+  if(!controls.length){event.preventDefault();dialog.focus();return}
+  const first=controls[0],last=controls[controls.length-1];
+  if(event.shiftKey&&(document.activeElement===first||document.activeElement===dialog)){event.preventDefault();last.focus()}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+ });
+ $('#phone').appendChild(overlay);
+ (dialog.querySelector('button:not([disabled])')||dialog).focus({preventScroll:true});
+}
+function sheet(html){const d=document.createElement('div');d.className='overlay';d.id='ov';d.innerHTML='<div class="sheet">'+html+'</div>';mountDialog(d)}
+function closeSheet(){const d=$('#ov');if(!d)return;d.remove();const previous=dialogReturnFocus;dialogReturnFocus=null;if(previous&&previous.isConnected)previous.focus({preventScroll:true})}
 function toast(t){const o=$('#toast');if(o)o.remove();const d=document.createElement('div');d.className='toast';d.id='toast';d.setAttribute('role','status');d.textContent=t;$('#phone').appendChild(d);setTimeout(()=>d.remove(),2200)}
 
 /* ---------- действия ---------- */
@@ -1253,7 +1300,7 @@ const ACT={
  order:()=>startBooking('facade'),
  home:()=>tab('home'),
  a2hsClose:()=>{try{localStorage.setItem('wim_a2hs','1')}catch(e){}const d=$('#a2hs');if(d)d.remove()},
- toPikap:()=>{if(!edCheck())return;const k=ed.k;S.cart[k]=JSON.parse(JSON.stringify(ed.items));save();chrome();truckBump();toast('В пикапе: '+SERV[k].chipLabel.toLowerCase()+', '+grpSummary(k,ed.items));$('#ctabar').innerHTML=CTA.service()},
+ toPikap:()=>{if(!edCheck())return;const k=ed.k;S.cart[k]=JSON.parse(JSON.stringify(ed.items));save();chrome();truckBump();toast('В сборе услуг: '+SERV[k].chipLabel.toLowerCase()+', '+grpSummary(k,ed.items));$('#ctabar').innerHTML=CTA.service()},
  edAdd:()=>{ed.items.push(blankItem(ed.k));edRedraw(ed.k==='carpet'?ed.items.length-1:null)},
  edRm:b=>{ed.items.splice(+b.dataset.i,1);edRedraw()},
  edN:b=>{const i=+b.dataset.i,it=ed.items[i];it.n=Math.max(1,Math.min(5,(it.n||1)+ +b.dataset.d));$('#n'+i).textContent=it.n;edRefresh(i)},
@@ -1283,7 +1330,7 @@ const ACT={
   })){closeSheet();render()}
  },
  closeSheet:()=>closeSheet(),
- lightbox:b=>{const o=byId(+b.dataset.id);const d=document.createElement('div');d.className='overlay lightbox';d.id='ov';d.innerHTML='<img src="'+o.photos[+b.dataset.src]+'" alt="Фото клиента"><button class="btn sec" data-act="closeSheet">Закрыть</button>';d.addEventListener('click',e=>{if(e.target===d)closeSheet()});closeSheet();$('#phone').appendChild(d)},
+ lightbox:b=>{const o=byId(+b.dataset.id);if(!o||(mode!=='admin'&&!o.mine)||!o.photos[+b.dataset.src])return;const d=document.createElement('div');d.className='overlay lightbox';d.id='ov';d.innerHTML='<img src="'+esc(o.photos[+b.dataset.src])+'" alt="Фото клиента"><button class="btn sec" data-act="closeSheet">Закрыть</button>';mountDialog(d,'Фото клиента')},
  reset:()=>{
   if(!cfCommit(()=>{S=seed();initClientFeatures()}))return;
   releasePhotos(draft);cfMessageDrafts.clear();ordersLoaded=false;draft=newDraft();errs={};toast('Данные сброшены');render();
@@ -1296,7 +1343,7 @@ const ACT={
  afd:b=>{af.date=b.dataset.v;render()},
  areset:()=>{af={q:'',status:'all',service:'all',date:'all',from:'',to:''};render()},
  astatus:b=>{
-  const id=+b.dataset.id,c=b.dataset.v,n=stOf(c).n;
+  const id=+b.dataset.id,c=b.dataset.v,n=orderStatusName(byId(+b.dataset.id),c);
   if(c==='cancelled'){sheet('<h2 class="h2">Отменить заказ №'+id+'?</h2><p class="muted">Клиент увидит статус «Отменён». Уведомление появится внутри прототипа. Push и SMS не подключены.</p><div class="field"><label for="creason">Причина отмены</label><textarea class="inp" id="creason" placeholder="Например, клиент передумал"></textarea><span class="error" id="creasonE" hidden role="alert">Укажите причину отмены.</span></div><button class="btn dng" data-act="cancelConfirm" data-id="'+id+'">Отменить заказ</button><button class="btn out" data-act="closeSheet">Отмена</button>');return}
   sheet('<h2 class="h2">Сменить статус?</h2><p class="muted">Сменить статус заказа №'+id+' на «'+n+'»? Уведомление появится внутри прототипа. Push и SMS не подключены.</p><button class="btn pri" id="doStatus" data-act="doStatus" data-id="'+id+'" data-v="'+c+'">Сменить</button><button class="btn out" data-act="closeSheet">Отмена</button>');
  },
@@ -1305,12 +1352,13 @@ const ACT={
  asave:b=>saveAdminOrder(+b.dataset.id),
  lim:b=>{const s=b.dataset.s;S.limit=S.limit||{};S.limit[s]=Math.max(1,Math.min(20,limitOf(s)+ +b.dataset.d));save();$('#lim_'+s.slice(0,2)).textContent=S.limit[s]}
 };
-document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const f=ACT[b.dataset.act];if(f)f(b)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const f=ACT[b.dataset.act];if(f){if(b.dataset.act==='skipContent')e.preventDefault();f(b)}});
 document.addEventListener('input',e=>{const n=e.target.dataset&&e.target.dataset.bind;if(!n)return;draft[n]=e.target.value;if(errs[n]){delete errs[n];e.target.classList.remove('bad');const er=document.getElementById('e_'+n);if(er)er.remove()}if(n==='date'){scheduleChanged()}if(n==='qty'){const t=$('#totalIn');if(t)t.innerHTML=formTotal()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
 </script>
-<script src="client-features.js"></script>
-<script src="booking.js"></script>
-<script>render();</script>
+<script src="client-features.js?v=20261116-account-a2"></script>
+<script src="booking.js?v=20261116-account-a2"></script>
+<script src="service-experience.js?v=20261116-account-a3"></script>
+<script>if(prepareDemoAccount())save();render();</script>
 </body>
 </html>

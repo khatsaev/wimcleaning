@@ -8,6 +8,7 @@ function initClientFeatures() {
   S.addresses = S.addresses.filter(a => a && typeof a.id === 'string' && typeof a.label === 'string' && typeof a.address === 'string');
   S.notifications = S.notifications.filter(n => n && typeof n.id === 'string' && typeof n.title === 'string' && Number.isFinite(n.orderId));
   S.messages = S.messages.filter(m => m && typeof m.id === 'string' && typeof m.text === 'string' && Number.isFinite(m.orderId) && ['client', 'operator'].includes(m.role));
+  if (typeof initServiceExperience === 'function') initServiceExperience();
 }
 
 const cfId = prefix => prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 9);
@@ -34,14 +35,16 @@ function notifyOrder(o, event) {
   if (!o || !o.mine) return false;
   const titles = {
     accepted: 'Заявка принята', picked_up: o.service === 'facade' ? 'Специалист осмотрел объект' : 'Вещи забрали',
-    in_progress: 'Заказ в работе', ready: 'Заказ готов', delivered: 'Заказ доставлен',
+    in_progress: o.service === 'facade' ? 'Начали мойку фасада' : 'Заказ в чистке', ready: 'Заказ готов', delivered: o.service === 'facade' ? 'Работы завершены' : 'Заказ доставлен',
     cancelled: 'Заказ отменён', estimate: 'Предварительная оценка готова',
-    courier: 'Курьер выехал', today: 'Сегодня доставка'
+    courier: 'Курьер выехал', today: 'Сегодня доставка',
+    schedule: o.readyDate ? 'Готовность — ' + fmtDate(o.readyDate) : 'Дата готовности уточняется',
+    resultPhotos: 'Добавлены фотографии результата'
   };
   if (!titles[event]) return false;
   const history = (o.history || []).filter(h => h.s === event);
   const suffix = ['courier', 'today'].includes(event) ? addDays(0)
-    : event === 'estimate' ? cfId('estimate') : history.length ? history[history.length - 1].t : o.created;
+    : ['estimate', 'schedule', 'resultPhotos'].includes(event) ? cfId(event) : history.length ? history[history.length - 1].t : o.created;
   const key = o.id + ':' + event + ':' + suffix;
   if (S.notifications.some(n => n.key === key)) return false;
   S.notifications.unshift({ id: cfId('notice'), key, orderId: o.id, event, title: titles[event], created: Date.now(), read: false });
@@ -54,6 +57,7 @@ function clientProfileLinks() {
   return '<div class="card stack"><h2 class="h2">Удобно под рукой</h2>' +
     '<button class="btn out" data-act="cfAddresses">' + ic('home') + 'Сохранённые адреса</button>' +
     '<button class="btn out" data-act="cfNotifications">' + ic('inbox') + 'Уведомления' + (unread ? ' · ' + unread + ' новых' : '') + '</button>' +
+    '<button class="btn out" data-act="reminderSettings">' + ic('cal') + 'Напоминания о чистке</button>' +
     '<button class="btn out" data-act="cfSupport">' + ic('list') + 'Связаться с оператором</button></div>';
 }
 
@@ -108,6 +112,7 @@ VIEWS.addressDelete = () => {
 VIEWS.notifications = () => {
   const list = S.notifications.filter(n => cfOwnOrder(n.orderId));
   return backBtn() + '<h1 class="h1">Уведомления</h1>' + cfDemo +
+    '<button class="btn out" data-act="reminderSettings">Настроить напоминания о чистке</button>' + remindersHTML() +
     (unReadCount() ? '<button class="btn out" data-act="cfReadAll">Прочитать все</button>' : '') +
     (list.length ? '<div class="cards">' + list.map(n => '<button class="card tap cf-notice' + (!n.read ? ' is-unread' : '') + '" data-act="cfOpenNotice" data-id="' + esc(n.id) + '"><span class="row sb"><b>' + esc(n.title) + '</b>' + (!n.read ? '<span class="cf-new">Новое</span>' : '') + '</span><span class="small">Заказ №' + n.orderId + '</span><span class="xs muted">' + esc(fmtStamp(n.created)) + '</span></button>').join('') + '</div>' : empty('Пока нет уведомлений', 'Здесь появятся новости ваших заказов.'));
 };
