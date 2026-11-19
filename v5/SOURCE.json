@@ -1,0 +1,31 @@
+{
+  "url": "https://khatsaev.github.io/wimcleaning/v4/",
+  "repository": "https://github.com/khatsaev/wimcleaning",
+  "commit": "d8b2373139e7289961baa97947470661176f8193",
+  "imported": "2026-11-20",
+  "sha256": {
+    "account-design.css": "0073ea328d905186a8ec5838d2865f06e367326cc5ff367aaa81ae4cef21ee31",
+    "assets/logo.svg": "aab9eb941c453bf12ec402213035c84d438a9187a608cdc76e75bccadee27894",
+    "assets/prizes/01-velly-lemon.webp": "31b322f03da54cdc117fa39889c435c6f3e72836666b3879c030807da368dd59",
+    "assets/prizes/02-clean-glass-pro.webp": "7d6d915a9d2dc684ca75b454640da1cf1074cc8ec6c037ec10d0f851724ee8b7",
+    "assets/prizes/03-universal-cleaner.webp": "bafc20ee8dd8e9d2378eaa8b6f59bcfd2241720067f5b1b081cd86c07bbe8f10",
+    "assets/prizes/04-arena-lily.webp": "6179f35397047b72c9922d9014cdbd74b8de44976966ac742ef6be57c1a1b7ee",
+    "assets/prizes/05-gloss.webp": "1deb23419a55e95315365611878487160e5003c72367fc0c8e1e9d97aa8b2564",
+    "assets/prizes/06-azelit.webp": "37c5b19d0234b8ba40dc0e8e45b6a1b7cc69f4657384ca875677d4c6bb34fa36",
+    "assets/prizes/07-milana-blueberry.webp": "78ccdf4e427fe26347bb568cacccef41cd4522dca1d0441c463e80861dedf75a",
+    "assets/prizes/08-wiper-soft.webp": "fb7c46e37bde2a1a64752e651c04a1de6748d24dc49f7164c6acadbb25915b99",
+    "assets/prizes/09-magic-glass.webp": "feec48f6265e77eb98b6d3e096c1d766cfb62a0e522769a129e81bc1f91591e4",
+    "assets/prizes/10-maxi-sponges.webp": "761743e06183458dfedee3d8c1659da7f279b258b6085d07018c19d1387f97d1",
+    "booking.css": "a8285de68d9f9b6c4340df4ce6269260ac6a1506f07ad65d4f3990c428f9b3f6",
+    "booking.js": "8db14fd4eaa95c4c9cf90e06b01dd1c62cde6add47c34b3e2c3a01020637826a",
+    "client-features.css": "a60a5b8b3abe7fce07f51b7dd71f32d23d3c5b353582f978fe2c82a408f90c9d",
+    "client-features.js": "91c8f94c92ea2f5432503e5a41fe3bdccc7fa66a592b4d4b4acb4520ebabf504",
+    "icon-180.png": "8d69e4d92b8714353f278387fbbb7f56f29ebb4713b68dd0e63ff8cf86f1a147",
+    "icon-192.png": "6e6eaa5b695a6941b165145713baffaca5e8b82e96c6110250d73e5d12a8de25",
+    "icon-512.png": "208665569f0b94af0d8ef0b55f1e8ec33d63d2929056349601ceda0a6a48fa4d",
+    "index.html": "6f0fee40fdfd937b0d3ea629c814c00187ccdaf49e9ba5e1e039d739488cc96d",
+    "manifest.webmanifest": "9a8ac0c38bc126ac17d44360c630ab9641e7cbcd52c95b73ccfeef552cf32747",
+    "service-experience.css": "3eeff70395bc0446b1b1824bd4f46d30fc96e69f8fc332d2e974ebe3fa827136",
+    "service-experience.js": "bec42a80e87610ce7cb198fb3c5723211d779e47c1a3bdb20c9545f62c3a058a"
+  }
+}

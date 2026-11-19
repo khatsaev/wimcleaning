@@ -1,0 +1,3617 @@
+/* Generated from ../styles.css by scripts/build-v4-crm-css.mjs. Scope prevents changes to v4. */
+
+:where(.crm-scope) *,
+:where(.crm-scope) *::before,
+:where(.crm-scope) *::after {
+  box-sizing: border-box;
+}
+.crm-scope,
+:where(.crm-scope) h1,
+:where(.crm-scope) h2,
+:where(.crm-scope) h3,
+:where(.crm-scope) p {
+  margin: 0;
+}
+:where(.crm-scope) button,
+:where(.crm-scope) input,
+:where(.crm-scope) select,
+:where(.crm-scope) textarea {
+  font: inherit;
+}
+:where(.crm-scope) button,
+:where(.crm-scope) a,
+:where(.crm-scope) input,
+:where(.crm-scope) select,
+:where(.crm-scope) textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+:where(.crm-scope) button,
+:where(.crm-scope) a {
+  touch-action: manipulation;
+}
+:where(.crm-scope) button {
+  cursor: pointer;
+}
+:where(.crm-scope) a {
+  color: inherit;
+  text-decoration: none;
+}
+:where(.crm-scope) button {
+  color: inherit;
+}
+:where(.crm-scope) svg {
+  display: block;
+}
+:where(.crm-scope) button {
+  border: 0;
+  background: none;
+}
+:where(.crm-scope) input,
+:where(.crm-scope) select,
+:where(.crm-scope) textarea {
+  min-width: 0;
+}
+:where(.crm-scope) button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+:where(.crm-scope) img {
+  max-width: 100%;
+  display: block;
+}
+:where(.crm-scope) table {
+  border-collapse: collapse;
+}
+:where(.crm-scope) dialog {
+  padding: 0;
+  border: 0;
+}
+:where(.crm-scope) [hidden] {
+  display: none !important;
+}
+.crm-scope {
+  --bg: #f4f7f6;
+  --surface: #fff;
+  --ink: #203a35;
+  --muted: #63736e;
+  --line: #e3eae6;
+  --primary: #176d5b;
+  --primary-dark: #105443;
+  --soft: #e8f2ed;
+  --blue: #3768a4;
+  --blue-bg: #edf3fc;
+  --amber: #986414;
+  --amber-bg: #fcf3df;
+  --red: #b7433d;
+  --red-bg: #fcece9;
+  --violet: #7562a4;
+  --violet-bg: #f0edf8;
+  --radius: 12px;
+  --shadow: 0 12px 40px #203a3510;
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  font-synthesis: none;
+}
+.crm-scope {
+  background: var(--bg);
+  min-width: 320px;
+}
+:where(.crm-scope) button,
+:where(.crm-scope) input,
+:where(.crm-scope) select,
+:where(.crm-scope) textarea {
+  outline-offset: 3px;
+}
+:where(.crm-scope) :focus-visible {
+  outline: 3px solid #609dcb;
+}
+:where(.crm-scope) h1,
+:where(.crm-scope) h2,
+:where(.crm-scope) h3 {
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+:where(.crm-scope) h1 {
+  font-size: 30px;
+}
+:where(.crm-scope) h2 {
+  font-size: 19px;
+}
+:where(.crm-scope) h3 {
+  font-size: 15px;
+}
+:where(.crm-scope) p {
+  line-height: 1.55;
+}
+:where(.crm-scope) small {
+  font-size: 12px;
+  color: var(--muted);
+}
+:where(.crm-scope) strong,
+:where(.crm-scope) b {
+  font-weight: 600;
+}
+:where(.crm-scope) input,
+:where(.crm-scope) select,
+:where(.crm-scope) textarea {
+  border: 1px solid #cdd9d2;
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  padding: 10px 12px;
+  max-width: 100%;
+}
+:where(.crm-scope) select {
+  cursor: pointer;
+}
+:where(.crm-scope) textarea {
+  resize: vertical;
+  min-height: 76px;
+}
+:where(.crm-scope) input:focus,
+:where(.crm-scope) select:focus,
+:where(.crm-scope) textarea:focus {
+  border-color: var(--primary);
+}
+:where(.crm-scope) hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 20px 0;
+}
+:where(.crm-scope) button,
+:where(.crm-scope) a {
+  transition:
+    background-color 0.16s,
+    color 0.16s,
+    box-shadow 0.16s;
+}
+:where(.crm-scope) button:active:not(:disabled) {
+  filter: brightness(0.96);
+}
+:where(.crm-scope) ::selection {
+  background: #cae5d8;
+}
+:where(.crm-scope) dialog::backdrop {
+  background: #18382d55;
+  backdrop-filter: blur(2px);
+}
+:where(.crm-scope) dialog[open] {
+  animation: dialog-in 0.16s ease-out;
+}
+.crm-scope:has(dialog[open]) {
+  overflow: hidden;
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+:where(.crm-scope) .sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+:where(.crm-scope) .skip-link {
+  position: fixed;
+  top: -70px;
+  left: 10px;
+  background: white;
+  padding: 12px;
+  z-index: 100;
+}
+:where(.crm-scope) .skip-link:focus {
+  top: 10px;
+}
+:where(.crm-scope) .icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+:where(.crm-scope) .icon-button {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 8px;
+  color: var(--muted);
+}
+:where(.crm-scope) .icon-button:hover {
+  background: var(--soft);
+  color: var(--primary);
+}
+:where(.crm-scope) .btn {
+  min-height: 40px;
+  padding: 9px 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 8px;
+  font-weight: 550;
+  white-space: normal;
+  border: 1px solid transparent;
+  line-height: 1.35;
+}
+:where(.crm-scope) .btn .icon {
+  width: 17px;
+  height: 17px;
+}
+:where(.crm-scope) .btn.primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 3px #1a4d2512;
+}
+:where(.crm-scope) .btn.primary:hover {
+  background: var(--primary-dark);
+}
+:where(.crm-scope) .btn.secondary {
+  background: #fff;
+  border-color: #d6e1da;
+}
+:where(.crm-scope) .btn.secondary:hover {
+  background: #f1f6f3;
+  border-color: #acbfb1;
+}
+:where(.crm-scope) .btn.ghost {
+  color: var(--primary);
+  background: transparent;
+}
+:where(.crm-scope) .btn.ghost:hover {
+  background: var(--soft);
+}
+:where(.crm-scope) .btn.danger-ghost {
+  color: var(--red);
+}
+:where(.crm-scope) .btn.danger-ghost:hover {
+  background: var(--red-bg);
+}
+:where(.crm-scope) .btn.small {
+  min-height: 34px;
+  font-size: 12px;
+  padding: 7px 10px;
+}
+:where(.crm-scope) .btn.full {
+  width: 100%;
+}
+:where(.crm-scope) .text-button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0;
+  color: var(--primary);
+  text-align: left;
+}
+:where(.crm-scope) .text-button:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+:where(.crm-scope) .text-button .icon {
+  width: 16px;
+  height: 16px;
+}
+:where(.crm-scope) .strong {
+  font-weight: 600;
+}
+:where(.crm-scope) .grow {
+  flex: 1;
+}
+:where(.crm-scope) .muted {
+  color: var(--muted);
+}
+:where(.crm-scope) .small {
+  font-size: 12px;
+}
+:where(.crm-scope) .green-text {
+  color: var(--primary);
+}
+:where(.crm-scope) .amber-text {
+  color: var(--amber);
+}
+:where(.crm-scope) .red-text,
+:where(.crm-scope) .overdue {
+  color: var(--red);
+}
+:where(.crm-scope) .green-text:has(.icon) {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+:where(.crm-scope) .align-right {
+  text-align: right !important;
+}
+:where(.crm-scope) .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+:where(.crm-scope) .between {
+  justify-content: space-between;
+}
+:where(.crm-scope) .wrap {
+  flex-wrap: wrap;
+}
+:where(.crm-scope) .space-top {
+  margin-top: 20px;
+}
+:where(.crm-scope) .quiet-label {
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+:where(.crm-scope) .sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 224px;
+  background: white;
+  border-right: 1px solid var(--line);
+  padding: 28px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+:where(.crm-scope) .wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 13px 25px;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -1.2px;
+  line-height: 1.2;
+}
+:where(.crm-scope) .brand-mark {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -2px;
+  padding: 0 3px 5px 0;
+}
+:where(.crm-scope) .brand-light {
+  font-weight: 400;
+}
+:where(.crm-scope) .wordmark small {
+  display: block;
+  font-size: 10px;
+  font-weight: 450;
+  letter-spacing: 0;
+  color: var(--muted);
+  margin-top: 4px;
+}
+:where(.crm-scope) .workspace-label {
+  font-size: 11px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin: 0 10px 25px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+:where(.crm-scope) .workspace-dot,
+:where(.crm-scope) .online-dot,
+:where(.crm-scope) .status-dot {
+  width: 7px;
+  height: 7px;
+  background: #3b8f69;
+  border-radius: 50%;
+  display: inline-block;
+  flex: none;
+}
+:where(.crm-scope) .workspace-region {
+  font-size: 10px;
+  margin-left: 14px;
+}
+:where(.crm-scope) .sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: auto;
+}
+:where(.crm-scope) .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 43px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  color: #5a6c64;
+  font-size: 13px;
+  font-weight: 500;
+}
+:where(.crm-scope) .nav-link.active {
+  background: var(--soft);
+  color: #175e4e;
+  font-weight: 650;
+}
+:where(.crm-scope) .nav-link:hover {
+  background: #f2f6f3;
+}
+:where(.crm-scope) .nav-link .icon {
+  width: 18px;
+  height: 18px;
+}
+:where(.crm-scope) .nav-count {
+  margin-left: auto;
+  font-size: 11px;
+  border-radius: 5px;
+  background: #e7eeea;
+  padding: 0 6px;
+  min-width: 22px;
+  text-align: center;
+}
+:where(.crm-scope) .nav-dot {
+  width: 6px;
+  height: 6px;
+  background: #c29239;
+  border-radius: 50%;
+  margin-left: auto;
+}
+:where(.crm-scope) .nav-separator {
+  height: 1px;
+  background: var(--line);
+  margin: 13px 13px;
+}
+:where(.crm-scope) .sidebar-bottom {
+  margin-top: auto;
+  padding-top: 18px;
+}
+:where(.crm-scope) .demo-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 13px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+:where(.crm-scope) .demo-note > .icon {
+  width: 15px;
+  height: 15px;
+}
+:where(.crm-scope) .demo-note small {
+  font-size: 9px;
+  display: block;
+  margin-top: 3px;
+}
+:where(.crm-scope) .identity {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 8px;
+}
+:where(.crm-scope) .identity > span:nth-child(2) {
+  flex: 1;
+}
+:where(.crm-scope) .identity b,
+:where(.crm-scope) .identity small {
+  display: block;
+}
+:where(.crm-scope) .identity b {
+  font-size: 12px;
+}
+:where(.crm-scope) .identity small {
+  font-size: 10px;
+}
+:where(.crm-scope) .avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #edf0e7;
+  color: #666d40;
+  font-size: 11px;
+  font-weight: 600;
+}
+:where(.crm-scope) .av-1 {
+  background: #f5ece4;
+  color: #9a6d49;
+}
+:where(.crm-scope) .av-2 {
+  background: #e9eef9;
+  color: #5b71a0;
+}
+:where(.crm-scope) .av-3 {
+  background: #eeeaf5;
+  color: #7a6398;
+}
+:where(.crm-scope) .workspace {
+  margin-left: 224px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+:where(.crm-scope) .topbar {
+  height: 69px;
+  padding: 0 30px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffffb8;
+}
+:where(.crm-scope) .breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+:where(.crm-scope) .breadcrumb b {
+  color: var(--ink);
+  font-weight: 500;
+}
+:where(.crm-scope) .breadcrumb .icon {
+  width: 13px;
+  height: 13px;
+  color: #99a89f;
+}
+:where(.crm-scope) .topbar-right {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+:where(.crm-scope) .demo-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 550;
+  background: #f0eee4;
+  color: #776b37;
+  border-radius: 5px;
+  padding: 3px 7px;
+  white-space: nowrap;
+}
+:where(.crm-scope) .role-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+:where(.crm-scope) .role-picker > .icon {
+  width: 16px;
+  height: 16px;
+}
+:where(.crm-scope) .role-picker select {
+  background: transparent;
+  border: 0;
+  padding: 7px 0;
+  font-size: 12px;
+  max-width: 165px;
+}
+:where(.crm-scope) .today {
+  font-size: 12px;
+  color: var(--muted);
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+:where(.crm-scope) .topbar > .icon-button {
+  display: none;
+}
+:where(.crm-scope) main {
+  padding: 29px 30px 40px;
+  width: 100%;
+  max-width: 1650px;
+  margin: 0 auto;
+  flex: 1;
+  outline: 0;
+}
+:where(.crm-scope) .page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+:where(.crm-scope) .page-heading p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 8px;
+}
+:where(.crm-scope) .heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+:where(.crm-scope) .workspace-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10px;
+  color: #687c71;
+  border-top: 1px solid var(--line);
+  padding: 14px 30px;
+}
+:where(.crm-scope) .mobile-nav {
+  display: none;
+}
+:where(.crm-scope) .summary-line {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  font-size: 12px;
+  padding: 2px 0 23px;
+  color: var(--muted);
+}
+:where(.crm-scope) .summary-line > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+:where(.crm-scope) .summary-line strong {
+  color: var(--ink);
+}
+:where(.crm-scope) .summary-line .icon {
+  width: 15px;
+  height: 15px;
+}
+:where(.crm-scope) .summary-line .text-button {
+  margin-left: auto;
+  font-size: 12px;
+}
+:where(.crm-scope) .panel {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-width: 0;
+  overflow: hidden;
+}
+:where(.crm-scope) .pipeline-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+:where(.crm-scope) .pipeline-tab {
+  padding: 17px 10px 15px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+}
+:where(.crm-scope) .pipeline-tab span {
+  font-size: 10px;
+  padding: 0 5px;
+  min-width: 19px;
+  border-radius: 5px;
+  background: #f0f3f1;
+  color: #6d7b73;
+  text-align: center;
+}
+:where(.crm-scope) .pipeline-tab.selected {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+:where(.crm-scope) .pipeline-tab.selected span {
+  background: var(--soft);
+  color: var(--primary);
+}
+:where(.crm-scope) .toolbar {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+:where(.crm-scope) .search-box {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 140px;
+  width: 310px;
+  max-width: 100%;
+  height: 36px;
+  border: 1px solid #dbe4df;
+  border-radius: 7px;
+  padding: 0 10px;
+  background: #fff;
+}
+:where(.crm-scope) .search-box > .icon {
+  width: 16px;
+  height: 16px;
+  color: #6c8176;
+}
+:where(.crm-scope) .search-box input {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  outline-offset: 0;
+  width: 100%;
+  font-size: 12px;
+}
+:where(.crm-scope) .search-box kbd {
+  font-family: inherit;
+  font-size: 10px;
+  padding: 0 4px;
+  color: #89998e;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+:where(.crm-scope) .inline-filter {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+}
+:where(.crm-scope) .inline-filter > .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--muted);
+}
+:where(.crm-scope) .inline-filter select {
+  border-color: #dbe4df;
+  font-size: 12px;
+  padding: 7px 9px;
+  background: white;
+  max-width: 200px;
+}
+:where(.crm-scope) .toolbar-spacer {
+  flex: 1;
+}
+:where(.crm-scope) .results-count {
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--muted);
+}
+:where(.crm-scope) .table-wrap {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+:where(.crm-scope) .data-table {
+  width: 100%;
+  font-size: 12px;
+}
+:where(.crm-scope) .data-table th {
+  background: #fbfcfb;
+  font-size: 10px;
+  font-weight: 550;
+  color: #738178;
+  padding: 11px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+:where(.crm-scope) .data-table td {
+  padding: 15px 18px;
+  border-bottom: 1px solid #edf1ee;
+  vertical-align: middle;
+}
+:where(.crm-scope) .data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+:where(.crm-scope) .data-table tbody tr:hover {
+  background: #fafcfb;
+}
+:where(.crm-scope) .data-table td:last-child,
+:where(.crm-scope) .data-table th:last-child {
+  padding-left: 4px;
+  padding-right: 12px;
+}
+:where(.crm-scope) .data-table small {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+:where(.crm-scope) .cell-link {
+  padding: 0;
+  text-align: left;
+  border-radius: 5px;
+}
+:where(.crm-scope) .client-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+:where(.crm-scope) .client-cell b {
+  font-size: 12px;
+}
+:where(.crm-scope) .client-cell:hover b {
+  color: var(--primary);
+}
+:where(.crm-scope) .client-cell .avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 10px;
+}
+:where(.crm-scope) .dot-divider {
+  margin: 0 3px;
+}
+:where(.crm-scope) .item-cell {
+  white-space: nowrap;
+  display: block;
+}
+:where(.crm-scope) .orders-table td:nth-child(2) small {
+  max-width: 175px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:where(.crm-scope) .date-cell {
+  white-space: nowrap;
+}
+:where(.crm-scope) .money {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-size: 12px;
+}
+:where(.crm-scope) .badge {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 4px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-weight: 550;
+  width: max-content;
+  max-width: 100%;
+}
+:where(.crm-scope) .badge i {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+:where(.crm-scope) .badge.blue {
+  color: var(--blue);
+  background: var(--blue-bg);
+}
+:where(.crm-scope) .badge.green,
+:where(.crm-scope) .badge.teal {
+  color: var(--primary);
+  background: var(--soft);
+}
+:where(.crm-scope) .badge.amber {
+  color: var(--amber);
+  background: var(--amber-bg);
+}
+:where(.crm-scope) .badge.red {
+  color: var(--red);
+  background: var(--red-bg);
+}
+:where(.crm-scope) .badge.violet {
+  color: var(--violet);
+  background: var(--violet-bg);
+}
+:where(.crm-scope) .badge.gray {
+  color: #66736a;
+  background: #eef1ee;
+}
+:where(.crm-scope) .mini-progress {
+  display: flex;
+  gap: 3px;
+  margin-top: 8px;
+  max-width: 112px;
+}
+:where(.crm-scope) .mini-progress span {
+  height: 3px;
+  flex: 1;
+  border-radius: 2px;
+  background: #e8eeea;
+}
+:where(.crm-scope) .mini-progress .filled {
+  background: #8bb29d;
+}
+:where(.crm-scope) .table-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: var(--muted);
+}
+:where(.crm-scope) .empty {
+  padding: 50px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  grid-column: 1/-1;
+  text-align: center;
+  min-height: 220px;
+}
+:where(.crm-scope) .empty > .icon {
+  width: 28px;
+  height: 28px;
+  color: #90a699;
+  margin-bottom: 4px;
+}
+:where(.crm-scope) .empty p {
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 350px;
+}
+:where(.crm-scope) .section-head {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+:where(.crm-scope) .section-head h2 {
+  font-size: 15px;
+}
+:where(.crm-scope) .section-description {
+  padding: 16px 20px 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+:where(.crm-scope) .section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 23px 0 14px;
+}
+:where(.crm-scope) .section-title h2 {
+  font-size: 21px;
+}
+:where(.crm-scope) .section-title h3 {
+  font-size: 14px;
+}
+:where(.crm-scope) .inline-note {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  background: #f2f6f3;
+  border: 1px solid #e3ece5;
+  padding: 13px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #5e7466;
+  line-height: 1.5;
+  margin: 15px 0;
+}
+:where(.crm-scope) .inline-note .icon {
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+}
+:where(.crm-scope) .amber-note {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border-color: #eddfb7;
+}
+:where(.crm-scope) .production-flow {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin-bottom: 22px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+:where(.crm-scope) .flow-stop {
+  background: #fff;
+  padding: 16px 8px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+:where(.crm-scope) .flow-stop > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+:where(.crm-scope) .flow-stop .icon {
+  width: 17px;
+  height: 17px;
+  color: #869c8d;
+}
+:where(.crm-scope) .flow-stop b {
+  font-size: 20px;
+  font-weight: 550;
+}
+:where(.crm-scope) .flow-stop strong {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+:where(.crm-scope) .flow-stop.active {
+  background: #e6f1eb;
+}
+:where(.crm-scope) .flow-stop.active strong,
+:where(.crm-scope) .flow-stop.active .icon {
+  color: var(--primary);
+}
+:where(.crm-scope) .production-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 18px;
+}
+:where(.crm-scope) .production-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+:where(.crm-scope) .production-card > h3 {
+  margin: 12px 0 5px;
+}
+:where(.crm-scope) .production-card > p {
+  font-size: 11px;
+  color: var(--muted);
+}
+:where(.crm-scope) .production-card > .row {
+  font-size: 11px;
+}
+:where(.crm-scope) .item-stack {
+  margin: 16px 0;
+}
+:where(.crm-scope) .mini-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf1ee;
+  font-size: 12px;
+}
+:where(.crm-scope) .mini-item > .icon {
+  color: #638876;
+  width: 21px;
+  height: 21px;
+}
+:where(.crm-scope) .mini-item > span:nth-child(2) {
+  flex: 1;
+}
+:where(.crm-scope) .mini-item small {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+}
+:where(.crm-scope) .packed-check {
+  color: var(--primary);
+}
+:where(.crm-scope) .task-row,
+:where(.crm-scope) .claim-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 19px 20px;
+  border-bottom: 1px solid #edf1ee;
+}
+:where(.crm-scope) .task-row:last-child,
+:where(.crm-scope) .claim-row:last-child {
+  border-bottom: 0;
+}
+:where(.crm-scope) .task-icon {
+  width: 33px;
+  height: 33px;
+  background: #f1f4f2;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #708b7b;
+  flex: none;
+}
+:where(.crm-scope) .task-icon.complete {
+  background: var(--soft);
+  color: var(--primary);
+}
+:where(.crm-scope) .task-icon .icon {
+  width: 17px;
+  height: 17px;
+}
+:where(.crm-scope) .task-main {
+  flex: 1;
+  min-width: 0;
+}
+:where(.crm-scope) .task-main h3 {
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 550;
+  letter-spacing: 0;
+}
+:where(.crm-scope) .task-main p {
+  margin-top: 5px;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+:where(.crm-scope) .task-main small {
+  margin-top: 5px;
+}
+:where(.crm-scope) .task-due {
+  text-align: right;
+  white-space: nowrap;
+  font-size: 12px;
+}
+:where(.crm-scope) .task-due small {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+}
+:where(.crm-scope) .auto-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: #8a7a44;
+}
+:where(.crm-scope) .auto-label .icon {
+  width: 11px;
+  height: 11px;
+}
+:where(.crm-scope) .date-control {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+:where(.crm-scope) .date-control input {
+  font-size: 12px;
+}
+:where(.crm-scope) .route-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 20px;
+  align-items: start;
+}
+:where(.crm-scope) .trip-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 24px 20px;
+  gap: 17px;
+  border-bottom: 1px solid var(--line);
+}
+:where(.crm-scope) .trip-row:last-child {
+  border: 0;
+}
+:where(.crm-scope) .route-number {
+  flex: none;
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  border: 1px solid #cad9cf;
+  color: #668070;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  background: #fafcfb;
+}
+:where(.crm-scope) .route-number.complete {
+  background: var(--soft);
+}
+:where(.crm-scope) .route-number > .icon {
+  width: 15px;
+  height: 15px;
+}
+:where(.crm-scope) .trip-content {
+  flex: 1;
+  min-width: 0;
+}
+:where(.crm-scope) .trip-content h3 {
+  margin: 10px 0 5px;
+  font-size: 14px;
+}
+:where(.crm-scope) .trip-content p,
+:where(.crm-scope) .trip-content .row {
+  font-size: 11px;
+  color: var(--muted);
+}
+:where(.crm-scope) .trip-content .row strong {
+  color: var(--ink);
+}
+:where(.crm-scope) .trip-actions {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 10px;
+}
+:where(.crm-scope) .driver-note {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  color: #716d48;
+  background: #faf8eb;
+  border-radius: 5px;
+  padding: 7px 9px;
+  margin-top: 9px;
+}
+:where(.crm-scope) .driver-note .icon {
+  width: 14px;
+  height: 14px;
+}
+:where(.crm-scope) .slot-panel .inline-note {
+  margin: 18px 15px;
+}
+:where(.crm-scope) .slot-meter {
+  padding: 17px 20px 0;
+  font-size: 11px;
+}
+:where(.crm-scope) .slot-meter .row b {
+  font-weight: 500;
+}
+:where(.crm-scope) .slot-meter .row > span {
+  font-size: 10px;
+  color: var(--muted);
+}
+:where(.crm-scope) .meter-track {
+  height: 5px;
+  background: #edf2ee;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 9px;
+}
+:where(.crm-scope) .meter-track > span {
+  height: 100%;
+  display: block;
+  background: #7bad8d;
+  border-radius: 3px;
+}
+:where(.crm-scope) .finance-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  margin: 0 0 24px;
+}
+:where(.crm-scope) .finance-strip > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px;
+  border-right: 1px solid var(--line);
+}
+:where(.crm-scope) .finance-strip > div:last-child {
+  border: 0;
+}
+:where(.crm-scope) .finance-strip span {
+  color: var(--muted);
+  font-size: 11px;
+}
+:where(.crm-scope) .finance-strip strong {
+  font-size: 25px;
+  font-weight: 550;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+:where(.crm-scope) .finance-total {
+  background: #eaf3ed;
+  border-radius: 0 10px 10px 0;
+  color: var(--primary);
+}
+:where(.crm-scope) .finance-strip.four {
+  grid-template-columns: repeat(4, 1fr);
+}
+:where(.crm-scope) .finance-strip.four strong {
+  font-size: 23px;
+}
+:where(.crm-scope) .claim-symbol {
+  display: grid;
+  place-items: center;
+  background: var(--amber-bg);
+  color: var(--amber);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex: none;
+}
+:where(.crm-scope) .claim-symbol .icon {
+  width: 19px;
+  height: 19px;
+}
+:where(.crm-scope) .claim-description {
+  max-width: 580px;
+  line-height: 1.6 !important;
+}
+:where(.crm-scope) .claim-body {
+  padding: 16px 0;
+  line-height: 1.7;
+  font-size: 14px;
+}
+:where(.crm-scope) .report-grid,
+:where(.crm-scope) .settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+:where(.crm-scope) .report-filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+  align-items: center;
+  font-size: 12px;
+}
+:where(.crm-scope) .report-filters label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--muted);
+}
+:where(.crm-scope) .report-filters input {
+  font-size: 12px;
+  padding: 7px 9px;
+}
+:where(.crm-scope) .bar-chart {
+  padding: 21px;
+}
+:where(.crm-scope) .chart-row {
+  display: grid;
+  grid-template-columns: 85px 1fr 25px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+:where(.crm-scope) .chart-row:last-child {
+  margin: 0;
+}
+:where(.crm-scope) .chart-row > span {
+  color: var(--muted);
+}
+:where(.crm-scope) .chart-track {
+  height: 15px;
+  background: #f3f6f4;
+  border-radius: 4px;
+  overflow: hidden;
+}
+:where(.crm-scope) .chart-track > i {
+  display: block;
+  min-width: 0;
+  height: 100%;
+  background: #82b59a;
+  border-radius: 4px;
+}
+:where(.crm-scope) .chart-row:nth-child(2n) .chart-track > i {
+  background: #b4c9a1;
+}
+:where(.crm-scope) .chart-row b {
+  text-align: right;
+  font-size: 11px;
+}
+:where(.crm-scope) .service-report {
+  padding: 0 20px;
+}
+:where(.crm-scope) .service-report > div {
+  display: flex;
+  gap: 13px;
+  padding: 16px 0;
+  align-items: center;
+  border-bottom: 1px solid #edf1ee;
+  font-size: 12px;
+}
+:where(.crm-scope) .service-report > div:last-child {
+  border: 0;
+}
+:where(.crm-scope) .service-report > div > .icon {
+  color: #6e917d;
+}
+:where(.crm-scope) .service-report > div > span {
+  flex: 1;
+}
+:where(.crm-scope) .service-report small {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+}
+:where(.crm-scope) .service-report strong {
+  white-space: nowrap;
+}
+:where(.crm-scope) .report-order {
+  width: 100%;
+  padding: 14px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid #edf1ee;
+  text-align: left;
+  font-size: 12px;
+}
+:where(.crm-scope) .report-order:hover {
+  background: #f7faf8;
+}
+:where(.crm-scope) .report-order > span:first-child {
+  flex: 1;
+  min-width: 0;
+}
+:where(.crm-scope) .report-order small {
+  display: block;
+  margin-top: 3px;
+  font-size: 10px;
+}
+:where(.crm-scope) .report-order .icon {
+  width: 15px;
+  height: 15px;
+  color: var(--muted);
+}
+:where(.crm-scope) .team-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 20px;
+  border-bottom: 1px solid #edf1ee;
+  font-size: 12px;
+}
+:where(.crm-scope) .team-row:last-child {
+  border: 0;
+}
+:where(.crm-scope) .team-row > span:nth-child(2) {
+  flex: 1;
+}
+:where(.crm-scope) .team-row small {
+  display: block;
+  font-size: 10px;
+  margin-top: 2px;
+}
+:where(.crm-scope) .team-row > span:last-child:not(.badge) {
+  text-align: right;
+}
+:where(.crm-scope) .rule-row {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid var(--line);
+}
+:where(.crm-scope) .rule-row:last-child {
+  border: 0;
+}
+:where(.crm-scope) .rule-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: #f3f5dc;
+  color: #849032;
+  border-radius: 9px;
+  flex: none;
+}
+:where(.crm-scope) .rule-icon.off {
+  background: #f0f0ef;
+  color: #859087;
+}
+:where(.crm-scope) .rule-icon .icon {
+  width: 18px;
+  height: 18px;
+}
+:where(.crm-scope) .rule-row .task-main p {
+  margin-top: 10px;
+  gap: 12px;
+}
+:where(.crm-scope) .rule-row .task-main p > .icon {
+  width: 14px;
+  height: 14px;
+}
+:where(.crm-scope) .settings-foot {
+  padding: 17px 20px;
+  border-top: 1px solid var(--line);
+}
+:where(.crm-scope) .integration {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+:where(.crm-scope) .integration > div {
+  flex: 1;
+  min-width: 120px;
+}
+:where(.crm-scope) .integration p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+:where(.crm-scope) .integration .badge {
+  font-size: 9px;
+}
+:where(.crm-scope) .channel-letter {
+  width: 29px;
+  height: 29px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 650;
+  color: var(--primary);
+}
+:where(.crm-scope) .settings-grid .panel > .inline-note {
+  margin: 16px;
+}
+:where(.crm-scope) .data-actions {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+:where(.crm-scope) .data-actions p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+:where(.crm-scope) .data-actions hr {
+  margin: 4px 0;
+}
+:where(.crm-scope) .data-actions > .text-button {
+  font-size: 11px;
+  margin-top: 8px;
+}
+:where(.crm-scope) .detail-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  margin: 0;
+  width: min(660px, 100vw);
+  height: 100dvh;
+  max-height: 100dvh;
+  max-width: 100vw;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--line);
+  background: #fff;
+  box-shadow: -12px 0 50px #152c2514;
+}
+:where(.crm-scope) .detail-drawer[open] {
+  display: flex;
+  flex-direction: column;
+}
+:where(.crm-scope) .drawer-heading {
+  padding: 24px 26px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+:where(.crm-scope) .drawer-heading h2 {
+  font-size: 23px;
+  letter-spacing: -0.65px;
+}
+:where(.crm-scope) .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  font-size: 9px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 7px;
+}
+:where(.crm-scope) .drawer-subhead {
+  padding: 0 26px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--muted);
+}
+:where(.crm-scope) .detail-tabs {
+  display: flex;
+  padding: 0 22px;
+  border-block: 1px solid var(--line);
+  flex-shrink: 0;
+  overflow: auto;
+}
+:where(.crm-scope) .detail-tabs button {
+  padding: 15px 14px;
+  font-size: 12px;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  color: var(--muted);
+}
+:where(.crm-scope) .detail-tabs button.selected {
+  color: var(--primary);
+  border-color: var(--primary);
+  font-weight: 650;
+}
+:where(.crm-scope) .detail-tabs button span {
+  font-size: 9px;
+  padding: 2px 5px;
+  background: var(--bg);
+  border-radius: 4px;
+  margin-left: 5px;
+}
+:where(.crm-scope) .drawer-content {
+  padding: 24px 26px;
+  overflow: auto;
+  flex: 1;
+  overscroll-behavior: contain;
+}
+:where(.crm-scope) .drawer-footer {
+  padding: 16px 26px;
+  border-top: 1px solid var(--line);
+  background: #fff;
+  flex-shrink: 0;
+}
+:where(.crm-scope) .drawer-footer > .row > .muted {
+  font-size: 12px;
+}
+:where(.crm-scope) .detail-customer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+:where(.crm-scope) .detail-customer .avatar {
+  height: 42px;
+  width: 42px;
+  font-size: 15px;
+}
+:where(.crm-scope) .detail-customer > div {
+  flex: 1;
+}
+:where(.crm-scope) .detail-customer h3 {
+  font-size: 17px;
+  margin-bottom: 4px;
+}
+:where(.crm-scope) .contact-link {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--primary);
+  margin: 5px 0;
+}
+:where(.crm-scope) .contact-link .icon {
+  width: 13px;
+}
+:where(.crm-scope) .journey {
+  display: flex;
+  margin: 24px 0 30px;
+}
+:where(.crm-scope) .journey-step {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+:where(.crm-scope) .journey-step:before {
+  content: '';
+  position: absolute;
+  height: 2px;
+  top: 11px;
+  left: -50%;
+  right: 50%;
+  background: var(--line);
+}
+:where(.crm-scope) .journey-step:first-child:before {
+  display: none;
+}
+:where(.crm-scope) .journey-step > span {
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  height: 24px;
+  width: 24px;
+  background: var(--bg);
+  font-size: 10px;
+  border: 2px solid white;
+  color: var(--muted);
+}
+:where(.crm-scope) .journey-step.reached > span {
+  background: var(--green-light);
+  color: var(--primary);
+}
+:where(.crm-scope) .journey-step.current > span {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--green-light);
+}
+:where(.crm-scope) .journey-step.reached:before {
+  background: #b8d6c7;
+}
+:where(.crm-scope) .journey-step small {
+  font-size: 9px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+:where(.crm-scope) .journey-step.current small {
+  font-weight: 650;
+  color: var(--primary);
+}
+:where(.crm-scope) .journey-step .icon {
+  width: 12px;
+}
+:where(.crm-scope) .detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 22px 0;
+}
+:where(.crm-scope) .detail-block {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+:where(.crm-scope) .detail-block > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+:where(.crm-scope) .detail-block > span .icon {
+  width: 13px;
+}
+:where(.crm-scope) .detail-block b {
+  font-size: 12px;
+  font-weight: 550;
+}
+:where(.crm-scope) .detail-block small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+:where(.crm-scope) .detail-block .driver-note {
+  font-size: 11px;
+}
+:where(.crm-scope) .small-grid {
+  gap: 15px 24px;
+  padding: 0 2px;
+}
+:where(.crm-scope) .small-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+}
+:where(.crm-scope) .small-grid > div > span {
+  color: var(--muted);
+}
+:where(.crm-scope) .small-grid b {
+  font-weight: 550;
+}
+:where(.crm-scope) .order-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 18px;
+  background: var(--bg);
+  border-radius: 9px;
+  gap: 10px;
+  margin: 20px 0;
+}
+:where(.crm-scope) .order-total small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+:where(.crm-scope) .order-total strong {
+  font-size: 25px;
+  letter-spacing: -0.8px;
+}
+:where(.crm-scope) .claim-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 15px;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 18px 0;
+  background: #fff;
+}
+:where(.crm-scope) .claim-inline > span {
+  flex: 1;
+}
+:where(.crm-scope) .claim-inline b,
+:where(.crm-scope) .claim-inline small {
+  display: block;
+}
+:where(.crm-scope) .claim-inline b {
+  font-size: 12px;
+}
+:where(.crm-scope) .claim-inline small {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+:where(.crm-scope) .claim-inline > .icon:first-child {
+  color: var(--primary);
+}
+:where(.crm-scope) .comments article {
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  font-size: 12px;
+}
+:where(.crm-scope) .comments article:first-child {
+  padding-top: 0;
+}
+:where(.crm-scope) .comments small {
+  font-size: 10px;
+  color: var(--muted);
+}
+:where(.crm-scope) .comments p {
+  margin: 10px 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+:where(.crm-scope) .comment-photo {
+  max-height: 240px;
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+:where(.crm-scope) .comment-form {
+  margin: 20px 0;
+}
+:where(.crm-scope) .comment-form textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  min-height: 75px;
+  resize: vertical;
+}
+:where(.crm-scope) .comment-form .row {
+  margin-top: 10px;
+}
+:where(.crm-scope) .comment-form .checkbox-label {
+  margin: 0;
+}
+:where(.crm-scope) .photo-label {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  max-width: 100%;
+}
+:where(.crm-scope) .photo-label input {
+  max-width: 190px;
+  font-size: 10px;
+}
+:where(.crm-scope) .photo-label .icon {
+  width: 16px;
+}
+:where(.crm-scope) .item-detail {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 18px;
+  margin-bottom: 14px;
+}
+:where(.crm-scope) .item-detail h3 {
+  font-size: 13px;
+}
+:where(.crm-scope) .item-detail small {
+  font-size: 9px;
+  color: var(--muted);
+}
+:where(.crm-scope) .item-art {
+  display: grid;
+  place-items: center;
+  width: 37px;
+  height: 42px;
+  background: var(--green-light);
+  border-radius: 7px;
+  color: var(--primary);
+}
+:where(.crm-scope) .item-art .icon {
+  width: 20px;
+}
+:where(.crm-scope) .item-measurements {
+  display: flex;
+  gap: 25px;
+  padding: 17px 0;
+  flex-wrap: wrap;
+}
+:where(.crm-scope) .item-measurements span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+:where(.crm-scope) .item-measurements b {
+  font-size: 11px;
+  font-weight: 550;
+}
+:where(.crm-scope) .defect-note {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 11px;
+  padding: 9px 11px;
+  border-radius: 6px;
+  background: #faf7ee;
+  margin-bottom: 12px;
+}
+:where(.crm-scope) .defect-note .icon {
+  width: 14px;
+}
+:where(.crm-scope) .detail-task {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+}
+:where(.crm-scope) .detail-task h3 {
+  font-size: 12px;
+}
+:where(.crm-scope) .detail-task p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 9px 0;
+}
+:where(.crm-scope) .detail-task .badge {
+  font-size: 9px;
+}
+:where(.crm-scope) .price-breakdown {
+  margin: 15px 0;
+}
+:where(.crm-scope) .price-breakdown > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+}
+:where(.crm-scope) .price-breakdown small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+:where(.crm-scope) .price-breakdown b {
+  font-weight: 550;
+}
+:where(.crm-scope) .price-breakdown .price-final {
+  padding: 20px 0;
+  border-bottom: 0;
+}
+:where(.crm-scope) .price-final strong {
+  font-size: 25px;
+}
+:where(.crm-scope) .payment-balance {
+  display: flex;
+  gap: 36px;
+  padding: 25px 0;
+}
+:where(.crm-scope) .payment-balance > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+:where(.crm-scope) .payment-balance small {
+  font-size: 10px;
+  color: var(--muted);
+}
+:where(.crm-scope) .payment-balance b,
+:where(.crm-scope) .payment-balance strong {
+  font-size: 22px;
+  letter-spacing: -0.6px;
+}
+:where(.crm-scope) .payment-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+:where(.crm-scope) .payment-line > span {
+  flex: 1;
+}
+:where(.crm-scope) .payment-line .icon {
+  color: var(--primary);
+}
+:where(.crm-scope) .payment-line small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 4px;
+}
+:where(.crm-scope) .timeline {
+  padding: 20px 0;
+}
+:where(.crm-scope) .timeline.compact {
+  padding: 20px 24px;
+}
+:where(.crm-scope) .timeline-row {
+  position: relative;
+  display: flex;
+  gap: 15px;
+  padding: 0 0 25px;
+  font-size: 12px;
+}
+:where(.crm-scope) .timeline-row:not(:last-child):before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  width: 1px;
+  top: 6px;
+  bottom: 0;
+  background: var(--line);
+}
+:where(.crm-scope) .timeline-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid #b2c9bc;
+  background: #fff;
+  flex-shrink: 0;
+  margin-top: 4px;
+  z-index: 1;
+}
+:where(.crm-scope) .timeline-row b {
+  font-weight: 500;
+  line-height: 1.5;
+}
+:where(.crm-scope) .timeline-row small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+:where(.crm-scope) .timeline-row:last-child {
+  padding-bottom: 0;
+}
+:where(.crm-scope) .claim-body {
+  line-height: 1.7;
+  font-size: 13px;
+  margin: 20px 0 28px;
+  white-space: pre-wrap;
+}
+:where(.crm-scope) .modal {
+  width: min(580px, calc(100vw - 40px));
+  max-width: 760px;
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 24px 100px #112b2526;
+}
+:where(.crm-scope) .modal:has(.wide-form) {
+  width: min(710px, calc(100vw - 40px));
+}
+:where(.crm-scope) .modal-form {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 50px);
+}
+:where(.crm-scope) .modal-heading {
+  padding: 21px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  border-bottom: 1px solid var(--line);
+}
+:where(.crm-scope) .modal-heading h2 {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+:where(.crm-scope) .modal-content {
+  padding: 24px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+:where(.crm-scope) .modal-content > p {
+  font-size: 13px;
+  line-height: 1.7;
+}
+:where(.crm-scope) .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+:where(.crm-scope) .modal-footer > .danger-ghost {
+  margin-right: auto;
+}
+:where(.crm-scope) .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+:where(.crm-scope) .field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  text-align: left;
+  margin: 0 0 17px;
+}
+:where(.crm-scope) .form-grid > .field {
+  margin-bottom: 0;
+}
+:where(.crm-scope) .field.wide {
+  grid-column: 1/-1;
+}
+:where(.crm-scope) .field > span {
+  font-size: 11px;
+  font-weight: 550;
+  color: #4b5e54;
+}
+:where(.crm-scope) .field input,
+:where(.crm-scope) .field select,
+:where(.crm-scope) .field textarea {
+  border: 1px solid #d6dfda;
+  border-radius: 7px;
+  background: white;
+  color: var(--ink);
+  padding: 10px 11px;
+  min-width: 0;
+  width: 100%;
+  font-size: 13px;
+  transition: border-color 0.15s;
+}
+:where(.crm-scope) .field input:focus,
+:where(.crm-scope) .field select:focus,
+:where(.crm-scope) .field textarea:focus {
+  border-color: var(--primary);
+}
+:where(.crm-scope) .field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+:where(.crm-scope) .field input::placeholder {
+  color: #94a199;
+}
+:where(.crm-scope) .form-section-title {
+  font-size: 13px;
+  font-weight: 650;
+  margin: 25px 0 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+:where(.crm-scope) .form-section-title:after {
+  content: '';
+  height: 1px;
+  background: var(--line);
+  flex: 1;
+}
+:where(.crm-scope) .form-section-title:first-child {
+  margin-top: 0;
+}
+:where(.crm-scope) .draft-item {
+  border: 1px solid var(--line);
+  background: #fafcfb;
+  padding: 15px;
+  border-radius: 9px;
+  margin-bottom: 12px;
+}
+:where(.crm-scope) .draft-item-heading {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+:where(.crm-scope) .draft-item-heading .field {
+  flex: 1;
+  margin-bottom: 15px;
+}
+:where(.crm-scope) .draft-item-heading > .icon-button {
+  margin-top: 22px;
+}
+:where(.crm-scope) .draft-item-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+:where(.crm-scope) .draft-item > .field:last-child {
+  margin-bottom: 0;
+}
+:where(.crm-scope) .draft-item-fields > p {
+  font-size: 12px;
+  grid-column: 1/-1;
+  padding: 5px 0 15px;
+}
+:where(.crm-scope) .form-estimate {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+:where(.crm-scope) .form-estimate strong {
+  font-size: 22px;
+  color: var(--ink);
+}
+:where(.crm-scope) .form-details {
+  margin: 23px 0 16px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+:where(.crm-scope) .form-details summary {
+  font-size: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+:where(.crm-scope) .form-hint {
+  font-size: 11px !important;
+  color: var(--muted);
+  line-height: 1.7 !important;
+  margin: 16px 0 0;
+}
+:where(.crm-scope) .form-error {
+  border: 1px solid #f0c9c1;
+  background: #fff6f3;
+  color: #9b3529;
+  border-radius: 7px;
+  padding: 12px;
+  font-size: 12px;
+  margin-top: 15px;
+  line-height: 1.6;
+}
+:where(.crm-scope) .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 16px 0;
+}
+:where(.crm-scope) .checkbox-label input,
+:where(.crm-scope) .item-checks input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+:where(.crm-scope) .item-checks {
+  border: 1px solid var(--line);
+  padding: 14px;
+  border-radius: 8px;
+  margin: 17px 0;
+}
+:where(.crm-scope) .item-checks legend {
+  font-size: 11px;
+  padding: 0 5px;
+  color: var(--muted);
+}
+:where(.crm-scope) .item-checks label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 12px;
+}
+:where(.crm-scope) .item-checks small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+:where(.crm-scope) .payment-heading {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0 22px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+:where(.crm-scope) .payment-heading strong {
+  font-size: 24px;
+  color: var(--ink);
+}
+:where(.crm-scope) .toast {
+  position: fixed;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #173e2f;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 8px 25px #173e2f26;
+  border-radius: 9px;
+  padding: 13px 20px;
+  font-size: 12px;
+  line-height: 1.6;
+  max-width: min(540px, 90vw);
+  width: max-content;
+  pointer-events: none;
+}
+:where(.crm-scope) .toast.error {
+  background: #7c3429;
+}
+:where(.crm-scope) .toast:popover-open {
+  display: block;
+}
+:where(.crm-scope) #print-area {
+  display: none;
+}
+:where(.crm-scope) .client-welcome {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  padding: 45px;
+  background: #e6eee7;
+  margin-bottom: 20px;
+  min-height: 310px;
+}
+:where(.crm-scope) .client-welcome > .quiet-label {
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #53725c;
+}
+:where(.crm-scope) .client-welcome h1 {
+  font-size: 43px;
+  line-height: 1.07;
+  letter-spacing: -1.7px;
+  font-weight: 550;
+  margin: 16px 0;
+  color: #1e4633;
+}
+:where(.crm-scope) .client-welcome p {
+  color: #587163;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+:where(.crm-scope) .client-welcome .btn {
+  position: relative;
+  z-index: 2;
+}
+:where(.crm-scope) .welcome-art {
+  position: absolute;
+  right: 35px;
+  top: 34px;
+  width: 280px;
+  height: 270px;
+}
+:where(.crm-scope) .rug-art {
+  position: absolute;
+  inset: 10px 38px 25px;
+  border: 12px solid #d6c9ae;
+  border-radius: 6px;
+  background: #eee2c4;
+  transform: rotate(-12deg);
+  box-shadow: 16px 25px 0 #64816c17;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 24px 20px;
+}
+:where(.crm-scope) .rug-art:before,
+:where(.crm-scope) .rug-art:after {
+  content: '';
+  position: absolute;
+  height: 10px;
+  left: -8px;
+  right: -8px;
+  background: repeating-linear-gradient(90deg, #c4b594 0 2px, transparent 2px 6px);
+}
+:where(.crm-scope) .rug-art:before {
+  top: -21px;
+}
+:where(.crm-scope) .rug-art:after {
+  bottom: -21px;
+}
+:where(.crm-scope) .rug-art span {
+  border: 1px solid #b7a787;
+  height: 35px;
+  transform: skew(-8deg);
+  border-radius: 50%;
+}
+:where(.crm-scope) .rug-art span:nth-child(even) {
+  background: #b3bd9d;
+  border-color: #a2b492;
+}
+:where(.crm-scope) .clean-tag {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  background: #fff;
+  border-radius: 7px;
+  padding: 12px 16px;
+  font-size: 10px;
+  color: var(--primary);
+  box-shadow: 0 3px 15px #173e2f0a;
+  transform: rotate(3deg);
+}
+:where(.crm-scope) .clean-tag .icon {
+  width: 15px;
+}
+:where(.crm-scope) .active-order-banner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 10px;
+  text-align: left;
+  margin: 22px 0 28px;
+}
+:where(.crm-scope) .active-order-banner > span:nth-child(2) {
+  flex: 1;
+}
+:where(.crm-scope) .active-order-banner small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+:where(.crm-scope) .active-order-banner b {
+  font-size: 13px;
+}
+:where(.crm-scope) .active-order-icon {
+  background: var(--green-light);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--primary);
+}
+:where(.crm-scope) .catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+:where(.crm-scope) .service-card {
+  padding: 22px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  text-align: left;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
+}
+:where(.crm-scope) .service-card:hover {
+  border-color: #8bad98;
+  transform: translateY(-2px);
+}
+:where(.crm-scope) .service-art {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 53px;
+  background: #eef2e9;
+  border-radius: 8px;
+  color: #64835d;
+  margin-bottom: 23px;
+}
+:where(.crm-scope) .service-art .icon {
+  width: 29px;
+  height: 29px;
+}
+:where(.crm-scope) .art-blanket,
+:where(.crm-scope) .art-plaid {
+  background: #f0ece4;
+  color: #9b8660;
+}
+:where(.crm-scope) .art-curtain,
+:where(.crm-scope) .art-cover {
+  background: #edeaf3;
+  color: #88759f;
+}
+:where(.crm-scope) .art-facade {
+  background: #e8eff1;
+  color: #6a8a94;
+}
+:where(.crm-scope) .service-card h3 {
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+:where(.crm-scope) .service-card p {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+  min-height: 32px;
+}
+:where(.crm-scope) .service-card > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 15px;
+  margin-top: 14px;
+  font-size: 13px;
+}
+:where(.crm-scope) .service-card > div .icon {
+  width: 17px;
+  color: var(--primary);
+}
+:where(.crm-scope) .client-orders {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 20px;
+}
+:where(.crm-scope) .client-order {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fff;
+  padding: 24px;
+  text-align: left;
+}
+:where(.crm-scope) .client-order > .row:first-child {
+  font-size: 11px;
+  margin-bottom: 27px;
+}
+:where(.crm-scope) .client-order h3 {
+  font-size: 20px;
+}
+:where(.crm-scope) .client-order p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 9px 0 25px;
+}
+:where(.crm-scope) .client-order .mini-progress {
+  width: 100%;
+  margin-bottom: 25px;
+}
+:where(.crm-scope) .client-order > .row:last-child {
+  font-size: 12px;
+}
+:where(.crm-scope) .client-order > .row:last-child strong {
+  margin-left: auto;
+}
+:where(.crm-scope) .profile-panel {
+  max-width: 460px;
+  padding: 32px;
+}
+:where(.crm-scope) .profile-panel > .avatar {
+  width: 54px;
+  height: 54px;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+:where(.crm-scope) .profile-panel h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+:where(.crm-scope) .profile-panel p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+:where(.crm-scope) .profile-panel hr {
+  margin: 25px 0;
+}
+:where(.crm-scope) .profile-panel h3 {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+@media (min-width: 1600px) {
+  :where(.crm-scope) main {
+    max-width: 1500px;
+    margin: auto;
+  }
+  :where(.crm-scope) .workspace-footer {
+    max-width: 1500px;
+    margin: auto;
+  }
+  :where(.crm-scope) .catalog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 1200px) {
+  :where(.crm-scope) .sidebar {
+    width: 194px;
+    padding-inline: 14px;
+  }
+  :where(.crm-scope) .workspace {
+    margin-left: 194px;
+  }
+  :where(.crm-scope) main {
+    padding: 25px 24px;
+  }
+  :where(.crm-scope) .topbar {
+    padding: 0 24px;
+  }
+  :where(.crm-scope) .today {
+    display: none;
+  }
+  :where(.crm-scope) .data-table th,
+  :where(.crm-scope) .data-table td {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  :where(.crm-scope) .orders-table td:nth-child(2),
+  :where(.crm-scope) .orders-table th:nth-child(2) {
+    display: none;
+  }
+  :where(.crm-scope) .pipeline-tab {
+    padding-inline: 13px;
+  }
+  :where(.crm-scope) .production-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  :where(.crm-scope) .route-layout {
+    grid-template-columns: 1fr;
+  }
+  :where(.crm-scope) .slot-panel {
+    display: none;
+  }
+  :where(.crm-scope) .welcome-art {
+    right: 0;
+    transform: scale(0.83);
+    transform-origin: right center;
+  }
+  :where(.crm-scope) .client-welcome {
+    padding: 32px;
+  }
+  :where(.crm-scope) .client-welcome h1 {
+    font-size: 38px;
+  }
+  :where(.crm-scope) .catalog-grid {
+    gap: 12px;
+  }
+  :where(.crm-scope) .service-card {
+    padding: 18px;
+  }
+  :where(.crm-scope) .service-card p {
+    min-height: 36px;
+  }
+}
+@media (max-width: 900px) {
+  :where(.crm-scope) .sidebar {
+    transform: translateX(-100%);
+    z-index: 50;
+    width: 250px;
+    box-shadow: 5px 0 40px #173e2f14;
+  }
+  :where(.crm-scope) .sidebar.is-open {
+    transform: translateX(0);
+  }
+  :where(.crm-scope) .menu-scrim {
+    position: fixed;
+    inset: 0;
+    background: #102e2359;
+    z-index: 49;
+  }
+  :where(.crm-scope) .workspace {
+    margin-left: 0;
+  }
+  :where(.crm-scope) .topbar > .icon-button {
+    display: flex;
+  }
+  :where(.crm-scope) .topbar {
+    gap: 12px;
+  }
+  :where(.crm-scope) .mobile-nav {
+    position: fixed;
+    z-index: 20;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background: #fffffff5;
+    border-top: 1px solid var(--line);
+    padding: 8px 8px max(8px, env(safe-area-inset-bottom));
+    backdrop-filter: blur(12px);
+  }
+  :where(.crm-scope) .mobile-nav a,
+  :where(.crm-scope) .mobile-nav button {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    min-height: 44px;
+    font-size: 9px;
+    color: var(--muted);
+    text-decoration: none;
+    border-radius: 8px;
+  }
+  :where(.crm-scope) .mobile-nav [aria-current='page'] {
+    color: var(--primary);
+    background: var(--green-light);
+  }
+  :where(.crm-scope) .mobile-nav .icon {
+    height: 19px;
+    width: 19px;
+  }
+  :where(.crm-scope) .workspace-footer {
+    padding-bottom: 90px;
+  }
+  :where(.crm-scope) .toast {
+    bottom: 85px;
+  }
+  :where(.crm-scope) .sidebar-bottom {
+    padding-bottom: 70px;
+  }
+  :where(.crm-scope) .data-table td {
+    padding-block: 17px;
+  }
+  :where(.crm-scope) .btn,
+  :where(.crm-scope) .icon-button {
+    min-height: 40px;
+  }
+  :where(.crm-scope) .report-grid {
+    gap: 16px;
+  }
+  :where(.crm-scope) .production-flow {
+    overflow: auto;
+    padding-bottom: 5px;
+  }
+  :where(.crm-scope) .flow-stop {
+    min-width: 92px;
+  }
+  :where(.crm-scope) .drawer-content .icon-button {
+    min-width: 40px;
+  }
+  :where(.crm-scope) .client-welcome {
+    margin-top: 0;
+  }
+  :where(.crm-scope) .welcome-art {
+    right: 24px;
+  }
+  :where(.crm-scope) .page-heading {
+    gap: 15px;
+  }
+}
+@media (max-width: 600px) {
+  :where(.crm-scope) .topbar {
+    height: 61px;
+    padding: 0 16px;
+    gap: 8px;
+  }
+  :where(.crm-scope) .breadcrumb {
+    font-size: 11px;
+  }
+  :where(.crm-scope) .breadcrumb > span,
+  :where(.crm-scope) .breadcrumb > .icon {
+    display: none;
+  }
+  :where(.crm-scope) .topbar-right {
+    gap: 7px;
+  }
+  :where(.crm-scope) .role-picker {
+    padding: 0 7px;
+    gap: 3px;
+  }
+  :where(.crm-scope) .role-picker select {
+    font-size: 11px;
+    max-width: 141px;
+    min-height: 40px;
+  }
+  :where(.crm-scope) .role-picker > .icon {
+    width: 15px;
+  }
+  :where(.crm-scope) .demo-badge {
+    font-size: 9px;
+  }
+  :where(.crm-scope) .topbar > .icon-button {
+    width: 32px;
+    min-width: 32px;
+  }
+  :where(.crm-scope) .topbar-right > .demo-badge {
+    display: none;
+  }
+  :where(.crm-scope) main {
+    padding: 25px 16px 18px;
+  }
+  :where(.crm-scope) .page-heading {
+    align-items: flex-start;
+    margin-bottom: 21px;
+  }
+  :where(.crm-scope) .page-heading h1 {
+    font-size: 27px;
+    letter-spacing: -0.8px;
+  }
+  :where(.crm-scope) .page-heading p {
+    font-size: 11px;
+    line-height: 1.6;
+    max-width: 230px;
+    margin-top: 7px;
+  }
+  :where(.crm-scope) .heading-actions {
+    gap: 7px;
+    flex-shrink: 0;
+  }
+  :where(.crm-scope) .heading-actions > .btn {
+    font-size: 11px;
+    padding: 9px 11px;
+  }
+  :where(.crm-scope) .heading-actions > .btn .icon {
+    width: 14px;
+  }
+  :where(.crm-scope) .heading-actions > .icon-button {
+    display: none;
+  }
+  :where(.crm-scope) .heading-actions .quiet-label {
+    display: none;
+  }
+  :where(.crm-scope) .summary-line {
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    margin-bottom: 20px;
+  }
+  :where(.crm-scope) .summary-line > span {
+    gap: 4px;
+  }
+  :where(.crm-scope) .summary-line strong {
+    font-size: 13px;
+  }
+  :where(.crm-scope) .summary-line > span:last-of-type {
+    flex-basis: 100%;
+    margin-top: 0;
+  }
+  :where(.crm-scope) .desktop-only {
+    display: none !important;
+  }
+  :where(.crm-scope) .pipeline-tabs {
+    padding: 0 8px;
+  }
+  :where(.crm-scope) .pipeline-tab {
+    padding: 15px 10px;
+    font-size: 11px;
+  }
+  :where(.crm-scope) .pipeline-tab span {
+    font-size: 9px;
+    min-width: 16px;
+  }
+  :where(.crm-scope) .toolbar {
+    padding: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .search-box {
+    flex: 1;
+    min-width: 140px;
+    max-width: none;
+  }
+  :where(.crm-scope) .search-box input {
+    font-size: 12px;
+    min-height: 35px;
+    width: 100%;
+  }
+  :where(.crm-scope) .search-box kbd {
+    display: none;
+  }
+  :where(.crm-scope) .inline-filter {
+    padding: 4px 7px;
+    max-width: 142px;
+  }
+  :where(.crm-scope) .inline-filter select {
+    font-size: 10px;
+    max-width: 107px;
+    min-height: 34px;
+  }
+  :where(.crm-scope) .inline-filter > .icon {
+    width: 13px;
+  }
+  :where(.crm-scope) .toolbar .results-count {
+    display: none;
+  }
+  :where(.crm-scope) .table-wrap {
+    overflow-x: auto;
+  }
+  :where(.crm-scope) .data-table {
+    min-width: 620px;
+  }
+  :where(.crm-scope) .orders-table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+  :where(.crm-scope) .orders-table th:nth-child(4),
+  :where(.crm-scope) .orders-table td:nth-child(4),
+  :where(.crm-scope) .orders-table th:last-child,
+  :where(.crm-scope) .orders-table td:last-child {
+    display: none;
+  }
+  :where(.crm-scope) .orders-table td:first-child,
+  :where(.crm-scope) .orders-table th:first-child {
+    width: 43%;
+  }
+  :where(.crm-scope) .orders-table td:nth-child(3),
+  :where(.crm-scope) .orders-table th:nth-child(3) {
+    width: 32%;
+  }
+  :where(.crm-scope) .orders-table td:nth-child(5),
+  :where(.crm-scope) .orders-table th:nth-child(5) {
+    width: 25%;
+  }
+  :where(.crm-scope) .orders-table th {
+    font-size: 9px;
+    padding: 11px 10px;
+  }
+  :where(.crm-scope) .orders-table td {
+    padding: 16px 10px;
+    font-size: 11px;
+  }
+  :where(.crm-scope) .orders-table .avatar {
+    display: none;
+  }
+  :where(.crm-scope) .orders-table .client-cell {
+    gap: 0;
+    min-height: 36px;
+  }
+  :where(.crm-scope) .orders-table .client-cell b {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .orders-table .client-cell small {
+    font-size: 9px;
+    margin-top: 5px;
+  }
+  :where(.crm-scope) .orders-table .badge {
+    font-size: 9px;
+    padding: 4px 5px;
+    gap: 3px;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.3;
+  }
+  :where(.crm-scope) .orders-table .badge i {
+    width: 4px;
+    height: 4px;
+    flex-shrink: 0;
+  }
+  :where(.crm-scope) .orders-table .money {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .orders-table td:nth-child(5) small {
+    font-size: 8px;
+    margin-top: 5px;
+  }
+  :where(.crm-scope) .orders-table .mini-progress {
+    width: 90px;
+    max-width: 100%;
+  }
+  :where(.crm-scope) .dot-divider {
+    display: none;
+  }
+  :where(.crm-scope) .orders-table .client-cell small {
+    max-width: 135px;
+    line-height: 1.4;
+  }
+  :where(.crm-scope) .table-footer {
+    font-size: 9px;
+    padding: 13px;
+  }
+  :where(.crm-scope) .table-footer span:last-child {
+    display: none;
+  }
+  :where(.crm-scope) .workspace-footer {
+    font-size: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    gap: 15px;
+  }
+  :where(.crm-scope) .production-grid {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+  :where(.crm-scope) .production-card {
+    padding: 18px;
+  }
+  :where(.crm-scope) .production-flow {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  :where(.crm-scope) .flow-stop {
+    min-width: 85px;
+    padding: 13px 10px;
+  }
+  :where(.crm-scope) .flow-stop strong {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .task-toolbar {
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .segmented {
+    max-width: 100%;
+    overflow: auto;
+  }
+  :where(.crm-scope) .segmented button {
+    white-space: nowrap;
+    min-height: 40px;
+    font-size: 11px;
+  }
+  :where(.crm-scope) .task-row {
+    padding: 17px 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .task-row .task-main {
+    flex-basis: calc(100% - 40px);
+  }
+  :where(.crm-scope) .task-row h3 {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .task-row .task-due {
+    margin-left: 37px;
+  }
+  :where(.crm-scope) .task-row > .icon-button {
+    margin-left: auto;
+  }
+  :where(.crm-scope) .task-meta {
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .finance-strip {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0;
+    gap: 0;
+  }
+  :where(.crm-scope) .finance-strip > div {
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+  :where(.crm-scope) .finance-strip > div:last-child {
+    border-right: 0;
+  }
+  :where(.crm-scope) .finance-strip strong {
+    font-size: 22px;
+  }
+  :where(.crm-scope) .finance-strip span {
+    font-size: 9px;
+  }
+  :where(.crm-scope) .finance-strip > .finance-total {
+    grid-column: 1/-1;
+  }
+  :where(.crm-scope) .report-grid,
+  :where(.crm-scope) .settings-grid {
+    grid-template-columns: 1fr;
+  }
+  :where(.crm-scope) .report-filters {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .report-filters label {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .report-filters input {
+    font-size: 11px;
+    padding: 8px;
+    max-width: 135px;
+  }
+  :where(.crm-scope) .report-filters .btn {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .section-head {
+    padding: 17px;
+  }
+  :where(.crm-scope) .section-head h2 {
+    font-size: 13px;
+  }
+  :where(.crm-scope) .section-head > span {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .chart-row {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .claim-row {
+    padding: 18px 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .claim-row > .task-main {
+    flex-basis: calc(100% - 50px);
+  }
+  :where(.crm-scope) .claim-row .task-due {
+    margin-left: 43px;
+    margin-right: auto;
+  }
+  :where(.crm-scope) .claim-row h3 {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .rule-row {
+    padding: 18px 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .rule-row > .task-main {
+    flex-basis: calc(100% - 50px);
+  }
+  :where(.crm-scope) .rule-row > .badge {
+    margin-left: 42px;
+    margin-right: auto;
+  }
+  :where(.crm-scope) .rule-row .task-main p {
+    flex-wrap: wrap;
+    font-size: 10px;
+  }
+  :where(.crm-scope) .integration {
+    padding: 18px;
+    gap: 9px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .integration > .badge {
+    margin-left: 37px;
+  }
+  :where(.crm-scope) .trip-row {
+    padding: 18px 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  :where(.crm-scope) .trip-content {
+    flex-basis: calc(100% - 45px);
+  }
+  :where(.crm-scope) .trip-actions {
+    width: 100%;
+    padding-left: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+  }
+  :where(.crm-scope) .trip-content h3 {
+    font-size: 13px;
+  }
+  :where(.crm-scope) .trip-content p {
+    font-size: 11px;
+  }
+  :where(.crm-scope) .date-control input {
+    max-width: 120px;
+    font-size: 11px;
+  }
+  :where(.crm-scope) .date-control .icon {
+    display: none;
+  }
+  :where(.crm-scope) .drawer-heading {
+    padding: 20px 18px 14px;
+  }
+  :where(.crm-scope) .drawer-heading h2 {
+    font-size: 21px;
+  }
+  :where(.crm-scope) .drawer-subhead {
+    padding: 0 18px 17px;
+  }
+  :where(.crm-scope) .detail-tabs {
+    padding: 0 6px;
+  }
+  :where(.crm-scope) .detail-tabs button {
+    padding: 14px 11px;
+    font-size: 11px;
+    min-height: 44px;
+  }
+  :where(.crm-scope) .detail-tabs button span {
+    display: none;
+  }
+  :where(.crm-scope) .drawer-content {
+    padding: 22px 18px;
+  }
+  :where(.crm-scope) .drawer-footer {
+    padding: 13px 18px max(13px, env(safe-area-inset-bottom));
+  }
+  :where(.crm-scope) .drawer-footer .btn {
+    font-size: 11px;
+    min-height: 44px;
+  }
+  :where(.crm-scope) .drawer-footer > .row {
+    gap: 8px;
+  }
+  :where(.crm-scope) .drawer-footer .grow {
+    flex: 1;
+    min-width: 150px;
+  }
+  :where(.crm-scope) .detail-grid {
+    gap: 10px;
+  }
+  :where(.crm-scope) .detail-block {
+    padding: 12px;
+  }
+  :where(.crm-scope) .detail-block b {
+    font-size: 11px;
+  }
+  :where(.crm-scope) .detail-block small {
+    font-size: 9px;
+  }
+  :where(.crm-scope) .journey-step small {
+    font-size: 8px;
+  }
+  :where(.crm-scope) .journey {
+    margin: 24px -4px;
+  }
+  :where(.crm-scope) .detail-customer h3 {
+    font-size: 16px;
+  }
+  :where(.crm-scope) .item-detail {
+    padding: 14px;
+  }
+  :where(.crm-scope) .item-detail h3 {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .item-detail > .row:first-child > b {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .item-measurements {
+    gap: 16px;
+  }
+  :where(.crm-scope) .item-measurements b {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .detail-task > .row {
+    align-items: flex-start;
+    gap: 9px;
+  }
+  :where(.crm-scope) .detail-task > .row > .badge {
+    white-space: normal;
+    font-size: 9px;
+  }
+  :where(.crm-scope) .comment-form .row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  :where(.crm-scope) .photo-label input {
+    max-width: 200px;
+  }
+  :where(.crm-scope) .comment-form .checkbox-label {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .comment-form button {
+    margin-left: auto;
+  }
+  :where(.crm-scope) .modal {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: 100dvh;
+    inset: auto 0 0;
+    margin: 0;
+    border-radius: 15px 15px 0 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+  :where(.crm-scope) .modal:has(.wide-form) {
+    width: 100vw;
+  }
+  :where(.crm-scope) .modal-form {
+    max-height: 93dvh;
+  }
+  :where(.crm-scope) .modal-heading {
+    padding: 18px;
+  }
+  :where(.crm-scope) .modal-heading h2 {
+    font-size: 18px;
+  }
+  :where(.crm-scope) .modal-content {
+    padding: 20px 18px;
+  }
+  :where(.crm-scope) .modal-footer {
+    padding: 14px 18px max(18px, env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+  :where(.crm-scope) .modal-footer .btn {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  :where(.crm-scope) .modal-footer .primary {
+    flex: 1;
+  }
+  :where(.crm-scope) .form-grid {
+    gap: 14px;
+  }
+  :where(.crm-scope) .field > span {
+    font-size: 10px;
+  }
+  :where(.crm-scope) .field input,
+  :where(.crm-scope) .field select,
+  :where(.crm-scope) .field textarea {
+    font-size: 16px;
+    padding: 11px 10px;
+  }
+  :where(.crm-scope) .draft-item {
+    padding: 12px;
+  }
+  :where(.crm-scope) .draft-item-fields {
+    gap: 8px;
+  }
+  :where(.crm-scope) .draft-item-fields > .field > span {
+    font-size: 9px;
+  }
+  :where(.crm-scope) .draft-item-fields select {
+    font-size: 13px;
+  }
+  :where(.crm-scope) .draft-item-heading .field > select {
+    font-size: 14px;
+  }
+  :where(.crm-scope) .form-estimate strong {
+    font-size: 20px;
+  }
+  :where(.crm-scope) .client-welcome {
+    padding: 27px 23px;
+    min-height: 345px;
+  }
+  :where(.crm-scope) .client-welcome h1 {
+    font-size: 37px;
+    max-width: 250px;
+  }
+  :where(.crm-scope) .client-welcome p {
+    font-size: 11px;
+    max-width: 210px;
+    position: relative;
+    z-index: 1;
+  }
+  :where(.crm-scope) .client-welcome > .quiet-label {
+    font-size: 8px;
+    letter-spacing: 0.5px;
+  }
+  :where(.crm-scope) .welcome-art {
+    right: -23px;
+    top: 122px;
+    transform: scale(0.53);
+    width: 240px;
+    transform-origin: right top;
+  }
+  :where(.crm-scope) .rug-art {
+    inset: 10px 28px 25px;
+  }
+  :where(.crm-scope) .clean-tag {
+    display: none;
+  }
+  :where(.crm-scope) .client-welcome .btn {
+    margin-top: 13px;
+  }
+  :where(.crm-scope) .active-order-banner {
+    padding: 16px;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  :where(.crm-scope) .active-order-banner b {
+    font-size: 12px;
+  }
+  :where(.crm-scope) .active-order-banner small {
+    font-size: 9px;
+  }
+  :where(.crm-scope) .catalog-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  :where(.crm-scope) .service-card {
+    padding: 16px;
+  }
+  :where(.crm-scope) .service-art {
+    width: 40px;
+    height: 44px;
+    margin-bottom: 20px;
+  }
+  :where(.crm-scope) .service-art .icon {
+    width: 25px;
+    height: 25px;
+  }
+  :where(.crm-scope) .service-card h3 {
+    font-size: 16px;
+  }
+  :where(.crm-scope) .service-card p {
+    font-size: 9px;
+    min-height: 30px;
+  }
+  :where(.crm-scope) .service-card > div {
+    font-size: 11px;
+  }
+  :where(.crm-scope) .service-card > div .icon {
+    width: 14px;
+  }
+  :where(.crm-scope) .section-title {
+    gap: 8px;
+  }
+  :where(.crm-scope) .section-title h2 {
+    font-size: 17px;
+    letter-spacing: -0.3px;
+  }
+  :where(.crm-scope) .section-title > .demo-badge {
+    font-size: 7px;
+    padding: 4px 5px;
+  }
+  :where(.crm-scope) .client-orders {
+    grid-template-columns: 1fr;
+  }
+  :where(.crm-scope) .profile-panel {
+    padding: 26px;
+  }
+  :where(.crm-scope) .btn {
+    min-height: 44px;
+  }
+  :where(.crm-scope) .icon-button {
+    min-height: 44px;
+    min-width: 40px;
+  }
+  :where(.crm-scope) .comment-photo {
+    max-width: 100%;
+  }
+  :where(.crm-scope) .empty {
+    padding: 35px 20px;
+  }
+  :where(.crm-scope) .empty h3 {
+    font-size: 14px;
+  }
+  :where(.crm-scope) .empty p {
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.crm-scope) *,
+  :where(.crm-scope) *:before,
+  :where(.crm-scope) *:after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media print {
+  .crm-scope {
+    background: #fff !important;
+    color: #000 !important;
+    overflow: visible !important;
+  }
+  :where(.crm-scope) #app,
+  :where(.crm-scope) #detail,
+  :where(.crm-scope) #modal,
+  :where(.crm-scope) #toast,
+  :where(.crm-scope) .skip-link {
+    display: none !important;
+  }
+  :where(.crm-scope) dialog::backdrop {
+    display: none !important;
+  }
+  :where(.crm-scope) #print-area {
+    display: block !important;
+    padding: 15mm;
+    font:
+      12pt Arial,
+      sans-serif;
+  }
+  :where(.crm-scope) #print-area h1 {
+    font-size: 20pt;
+    margin: 0 0 20px;
+  }
+  :where(.crm-scope) #print-area p {
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+  :where(.crm-scope) #print-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+  }
+  :where(.crm-scope) #print-area th,
+  :where(.crm-scope) #print-area td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  :where(.crm-scope) #print-area h2 {
+    font-size: 16pt;
+  }
+}
+.crm-scope {
+  --green-light: var(--soft);
+}
+:where(.crm-scope) .sidebar nav {
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+:where(.crm-scope) .file-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 8px 0;
+}
+:where(.crm-scope) .file-button .icon {
+  width: 16px;
+}
+:where(.crm-scope) .file-button input {
+  max-width: 165px;
+  font-size: 9px;
+  border: 0;
+  padding: 2px;
+}
+:where(.crm-scope) .sidebar .nav-link {
+  min-height: 39px;
+  padding-block: 10px;
+}
+:where(.crm-scope) .workspace-label {
+  margin-bottom: 16px;
+}
+:where(.crm-scope) .sidebar .nav-separator {
+  margin-block: 10px;
+}
+:where(.crm-scope) .sidebar-bottom .demo-note {
+  padding: 11px;
+}
+:where(.crm-scope) .sidebar-bottom .identity {
+  padding-top: 12px;
+}
+@media (max-height: 760px) and (min-width: 901px) {
+  :where(.crm-scope) .sidebar .nav-link {
+    min-height: 36px;
+    padding-block: 8px;
+  }
+  :where(.crm-scope) .sidebar .workspace-label {
+    margin-block: 16px 12px;
+  }
+  :where(.crm-scope) .sidebar-bottom .demo-note {
+    display: none;
+  }
+  :where(.crm-scope) .sidebar .nav-separator {
+    margin-block: 6px;
+  }
+}
+:where(.crm-scope) .advanced-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 18px;
+  background: #f9fbfa;
+  border-bottom: 1px solid var(--line);
+}
+:where(.crm-scope) .advanced-filters > label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--muted);
+}
+:where(.crm-scope) .advanced-filters select,
+:where(.crm-scope) .advanced-filters input {
+  font-size: 11px;
+  max-width: 155px;
+  padding: 8px;
+}
+:where(.crm-scope) .advanced-filters > .checkbox-label {
+  flex-direction: row;
+  align-items: center;
+  margin: 0 0 8px;
+}
+:where(.crm-scope) .advanced-filters .btn {
+  min-height: 34px;
+}
+@media (max-width: 900px) {
+  :where(.crm-scope) .sidebar {
+    visibility: hidden;
+  }
+  :where(.crm-scope) .sidebar.is-open {
+    visibility: visible;
+  }
+}
