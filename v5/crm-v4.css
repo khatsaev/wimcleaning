@@ -769,3 +769,10 @@
 .crm-scope .report-filters .btn {
   justify-self: start;
 }
+
+/* A production order number must be easy to tap on a phone. */
+.crm-scope .production-card .text-button[data-action='open-order'] {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+}
