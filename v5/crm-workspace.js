@@ -544,6 +544,21 @@ export function createWorkspace(host) {
         () => execute('claim.compensation', { id: d.id, pay: true }),
         'Записать выплату',
       ),
+    'channel-settings': (d) => openModal(forms.channelForm(state, d.channel)),
+    'channel-demo': (d) => {
+      const c = state.settings.channels?.[d.channel];
+      if (!c?.enabled) throw new Error('Сначала настройте канал в настройках CRM.');
+      const o = order(d.id);
+      const text =
+        d.channel === 'pbx'
+          ? 'Демо: входящий звонок от ' +
+            o.phones[0] +
+            '. Клиент определён по номеру. Ответственный: ' +
+            (state.users.find((u) => u.id === c.assignee)?.name || 'Не назначен')
+          : 'Демо WhatsApp: Здравствуйте! Подскажите, когда будет готов мой заказ?';
+      execute('comment.add', { orderId: o.id, text, visibleToClient: d.channel === 'whatsapp' });
+      notify('Демонстрационное событие сохранено в карточке.');
+    },
     'edit-settings': () => openModal(forms.settingsForm(state)),
     'edit-rule': (d) =>
       openModal(
@@ -729,6 +744,7 @@ export function createWorkspace(host) {
         'claim-create': 'claim.create',
         'claim-update': 'claim.update',
         'settings-save': 'settings.save',
+        'channel-save': 'channel.save',
         'rule-save': 'rule.save',
       };
       if (kind === 'comment') {

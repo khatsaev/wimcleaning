@@ -197,3 +197,18 @@ export function ruleForm(s, r) {
     'rule-save',
   );
 }
+
+export function channelForm(s, channel) {
+  const c = s.settings.channels?.[channel] || {};
+  return modal(
+    channel === 'whatsapp' ? 'Подключение WhatsApp' : 'Подключение АТС',
+    `<input type="hidden" name="channel" value="${esc(channel)}"><p class="inline-note">Демо-настройка подключения. Сообщения и звонки не отправляются.</p>${select('Провайдер', 'provider', channel === 'whatsapp' ? ['Meta Cloud API', 'Через провайдера WhatsApp Business'] : ['Mango Office', 'UIS', 'Zadarma', 'Другая АТС с API'], c.provider)}${field('Рабочий номер', 'number', c.number || '', 'tel', 'required')}${select(
+      'Ответственный за обращения',
+      'assignee',
+      s.users.map((u) => [u.id, u.name]),
+      c.assignee || 'u2',
+    )}<label class="checkbox-label"><input type="checkbox" name="enabled" ${c.enabled ? 'checked' : ''}>Включить демонстрацию канала</label><p class="form-hint">API-ключи и пароли будут храниться на сервере. В браузере они не запрашиваются.</p>`,
+    'channel-save',
+    'Сохранить настройки',
+  );
+}

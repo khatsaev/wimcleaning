@@ -1349,6 +1349,28 @@ export function command(state, type, p = {}, role = 'admin') {
       });
       break;
     }
+    case 'channel.save': {
+      authorize(s, role, 'settings');
+      requireValue(['whatsapp', 'pbx'].includes(p.channel), 'Выберите канал.');
+      const providers =
+        p.channel === 'whatsapp'
+          ? ['Meta Cloud API', 'Через провайдера WhatsApp Business']
+          : ['Mango Office', 'UIS', 'Zadarma', 'Другая АТС с API'];
+      requireValue(providers.includes(p.provider), 'Выберите провайдера.');
+      const number = normalizePhone(p.number);
+      requireValue(
+        s.users.some((u) => u.id === p.assignee),
+        'Выберите ответственного.',
+      );
+      s.settings.channels ||= {};
+      s.settings.channels[p.channel] = {
+        provider: p.provider,
+        number,
+        assignee: p.assignee,
+        enabled: p.enabled === 'on',
+      };
+      break;
+    }
     case 'settings.save': {
       authorize(s, role, 'settings');
       for (const key of ['minimum', 'urgent', 'rounding']) {
@@ -1639,5 +1661,29 @@ export function validateBackup(value) {
         Array.isArray(m.previousPhones),
       'Некорректная история объединения.',
     );
+  if (value.settings.channels !== undefined) {
+    requireValue(
+      value.settings.channels &&
+        typeof value.settings.channels === 'object' &&
+        !Array.isArray(value.settings.channels),
+      'Некорректные каналы.',
+    );
+    for (const [channel, c] of Object.entries(value.settings.channels)) {
+      const providers =
+        channel === 'whatsapp'
+          ? ['Meta Cloud API', 'Через провайдера WhatsApp Business']
+          : ['Mango Office', 'UIS', 'Zadarma', 'Другая АТС с API'];
+      requireValue(
+        ['whatsapp', 'pbx'].includes(channel) &&
+          c &&
+          Object.keys(c).every((k) => ['provider', 'number', 'assignee', 'enabled'].includes(k)) &&
+          providers.includes(c.provider) &&
+          typeof c.enabled === 'boolean' &&
+          value.users.some((u) => u.id === c.assignee),
+        'Некорректные настройки канала.',
+      );
+      requireValue(normalizePhone(c.number) === c.number, 'Некорректный номер канала.');
+    }
+  }
   return structuredClone(value);
 }
