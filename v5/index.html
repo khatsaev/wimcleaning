@@ -920,8 +920,8 @@ VIEWS.home=()=>{
  return '<header class="hero"><div class="brand">'+logo()+'<p class="muted small">Работаем по Чеченской Республике</p></div>'+
 
  '<div class="lead"><h1 class="h1">Сервис профессиональной чистки</h1></div></header>'+
- '<section class="home-account" aria-label="Личный кабинет">'+homeGreetingHTML()+
- (mine?activeOrderHTML(mine):homeEmptyOrderHTML())+bonusCard()+repeatShortcutHTML()+servicesHTML()+remindersHTML()+
+ '<section class="home-account" aria-label="Личный кабинет">'+servicesHTML()+homeGreetingHTML()+
+ (mine?activeOrderHTML(mine):homeEmptyOrderHTML())+bonusCard()+repeatShortcutHTML()+remindersHTML()+
  '<button class="home-support" data-act="cfSupport">'+ic('list')+'<span>Есть вопрос? Оператор поможет</span></button></section>';
 };
 
