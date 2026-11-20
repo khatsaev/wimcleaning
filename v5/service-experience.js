@@ -75,12 +75,11 @@ function repeatShortcutHTML() {
 }
 
 function servicesHTML() {
-  const crops={carpet:'125 320 310 360',blanket:'580 345 440 320',curtain:'110 925 370 340',facade:'580 925 430 325'};
   return '<section class="stack home-catalog" id="homeServices"><h2 class="h2">Что нужно почистить?</h2><div class="home-services">' + SKEYS.map(key => {
     const service = SERV[key];
     const label = service.listPrice || 'Рассчитать стоимость';
     return '<button class="home-service" data-act="svc" data-k="' + key + '" aria-label="' + esc(service.title + '. ' + label) + '">' +
-      '<span class="service-tile-heading"><b>' + ({carpet:'Ковры',blanket:'Одеяла',curtain:'Шторы',facade:'Фасады'}[key]) + '</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span><span class="service-tile-art art-' + key + '" aria-hidden="true"><svg viewBox="' + crops[key] + '" preserveAspectRatio="xMidYMid meet"><defs><clipPath id="crop-' + key + '"><rect x="' + crops[key].split(' ')[0] + '" y="' + crops[key].split(' ')[1] + '" width="' + crops[key].split(' ')[2] + '" height="' + crops[key].split(' ')[3] + '"/></clipPath></defs><image href="assets/services/reference.png" width="1086" height="1448" clip-path="url(#crop-' + key + ')"/></svg></span><span class="small">' + (key==='facade'?'Расчёт по фото':label) + '</span>' +
+      '<span class="service-tile-heading"><b>' + ({carpet:'Ковры',blanket:'Одеяла',curtain:'Шторы',facade:'Фасады'}[key]) + '</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span><span class="service-tile-art art-' + key + '" aria-hidden="true"><img src="assets/services/' + key + '.webp" alt="" width="420" height="420" decoding="async" loading="lazy"></span><span class="small">' + (key==='facade'?'Расчёт по фото':label) + '</span>' +
       '</button>';
   }).join('') + '</div></section>';
 }
