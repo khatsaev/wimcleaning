@@ -79,8 +79,8 @@ function servicesHTML() {
     const service = SERV[key];
     const label = service.listPrice || 'Рассчитать стоимость';
     return '<button class="home-service" data-act="svc" data-k="' + key + '" aria-label="' + esc(service.title + '. ' + label) + '">' +
-      '<span class="ico">' + ic(service.icon) + '</span><b>' + service.chipLabel + '</b><span class="small">' + label + '</span>' +
-      (key === 'facade' ? '<span class="xs muted">По 2–3 фотографиям</span>' : '') + '</button>';
+      '<span class="service-tile-heading"><b>' + ({carpet:'Ковры',blanket:'Одеяла',curtain:'Шторы',facade:'Фасады'}[key]) + '</b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></span><span class="service-tile-art art-' + key + '" aria-hidden="true"></span><span class="small">' + (key==='facade'?'Расчёт по фото':label) + '</span>' +
+      (key === 'facade' ? '<span class="xs muted">2–3 фотографии</span>' : '') + '</button>';
   }).join('') + '</div></section>';
 }
 
