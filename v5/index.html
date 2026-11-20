@@ -899,7 +899,7 @@ function lotPause(){
 function lotStop(){lotPause();LOT.sec=null;LOT.els=null}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)lotPause();else lotRun()});
 addEventListener('resize',()=>{if(LOT.sec&&LOT.sec.isConnected&&LOT.els){lotMeasure();lotLayout()}});
-AFTER.home=()=>{lotMount();a2hs()};
+AFTER.home=()=>{a2hs()};
 function a2hs(){
  const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),inApp=navigator.standalone||matchMedia('(display-mode: standalone)').matches;
  let closed=false;try{closed=localStorage.getItem('wim_a2hs')==='1'}catch(e){}
@@ -917,7 +917,8 @@ function activeProgress(o){
 }
 VIEWS.home=()=>{
  const mine=S.user&&S.orders.filter(o=>o.mine&&!['delivered','cancelled'].includes(o.status)).sort((a,b)=>b.created-a.created)[0];
- return '<header class="hero"><div class="brand">'+logo()+'<p class="muted small">Работаем по Чеченской Республике</p></div>'+lotHTML()+
+ return '<header class="hero"><div class="brand">'+logo()+'<p class="muted small">Работаем по Чеченской Республике</p></div>'+
+
  '<div class="lead"><h1 class="h1">Сервис профессиональной чистки</h1></div></header>'+
  '<section class="home-account" aria-label="Личный кабинет">'+homeGreetingHTML()+
  (mine?activeOrderHTML(mine):homeEmptyOrderHTML())+bonusCard()+repeatShortcutHTML()+servicesHTML()+remindersHTML()+
