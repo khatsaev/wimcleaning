@@ -817,7 +817,7 @@ function lotMount(){
   return;
  }
  const ring=$('#lotRing');
- ring.innerHTML=PRIZES.map(p=>'<div class="lot-item" style="--k:'+p.scale+';--dx:'+p.dx+';--drop:'+p.drop+';--sw:'+p.sw+'"><i></i><img src="'+p.img+'" alt="'+esc(p.name)+'" draggable="false"></div>').join('');
+ ring.innerHTML=PRIZES.map(p=>'<div class="lot-item" style="--k:'+p.scale+';--dx:'+p.dx+';--drop:'+p.drop+';--sw:'+p.sw+'"><i></i><img decoding="async" src="'+p.img+'" alt="'+esc(p.name)+'" draggable="false"></div>').join('');
  LOT.els=[...ring.children];
  lotLayout();
  if(LOT.spin){ // вернулись на главную, пока ждём ответ pickPrize: продолжаем вращение
