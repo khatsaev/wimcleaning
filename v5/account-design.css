@@ -98,3 +98,33 @@ button,a,input,select,textarea{scroll-margin-block:var(--s4)}
   .hero{margin-top:calc(-1 * var(--s4))}
 }
 @media(prefers-reduced-motion:reduce){.btn,.home-service{transition:none}}
+
+/* Rounded transition from the blue hero to the customer workspace. */
+.hero::after{display:none}
+.hero{padding-bottom:48px}
+.home-account{
+  position:relative;
+  margin:-16px calc(-1 * var(--s4)) 0;
+  padding:24px var(--s4) var(--s4);
+  border-radius:32px 32px 0 0;
+  background:var(--bg);
+  isolation:isolate;
+}
+.home-account::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:var(--primary);
+  z-index:-2;
+}
+.home-account::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:var(--bg);
+  z-index:-1;
+}
+.home-account{margin-top:-32px}
+.home-account::before{inset:0 0 auto;height:32px;border-radius:0}
